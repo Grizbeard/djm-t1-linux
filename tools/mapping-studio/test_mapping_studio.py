@@ -555,3 +555,56 @@ class TestDetentGuard(unittest.TestCase):
     def test_centre_at_an_extreme_is_rejected(self):
         xml, _js, _ = export_mixxx.export(self.make(0, 127, 127))
         self.assertIn("too partial", xml)
+
+
+class TestFourteenBit(unittest.TestCase):
+    """A high-resolution fader sends two CCs; binding one is not enough."""
+
+    @staticmethod
+    def sweep():
+        # Exactly what a Reloop Ready pitch fader emits: coarse on CC 9, fine on
+        # CC 63, interleaved, the fine byte wrapping as the coarse one steps.
+        events = []
+        for value in range(0, 1024, 3):
+            msb, lsb = divmod(value, 128)
+            events.append({"t": 0.0, "status": "cc", "channel": 1,
+                           "number": 9, "value": msb, "raw": ""})
+            events.append({"t": 0.0, "status": "cc", "channel": 1,
+                           "number": 63, "value": lsb, "raw": ""})
+        return events
+
+    def test_pair_is_recognised_not_called_a_mirror(self):
+        binding, _g, mirrors, notes = analyse(self.sweep(), kind="fader")
+        self.assertEqual(binding["mode"], "14bit")
+        self.assertEqual(binding["number"], 9)      # coarse
+        self.assertEqual(binding["lsb"], 63)        # fine
+        self.assertEqual(mirrors, [])
+        self.assertTrue(any("14-bit" in n for n in notes))
+
+    def test_span_is_reported_in_14_bit_terms(self):
+        binding, _g, _m, _n = analyse(self.sweep(), kind="fader")
+        self.assertGreater(binding["max"], 1000)
+
+    def test_lsb_is_not_assumed_to_be_msb_plus_32(self):
+        # The conventional pairing is CC n with CC n+32. This device uses 9/63,
+        # so the detector has to work from behaviour.
+        binding, _g, _m, _n = analyse(self.sweep())
+        self.assertNotEqual(binding["lsb"], binding["number"] + 32)
+
+    def test_export_emits_both_halves_on_one_target(self):
+        p = Profile.new("t", "T", {"w": 10, "h": 10})
+        p.add_control({"id": "pitch", "label": "PITCH", "kind": "fader",
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 4, "h": 8},
+                       "target": {"group": "[Channel1]", "key": "rate"}})
+        p.set_binding("pitch", "base", "input",
+                      {"status": "cc", "channel": 1, "number": 9, "lsb": 63,
+                       "mode": "14bit", "min": 0, "max": 1023, "resting": 512})
+        xml, _js, _fn = export_mixxx.export(p)
+        root = ET.fromstring(xml)
+        entries = root.findall(".//controls/control")
+        self.assertEqual(len(entries), 2)
+        self.assertEqual({e.findtext("midino") for e in entries}, {"0x09", "0x3F"})
+        self.assertIn("<fourteen-bit-msb/>", xml)
+        self.assertIn("<fourteen-bit-lsb/>", xml)
+        # both halves drive the same Mixxx control
+        self.assertEqual({e.findtext("key") for e in entries}, {"rate"})

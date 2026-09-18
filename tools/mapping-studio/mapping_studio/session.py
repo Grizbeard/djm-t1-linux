@@ -53,6 +53,40 @@ class CaptureResult:
         }
 
 
+def _detect_14bit(groups):
+    """Spot a high-resolution control sent as two CCs, and say which is which.
+
+    A 14-bit fader sends a coarse byte and a fine byte together, so the two
+    arrive in near-equal numbers. Without this they look like a control and its
+    mirror, and the studio binds the coarse half alone -- which is how a pitch
+    fader ended up captured as "0..7".
+
+    Told apart by behaviour, not by number: the fine byte sweeps the whole
+    0..127 range many times over while the coarse byte takes a handful of
+    values. The convention that the low byte lives at CC n+32 is *not* assumed;
+    the Reloop Ready pairs CC 9 with CC 63.
+    """
+    ccs = [g for g in groups if g["status"] == "cc"]
+    if len(ccs) < 2:
+        return None
+    for i, a in enumerate(ccs):
+        for b in ccs[i + 1:]:
+            if a["channel"] != b["channel"]:
+                continue
+            lo, hi = sorted((a, b), key=lambda g: g["distinct"])
+            if lo["count"] == 0 or hi["count"] == 0:
+                continue
+            ratio = min(a["count"], b["count"]) / max(a["count"], b["count"])
+            if ratio < 0.7:                      # not sent together
+                continue
+            if hi["distinct"] < 32 or hi["max"] < 100:
+                continue                          # fine byte must really sweep
+            if lo["distinct"] > hi["distinct"] / 2:
+                continue                          # coarse byte must be coarse
+            return lo, hi                         # (msb, lsb)
+    return None
+
+
 def analyse(events, kind=None):
     """Reduce a burst of MIDI into a proposed binding plus what else was seen.
 
@@ -98,6 +132,27 @@ def analyse(events, kind=None):
             g["presses"] = ons
         groups.append(g)
     groups.sort(key=lambda g: -g["count"])
+
+    pair = _detect_14bit(groups)
+    if pair:
+        msb, lsb = pair
+        span = msb["max"] * 128 + lsb["max"]
+        binding = {
+            "status": "cc",
+            "channel": msb["channel"],
+            "number": msb["number"],
+            "lsb": lsb["number"],
+            "mode": "14bit",
+            "min": msb["min"] * 128 + lsb["min"],
+            "max": span,
+            "resting": msb["resting"] * 128 + lsb["resting"],
+        }
+        notes.append(
+            f"14-bit: CC {msb['number']} carries the high bits and CC "
+            f"{lsb['number']} the low ones, about {span + 1} steps of travel. "
+            f"Both are exported; Mixxx pairs them itself.")
+        others = [g for g in groups if g not in (msb, lsb)]
+        return binding, groups, others, notes
 
     top = groups[0]
     status, channel, number = top["status"], top["channel"], top["number"]

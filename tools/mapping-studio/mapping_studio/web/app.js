@@ -769,9 +769,10 @@ async function refreshProfile() {
   $('#pname').textContent = d.profile.name || d.profile.id;
   const sel = $('#layer');
   const layers = d.profile.layers || ['base'];
-  if (sel.options.length !== layers.length) {
+  if (sel.options.length !== layers.length + 1) {
     sel.innerHTML = layers.map(l =>
-      `<option${l === S.layer ? ' selected' : ''}>${esc(l)}</option>`).join('');
+      `<option${l === S.layer ? ' selected' : ''}>${esc(l)}</option>`).join('')
+      + '<option value="__new">+ new layer…</option>';
   }
   drawPanel();
   renderUnassigned();
@@ -882,9 +883,18 @@ function wire() {
     toast('Saved ' + r.saved.split(/[\\/]/).pop());
   };
   $('#layer').onchange = async e => {
-    await api('/api/layer', { layer: e.target.value });
-    S.layer = e.target.value;
+    let name = e.target.value;
+    if (name === '__new') {
+      // A controller can have more than one modifier: on the Reloop Ready,
+      // holding MODE changes what the pads send just as SHIFT does.
+      name = (prompt('Name for the new layer (e.g. "mode", "shift+mode")')
+              || '').trim().toLowerCase();
+      if (!name) { e.target.value = S.layer; return; }
+    }
+    await api('/api/layer', { layer: name });
+    S.layer = name;
     await refreshProfile();
+    toast(`Now capturing into the "${name}" layer`);
   };
 
   $('#delprov').onclick = async () => {

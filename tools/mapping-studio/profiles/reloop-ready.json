@@ -3157,20 +3157,22 @@
    "detent": true,
    "id": "pitch_fader_a",
    "bindings": {
+    "shift": {
+     "input": {
+      "status": "silent"
+     }
+    },
     "base": {
      "input": {
       "status": "cc",
       "channel": 1,
       "number": 9,
-      "mode": "absolute",
+      "lsb": 63,
+      "mode": "14bit",
       "min": 0,
-      "max": 7,
-      "resting": 0
-     }
-    },
-    "shift": {
-     "input": {
-      "status": "silent"
+      "max": 1023,
+      "source": "measured 2026-09-18: CC9 high byte, CC63 low byte",
+      "verified": false
      }
     }
    },
@@ -3196,20 +3198,22 @@
    "detent": true,
    "id": "pitch_fader_b",
    "bindings": {
+    "shift": {
+     "input": {
+      "status": "silent"
+     }
+    },
     "base": {
      "input": {
       "status": "cc",
       "channel": 2,
       "number": 9,
-      "mode": "absolute",
+      "lsb": 63,
+      "mode": "14bit",
       "min": 0,
-      "max": 7,
-      "resting": 0
-     }
-    },
-    "shift": {
-     "input": {
-      "status": "silent"
+      "max": 1023,
+      "source": "measured 2026-09-18: CC9 high byte, CC63 low byte",
+      "verified": false
      }
     }
    },

@@ -86,6 +86,10 @@ def _detent_usable(binding):
     lo, hi, rest = binding.get("min"), binding.get("max"), binding.get("resting")
     if None in (lo, hi, rest):
         return False
+    # An absolute threshold rather than a fraction of the encoding's range: a
+    # device may use only part of what its encoding could express. The Reloop's
+    # pitch fader is sent as 14-bit but travels about 1024 steps, so judging it
+    # against a full 16384 would reject a perfectly good sweep.
     return (hi - lo) >= 100 and lo < rest < hi
 
 
@@ -171,6 +175,18 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
                         "midino": inp["number"],
                         "options": opts,
                     }
+                    if inp.get("mode") == "14bit" and inp.get("lsb") is not None:
+                        # Mixxx pairs the two halves itself: two entries on the
+                        # same group and key, one flagged msb and one lsb. No
+                        # script, and the full resolution survives.
+                        entry["options"] = ["fourteen-bit-msb"]
+                        controls.append(entry)
+                        controls.append(dict(entry,
+                                             description=f"{label}{suffix} (LSB)",
+                                             midino=inp["lsb"],
+                                             options=["fourteen-bit-lsb"]))
+                        seen_in.add(("cc", inp.get("channel", 1), inp["lsb"]))
+                        continue
                     if _needs_script(c, inp, target):
                         fn = target.get("script") or f"{prefix}.{_ident(fn_id)}"
                         entry["key"] = fn
