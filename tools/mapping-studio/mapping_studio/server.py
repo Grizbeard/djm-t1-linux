@@ -206,7 +206,9 @@ class Handler(BaseHTTPRequestHandler):
                 s.dirty = True
                 return self._json({"control": s.profile.get(body["id"])})
             if path == "/api/control/target":
-                c = s.profile.update_control(body["id"], {"target": body.get("target")})
+                c = s.profile.set_target(body["id"],
+                                         body.get("layer") or sess.layer,
+                                         body.get("target"))
                 s.dirty = True
                 return self._json({"control": c})
 

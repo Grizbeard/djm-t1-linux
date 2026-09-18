@@ -523,3 +523,35 @@ class TestShippedProfile(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestDetentGuard(unittest.TestCase):
+    """A partial sweep must not become a centre-remap script."""
+
+    def make(self, lo, hi, rest):
+        p = Profile.new("t", "T", {"w": 10, "h": 10})
+        p.add_control({"id": "pitch", "label": "PITCH", "kind": "fader",
+                       "detent": True,
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 4, "h": 8},
+                       "target": {"group": "[Channel1]", "key": "rate"}})
+        p.set_binding("pitch", "base", "input",
+                      {"status": "cc", "channel": 1, "number": 9,
+                       "mode": "absolute", "min": lo, "max": hi, "resting": rest})
+        return p
+
+    def test_full_sweep_with_offset_centre_is_remapped(self):
+        xml, js, _ = export_mixxx.export(self.make(0, 127, 62))
+        self.assertIn("<script-binding/>", xml)
+        self.assertIn("var centre = 62;", js)
+
+    def test_partial_sweep_is_not_remapped_and_says_why(self):
+        # The real case: a pitch fader captured over 0..7 would have produced a
+        # curve that was wrong across its whole travel.
+        xml, js, _ = export_mixxx.export(self.make(0, 7, 0))
+        self.assertNotIn("var centre", js)
+        self.assertIn("too partial", xml)
+        self.assertIn("<normal/>", xml)
+
+    def test_centre_at_an_extreme_is_rejected(self):
+        xml, _js, _ = export_mixxx.export(self.make(0, 127, 127))
+        self.assertIn("too partial", xml)

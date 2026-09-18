@@ -193,6 +193,43 @@ class Profile:
         c.pop("provisional", None)
         return c
 
+    # ---------------------------------------------------------------- target
+
+    def target(self, control, layer="base"):
+        """What this control drives in the host, on a given layer.
+
+        Targets are per layer, because a layer is not a modifier the host can
+        infer: holding SHIFT makes a pad emit a different note entirely, and
+        that note usually means something different too. Older profiles carry a
+        single `target`, which is read as the base layer.
+        """
+        if isinstance(control, str):
+            control = self.get(control)
+        if not control:
+            return None
+        t = (control.get("targets") or {}).get(layer)
+        if t is None and layer == "base":
+            t = control.get("target")
+        return t
+
+    def set_target(self, control_id, layer, target):
+        c = self.get(control_id)
+        if c is None:
+            raise ProfileError(f"no such control: {control_id}")
+        # Migrate a legacy single target onto the base layer the first time
+        # this control is touched, so nothing is silently lost.
+        legacy = c.pop("target", None)
+        tg = c.setdefault("targets", {})
+        if legacy is not None and "base" not in tg:
+            tg["base"] = legacy
+        if target:
+            tg[layer] = target
+        else:
+            tg.pop(layer, None)
+        if not tg:
+            c.pop("targets", None)
+        return c
+
     def binding(self, control_id, layer, direction):
         c = self.get(control_id)
         if not c:
@@ -274,7 +311,8 @@ class Profile:
         outputs = sum(
             1 for c in self.controls
             for b in (c.get("bindings") or {}).values() if b.get("output"))
-        targeted = sum(1 for c in self.controls if c.get("target"))
+        targeted = sum(1 for c in self.controls
+                       if c.get("target") or c.get("targets"))
         return {
             "controls": total,
             "provisional": prov,

@@ -63,9 +63,9 @@ def _ident(text):
     return s
 
 
-def _options(control, binding):
+def _options(control, binding, target=None):
     """Pick the Mixxx <options> for a binding, from its kind and capture."""
-    target = control.get("target") or {}
+    target = target or {}
     if target.get("options"):
         return list(target["options"])
     if binding.get("mode") == "relative":
@@ -75,21 +75,36 @@ def _options(control, binding):
     return ["normal"]
 
 
-def _needs_script(control, binding):
-    target = control.get("target") or {}
+def _detent_usable(binding):
+    """Is a detented capture good enough to build a centre remap from?
+
+    The remap divides by (centre - min) and (max - centre), so a capture that
+    never left one end produces a curve that is wrong everywhere. A pitch fader
+    swept over only eight values would otherwise export a fader that does
+    nothing across half its travel. Better a plain binding and a note saying so.
+    """
+    lo, hi, rest = binding.get("min"), binding.get("max"), binding.get("resting")
+    if None in (lo, hi, rest):
+        return False
+    return (hi - lo) >= 100 and lo < rest < hi
+
+
+def _needs_script(control, binding, target=None):
+    target = target or {}
     if target.get("script"):
         return True
     if binding.get("mode") == "relative" and not target.get("options"):
         return False          # selectknob handles the common case natively
     if target.get("toggle"):
         return True
-    if control.get("detent") and binding.get("resting") not in (None, 64):
+    if (control.get("detent") and binding.get("resting") not in (None, 64)
+            and _detent_usable(binding)):
         return True
     return False
 
 
 def build_xml(profile, layer="base", name=None, author="", description=None,
-              script_file=None, prefix=None, controller_id=None):
+              script_file=None, prefix=None, controller_id=None, layers=None):
     p = profile
     name = name or p.data.get("name") or p.data.get("id")
     prefix = prefix or _ident(name)
@@ -98,74 +113,109 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
 
     controls, outputs, comments = [], [], []
     scripted = []
+    # Mixxx loads one mapping, so every layer goes into it. That works because a
+    # layer here is not a modifier the host tracks: on this hardware holding
+    # SHIFT changes the note a button sends, so the layers are simply different
+    # MIDI addresses. Identical addresses are emitted once -- a knob sends the
+    # same CC whether or not SHIFT is held, and binding it twice is a conflict.
+    layers = list(layers or p.layers or [layer])
+    seen_in, seen_out = set(), set()
 
     for c in sorted(p.controls, key=lambda c: (c.get("section", ""), c["id"])):
-        binds = (c.get("bindings") or {}).get(layer) or {}
-        inp = binds.get("input")
-        out = binds.get("output")
-        target = c.get("target") or {}
         label = c.get("label", c["id"])
+        for ly in layers:
+            binds = (c.get("bindings") or {}).get(ly) or {}
+            inp = binds.get("input")
+            out = binds.get("output")
+            target = p.target(c, ly) or {}
+            suffix = "" if ly == layers[0] else f" ({ly})"
 
-        if inp and inp.get("status") == "silent":
-            comments.append(f"{label}: sends no MIDI (verified silent)")
-            continue
+            if inp and inp.get("status") == "silent":
+                if ly == layers[0]:
+                    comments.append(f"{label}: sends no MIDI (verified silent)")
+                continue
 
-        if inp and not target.get("group"):
-            comments.append(
-                f"{label}: captured as {inp.get('status')} "
-                f"{inp.get('number')} but no Mixxx control chosen yet")
+            if inp:
+                addr = (inp.get("status"), inp.get("channel", 1), inp.get("number"))
+                if addr in seen_in:
+                    inp = None          # same message as another layer; bind once
+                else:
+                    seen_in.add(addr)
 
-        if inp and target.get("group") and target.get("key"):
-            status = _status_for(inp)
-            if status is None:
-                comments.append(f"{label}: cannot export status {inp.get('status')!r}")
-            else:
-                opts = _options(c, inp)
-                entry = {
-                    "group": target["group"],
-                    "key": target["key"],
-                    "description": label,
-                    "status": status,
-                    "midino": inp["number"],
-                    "options": opts,
-                }
-                if _needs_script(c, inp):
-                    fn = target.get("script") or f"{prefix}.{_ident(c['id'])}"
-                    entry["key"] = fn
-                    entry["options"] = ["script-binding"]
-                    scripted.append((c, inp, fn))
-                controls.append(entry)
-                for m in (inp.get("mirrors") or []):
-                    comments.append(
-                        f"{label}: also emits {m} -- mirror, intentionally unbound")
-
-        if out and out.get("status") == "local":
-            comments.append(
-                f"{label}: LED is driven by the device firmware and cannot be "
-                f"addressed from the host, so no output is possible")
-            out = None
-        if out and not target.get("group"):
-            comments.append(
-                f"{label}: LED answers to note {out.get('number')} but no Mixxx "
-                f"control chosen yet, so no <output> was written")
-        if out and target.get("group"):
-            key = target.get("output_key") or target.get("key")
-            if not key:
+            if inp and not target.get("group"):
                 comments.append(
-                    f"{label}: LED found on note {out.get('number')} but the "
-                    f"target has no key to drive it")
-            if key:
-                outputs.append({
-                    "group": target["group"],
-                    "key": key,
-                    "description": f"{label} LED",
-                    "status": _status_for({"status": out.get("status", "note"),
-                                           "channel": out.get("channel", 1)}),
-                    "midino": out["number"],
-                    "on": out.get("on", 0x7F),
-                    "off": out.get("off", 0x00),
-                    "minimum": target.get("output_minimum", 0.5),
-                })
+                    f"{label}{suffix}: captured as {inp.get('status')} "
+                    f"{inp.get('number')} but no Mixxx control chosen yet")
+
+            if (inp and c.get("detent") and inp.get("mode") == "absolute"
+                    and not _detent_usable(inp)):
+                comments.append(
+                    f"{label}{suffix}: marked detented but the capture only "
+                    f"covers {inp.get('min')}..{inp.get('max')} resting at "
+                    f"{inp.get('resting')}, too partial to build a centre "
+                    f"remap from; exported as a plain binding. Re-learn it with "
+                    f"a full sweep ending at the detent.")
+
+            if inp and target.get("group") and target.get("key"):
+                status = _status_for(inp)
+                if status is None:
+                    comments.append(f"{label}: cannot export status {inp.get('status')!r}")
+                else:
+                    opts = _options(c, inp, target)
+                    fn_id = c["id"] if ly == layers[0] else f"{c['id']}_{ly}"
+                    entry = {
+                        "group": target["group"],
+                        "key": target["key"],
+                        "description": f"{label}{suffix}",
+                        "status": status,
+                        "midino": inp["number"],
+                        "options": opts,
+                    }
+                    if _needs_script(c, inp, target):
+                        fn = target.get("script") or f"{prefix}.{_ident(fn_id)}"
+                        entry["key"] = fn
+                        entry["options"] = ["script-binding"]
+                        scripted.append((c, inp, fn, target))
+                    controls.append(entry)
+                    for m in (inp.get("mirrors") or []):
+                        comments.append(
+                            f"{label}{suffix}: also emits {m} -- mirror, "
+                            f"intentionally unbound")
+
+            if out and out.get("status") == "local":
+                if ly == layers[0]:
+                    comments.append(
+                        f"{label}: LED is driven by the device firmware and cannot "
+                        f"be addressed from the host, so no output is possible")
+                out = None
+            if out:
+                oaddr = (out.get("channel", 1), out.get("number"))
+                if oaddr in seen_out:
+                    out = None
+                else:
+                    seen_out.add(oaddr)
+            if out and not target.get("group"):
+                comments.append(
+                    f"{label}{suffix}: LED answers to note {out.get('number')} but "
+                    f"no Mixxx control chosen yet, so no <output> was written")
+            if out and target.get("group"):
+                key = target.get("output_key") or target.get("key")
+                if not key:
+                    comments.append(
+                        f"{label}: LED found on note {out.get('number')} but the "
+                        f"target has no key to drive it")
+                if key:
+                    outputs.append({
+                        "group": target["group"],
+                        "key": key,
+                        "description": f"{label} LED{suffix}",
+                        "status": _status_for({"status": out.get("status", "note"),
+                                               "channel": out.get("channel", 1)}),
+                        "midino": out["number"],
+                        "on": out.get("on", 0x7F),
+                        "off": out.get("off", 0x00),
+                        "minimum": target.get("output_minimum", 0.5),
+                    })
 
     if description is None:
         description = _describe(p, layer, len(controls), len(outputs), comments)
@@ -274,8 +324,8 @@ def build_script(profile, scripted, prefix, layer="base"):
         out.append("")
         return "\n".join(out)
 
-    for control, binding, fn in scripted:
-        target = control.get("target") or {}
+    for control, binding, fn, target in scripted:
+        target = target or {}
         short = fn.split(".", 1)[-1]
         label = control.get("label", control["id"])
         group = target.get("group", "[Channel1]")

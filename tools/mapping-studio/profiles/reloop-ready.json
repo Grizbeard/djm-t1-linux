@@ -52,11 +52,23 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "beatloop_activate",
+     "output_key": "loop_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "reloop_toggle",
+     "output_key": "loop_enabled"
+    }
+   }
   },
   {
    "id": "loop_b",
-   "label": "Loob B",
+   "label": "Loop B",
    "kind": "button",
    "tier": "control",
    "shape": {
@@ -87,7 +99,19 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "beatloop_activate",
+     "output_key": "loop_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "reloop_toggle",
+     "output_key": "loop_enabled"
+    }
+   }
   },
   {
    "id": "fx1_level",
@@ -122,6 +146,12 @@
       "max": 127,
       "resting": 0
      }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "mix"
     }
    }
   },
@@ -164,6 +194,18 @@
       "press_value": 127
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "enabled",
+     "toggle": true,
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "next_effect"
+    }
    }
   },
   {
@@ -205,6 +247,18 @@
       "press_value": 127
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "enabled",
+     "toggle": true,
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "next_effect"
+    }
    }
   },
   {
@@ -245,6 +299,18 @@
       "mode": "button",
       "press_value": 127
      }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "enabled",
+     "toggle": true,
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "next_effect"
     }
    }
   },
@@ -322,7 +388,13 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "pregain"
+    }
+   }
   },
   {
    "id": "gain_b",
@@ -359,7 +431,13 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "pregain"
+    }
+   }
   },
   {
    "id": "fx2_level",
@@ -394,6 +472,12 @@
       "max": 127,
       "resting": 0
      }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "mix"
     }
    }
   },
@@ -436,6 +520,18 @@
       "press_value": 127
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "enabled",
+     "toggle": true,
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "next_effect"
+    }
    }
   },
   {
@@ -477,6 +573,18 @@
       "press_value": 127
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "enabled",
+     "toggle": true,
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "next_effect"
+    }
    }
   },
   {
@@ -517,6 +625,18 @@
       "mode": "button",
       "press_value": 127
      }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "enabled",
+     "toggle": true,
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "next_effect"
     }
    }
   },
@@ -595,7 +715,13 @@
     }
    },
    "section": "Deck A",
-   "detent": true
+   "detent": true,
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter3"
+    }
+   }
   },
   {
    "id": "high_b",
@@ -633,7 +759,13 @@
     }
    },
    "section": "Deck B",
-   "detent": true
+   "detent": true,
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter3"
+    }
+   }
   },
   {
    "id": "low_a",
@@ -671,7 +803,13 @@
     }
    },
    "section": "Deck A",
-   "detent": true
+   "detent": true,
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter1"
+    }
+   }
   },
   {
    "id": "low_b",
@@ -709,7 +847,13 @@
     }
    },
    "section": "Low B",
-   "detent": true
+   "detent": true,
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter1"
+    }
+   }
   },
   {
    "id": "track_load_button_a",
@@ -732,13 +876,6 @@
       "number": 2,
       "on": 127,
       "off": 0
-     },
-     "input": {
-      "status": "note",
-      "channel": 1,
-      "number": 27,
-      "mode": "button",
-      "press_value": 127
      }
     },
     "shift": {
@@ -751,7 +888,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "LoadSelectedTrack",
+     "output_key": "track_loaded"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "CloneFromDeck"
+    }
+   }
   },
   {
    "id": "track_load_button_b",
@@ -793,7 +941,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "LoadSelectedTrack",
+     "output_key": "track_loaded"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "CloneFromDeck"
+    }
+   }
   },
   {
    "id": "hp_cue_a",
@@ -833,7 +992,14 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "pfl",
+     "toggle": true
+    }
+   }
   },
   {
    "id": "filter_a",
@@ -871,7 +1037,13 @@
     }
    },
    "section": "Deck A",
-   "detent": true
+   "detent": true,
+   "targets": {
+    "base": {
+     "group": "[QuickEffectRack1_[Channel1]]",
+     "key": "super1"
+    }
+   }
   },
   {
    "id": "shift",
@@ -943,7 +1115,13 @@
     }
    },
    "section": "Deck B",
-   "detent": true
+   "detent": true,
+   "targets": {
+    "base": {
+     "group": "[QuickEffectRack1_[Channel2]]",
+     "key": "super1"
+    }
+   }
   },
   {
    "id": "hp_cue_b",
@@ -983,7 +1161,14 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "pfl",
+     "toggle": true
+    }
+   }
   },
   {
    "id": "vinyl_a",
@@ -1016,7 +1201,15 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "shift": {
+     "group": "[Channel1]",
+     "key": "slip_enabled",
+     "toggle": true,
+     "output_key": "slip_enabled"
+    }
+   }
   },
   {
    "id": "key_lock_a",
@@ -1051,7 +1244,19 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "keylock",
+     "toggle": true,
+     "output_key": "keylock"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "sync_key"
+    }
+   }
   },
   {
    "id": "parameter_left_a",
@@ -1086,7 +1291,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "loop_halve",
+     "output_key": "loop_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "beatjump_backward"
+    }
+   }
   },
   {
    "id": "parameter_right_a",
@@ -1121,7 +1337,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "loop_double",
+     "output_key": "loop_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "beatjump_forward"
+    }
+   }
   },
   {
    "id": "vinyl_b",
@@ -1161,7 +1388,15 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "shift": {
+     "group": "[Channel2]",
+     "key": "slip_enabled",
+     "toggle": true,
+     "output_key": "slip_enabled"
+    }
+   }
   },
   {
    "id": "key_lock_b",
@@ -1203,7 +1438,19 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "keylock",
+     "toggle": true,
+     "output_key": "keylock"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "sync_key"
+    }
+   }
   },
   {
    "id": "parameter_left_b",
@@ -1245,7 +1492,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "loop_halve",
+     "output_key": "loop_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "beatjump_backward"
+    }
+   }
   },
   {
    "id": "parameter_right_b",
@@ -1287,7 +1545,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "loop_double",
+     "output_key": "loop_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "beatjump_forward"
+    }
+   }
   },
   {
    "id": "mode_a",
@@ -1369,7 +1638,19 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "sync_enabled",
+     "toggle": true
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "quantize",
+     "toggle": true
+    }
+   }
   },
   {
    "id": "cue_a",
@@ -1413,7 +1694,18 @@
    },
    "section": "Deck A",
    "rgb": false,
-   "fixed_colour": "red"
+   "fixed_colour": "red",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "cue_default",
+     "output_key": "cue_indicator"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "start"
+    }
+   }
   },
   {
    "id": "play_a",
@@ -1457,7 +1749,19 @@
    },
    "section": "Deck A",
    "rgb": false,
-   "fixed_colour": "green"
+   "fixed_colour": "green",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "play",
+     "toggle": true,
+     "output_key": "play_indicator"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "reverseroll"
+    }
+   }
   },
   {
    "id": "mode_b",
@@ -1539,7 +1843,19 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "sync_enabled",
+     "toggle": true
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "quantize",
+     "toggle": true
+    }
+   }
   },
   {
    "id": "cue_b",
@@ -1583,7 +1899,18 @@
    },
    "section": "Deck B",
    "rgb": false,
-   "fixed_colour": "red"
+   "fixed_colour": "red",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "cue_default",
+     "output_key": "cue_indicator"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "start"
+    }
+   }
   },
   {
    "id": "play_b",
@@ -1627,7 +1954,19 @@
    },
    "section": "Deck B",
    "rgb": false,
-   "fixed_colour": "green"
+   "fixed_colour": "green",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "play",
+     "toggle": true,
+     "output_key": "play_indicator"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "reverseroll"
+    }
+   }
   },
   {
    "id": "pad_a1",
@@ -1676,6 +2015,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 112
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_1_activate",
+     "output_key": "hotcue_1_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_1_clear",
+     "output_key": "hotcue_1_enabled"
+    }
    }
   },
   {
@@ -1725,6 +2076,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 116
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_2_activate",
+     "output_key": "hotcue_2_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_2_clear",
+     "output_key": "hotcue_2_enabled"
+    }
    }
   },
   {
@@ -1774,6 +2137,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 120
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_3_activate",
+     "output_key": "hotcue_3_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_3_clear",
+     "output_key": "hotcue_3_enabled"
+    }
    }
   },
   {
@@ -1823,6 +2198,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 124
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_4_activate",
+     "output_key": "hotcue_4_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_4_clear",
+     "output_key": "hotcue_4_enabled"
+    }
    }
   },
   {
@@ -1872,6 +2259,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 108
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_5_activate",
+     "output_key": "hotcue_5_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_5_clear",
+     "output_key": "hotcue_5_enabled"
+    }
    }
   },
   {
@@ -1921,6 +2320,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 76
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_6_activate",
+     "output_key": "hotcue_6_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_6_clear",
+     "output_key": "hotcue_6_enabled"
+    }
    }
   },
   {
@@ -1970,6 +2381,18 @@
     "b": 0.6666666666666666,
     "bright": true,
     "velocity": 78
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_7_activate",
+     "output_key": "hotcue_7_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_7_clear",
+     "output_key": "hotcue_7_enabled"
+    }
    }
   },
   {
@@ -2019,6 +2442,18 @@
     "b": 1.0,
     "bright": true,
     "velocity": 79
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "hotcue_8_activate",
+     "output_key": "hotcue_8_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "hotcue_8_clear",
+     "output_key": "hotcue_8_enabled"
+    }
    }
   },
   {
@@ -2068,6 +2503,18 @@
     "b": 1.0,
     "bright": true,
     "velocity": 75
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_1_activate",
+     "output_key": "hotcue_1_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_1_clear",
+     "output_key": "hotcue_1_enabled"
+    }
    }
   },
   {
@@ -2117,6 +2564,18 @@
     "b": 1.0,
     "bright": true,
     "velocity": 67
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_2_activate",
+     "output_key": "hotcue_2_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_2_clear",
+     "output_key": "hotcue_2_enabled"
+    }
    }
   },
   {
@@ -2166,6 +2625,18 @@
     "b": 1.0,
     "bright": true,
     "velocity": 83
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_3_activate",
+     "output_key": "hotcue_3_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_3_clear",
+     "output_key": "hotcue_3_enabled"
+    }
    }
   },
   {
@@ -2215,6 +2686,18 @@
     "b": 1.0,
     "bright": true,
     "velocity": 115
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_4_activate",
+     "output_key": "hotcue_4_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_4_clear",
+     "output_key": "hotcue_4_enabled"
+    }
    }
   },
   {
@@ -2264,6 +2747,18 @@
     "b": 0.6666666666666666,
     "bright": true,
     "velocity": 118
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_5_activate",
+     "output_key": "hotcue_5_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_5_clear",
+     "output_key": "hotcue_5_enabled"
+    }
    }
   },
   {
@@ -2313,6 +2808,18 @@
     "b": 1.0,
     "bright": true,
     "velocity": 127
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_6_activate",
+     "output_key": "hotcue_6_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_6_clear",
+     "output_key": "hotcue_6_enabled"
+    }
    }
   },
   {
@@ -2362,6 +2869,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 112
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_7_activate",
+     "output_key": "hotcue_7_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_7_clear",
+     "output_key": "hotcue_7_enabled"
+    }
    }
   },
   {
@@ -2411,6 +2930,18 @@
     "b": 0.0,
     "bright": true,
     "velocity": 76
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "hotcue_8_activate",
+     "output_key": "hotcue_8_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "hotcue_8_clear",
+     "output_key": "hotcue_8_enabled"
+    }
    }
   },
   {
@@ -2449,7 +2980,13 @@
      }
     }
    },
-   "section": "Deck A Jog"
+   "section": "Deck A Jog",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "jog"
+    }
+   }
   },
   {
    "label": "Jog Rotation B",
@@ -2486,7 +3023,13 @@
      }
     }
    },
-   "section": "Deck B Jog"
+   "section": "Deck B Jog",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "jog"
+    }
+   }
   },
   {
    "label": "Jog Touch A",
@@ -2587,6 +3130,16 @@
       ]
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[Library]",
+     "key": "MoveVertical"
+    },
+    "shift": {
+     "group": "[Library]",
+     "key": "MoveHorizontal"
+    }
    }
   },
   {
@@ -2620,6 +3173,12 @@
       "status": "silent"
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "rate"
+    }
    }
   },
   {
@@ -2652,6 +3211,12 @@
      "input": {
       "status": "silent"
      }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "rate"
     }
    }
   },
@@ -2691,6 +3256,12 @@
       "resting": 0
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "volume"
+    }
    }
   },
   {
@@ -2728,6 +3299,12 @@
       "max": 127,
       "resting": 0
      }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "volume"
     }
    }
   },
@@ -2767,6 +3344,12 @@
       "resting": 127
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "crossfader"
+    }
    }
   },
   {
@@ -2790,15 +3373,16 @@
       "mode": "button",
       "press_value": 127
      }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[Library]",
+     "key": "GoToItem"
     },
     "shift": {
-     "input": {
-      "status": "note",
-      "channel": 15,
-      "number": 0,
-      "mode": "button",
-      "press_value": 127
-     }
+     "group": "[Library]",
+     "key": "MoveFocusBackward"
     }
    }
   }

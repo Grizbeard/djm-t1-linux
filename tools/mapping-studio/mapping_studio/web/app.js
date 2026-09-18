@@ -684,10 +684,10 @@ function renderAssign() {
     return;
   }
   box.className = '';
-  const t = c.target || {};
+  const t = (c.targets || {})[S.layer] || (S.layer === 'base' ? (c.target || {}) : {});
   box.innerHTML = `
     <div class="capture">
-      <div class="what">${esc(c.label)}</div>
+      <div class="what">${esc(c.label)} <span class="prior">on ${esc(S.layer)}</span></div>
       <div class="sub mono">${inp.status} ${inp.number} · ch ${inp.channel}${
         inp.mode ? ' · ' + inp.mode : ''}</div>
     </div>
@@ -711,7 +711,7 @@ function renderAssign() {
         ? '<button id="t-blink" class="ghost">Blink its LED</button>' : ''}
     </div>`;
   $('#t-save').onclick = async () => {
-    await api('/api/control/target', { id: c.id, target: {
+    await api('/api/control/target', { id: c.id, layer: S.layer, target: {
       group: $('#t-group').value.trim(),
       key: $('#t-key').value.trim(),
       toggle: $('#t-toggle').checked || undefined,
@@ -726,7 +726,9 @@ function renderUnassigned() {
   const ul = $('#unassigned');
   const items = S.controls.filter(c => {
     const i = bindingOf(c, 'input');
-    return i && i.status !== 'silent' && !(c.target && c.target.group);
+    const t = (c.targets || {})[S.layer]
+      || (S.layer === 'base' ? c.target : null);
+    return i && i.status !== 'silent' && !(t && t.group);
   });
   ul.innerHTML = items.length
     ? items.map(c => {
