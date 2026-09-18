@@ -1069,9 +1069,9 @@
    "shape": {
     "type": "rect",
     "cx": 22.4,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1094,9 +1094,9 @@
    "shape": {
     "type": "rect",
     "cx": 48.6,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1119,9 +1119,9 @@
    "shape": {
     "type": "rect",
     "cx": 74.9,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1144,9 +1144,9 @@
    "shape": {
     "type": "rect",
     "cx": 101.1,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1169,9 +1169,9 @@
    "shape": {
     "type": "rect",
     "cx": 22.4,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1194,9 +1194,9 @@
    "shape": {
     "type": "rect",
     "cx": 48.6,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1219,9 +1219,9 @@
    "shape": {
     "type": "rect",
     "cx": 74.9,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1244,9 +1244,9 @@
    "shape": {
     "type": "rect",
     "cx": 101.1,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1269,9 +1269,9 @@
    "shape": {
     "type": "rect",
     "cx": 217.1,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1294,9 +1294,9 @@
    "shape": {
     "type": "rect",
     "cx": 243.3,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1319,9 +1319,9 @@
    "shape": {
     "type": "rect",
     "cx": 269.6,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1344,9 +1344,9 @@
    "shape": {
     "type": "rect",
     "cx": 295.8,
-    "cy": 152.7,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 150.8,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1369,9 +1369,9 @@
    "shape": {
     "type": "rect",
     "cx": 217.1,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1394,9 +1394,9 @@
    "shape": {
     "type": "rect",
     "cx": 243.3,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1419,9 +1419,9 @@
    "shape": {
     "type": "rect",
     "cx": 269.6,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1444,9 +1444,9 @@
    "shape": {
     "type": "rect",
     "cx": 295.8,
-    "cy": 177.0,
-    "w": 24.0,
-    "h": 22.0,
+    "cy": 177.1,
+    "w": 22.8,
+    "h": 20.8,
     "round": true
    },
    "bindings": {
@@ -1525,6 +1525,83 @@
     "round": true
    },
    "id": "browse",
+   "bindings": {}
+  },
+  {
+   "label": "PITCH FADER A",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 136.5,
+    "cy": 43.5,
+    "w": 10.0,
+    "h": 73.0,
+    "round": true
+   },
+   "section": "Deck A",
+   "detent": true,
+   "id": "pitch_fader_a",
+   "bindings": {}
+  },
+  {
+   "label": "PITCH FADER B",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 181.7,
+    "cy": 43.6,
+    "w": 10.0,
+    "h": 73.0,
+    "round": true
+   },
+   "section": "Deck B",
+   "detent": true,
+   "id": "pitch_fader_b",
+   "bindings": {}
+  },
+  {
+   "label": "LINE FADER A",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 137.3,
+    "cy": 156.6,
+    "w": 14.0,
+    "h": 51.1,
+    "round": true
+   },
+   "section": "Mixer",
+   "id": "line_fader_a",
+   "bindings": {}
+  },
+  {
+   "label": "LINE FADER B",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 180.9,
+    "cy": 156.6,
+    "w": 14.0,
+    "h": 51.1,
+    "round": true
+   },
+   "section": "Mixer",
+   "id": "line_fader_b",
+   "bindings": {}
+  },
+  {
+   "label": "CROSSFADER",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 159.1,
+    "cy": 199.6,
+    "w": 51.2,
+    "h": 13.0,
+    "round": true
+   },
+   "section": "Mixer",
+   "id": "crossfader",
    "bindings": {}
   }
  ],
