@@ -78,8 +78,13 @@ def cmd_info(args):
     print(f"  outputs    {st['mapped_outputs']} LEDs bound")
     print(f"  targets    {st['targeted']} assigned to Mixxx controls")
     if st["collisions"]:
-        print(f"  COLLISIONS {st['collisions']}")
+        print(f"  COLLISIONS {st['collisions']} (input)")
         for (layer, status, ch, num), ids in prof.collisions().items():
+            print(f"    {layer} {status} ch{ch} {num}: {', '.join(ids)}")
+    if st.get("output_collisions"):
+        print(f"  COLLISIONS {st['output_collisions']} (LED output) -- usually a "
+              f"mis-click during an LED probe")
+        for (layer, status, ch, num), ids in prof.output_collisions().items():
             print(f"    {layer} {status} ch{ch} {num}: {', '.join(ids)}")
     return 0
 

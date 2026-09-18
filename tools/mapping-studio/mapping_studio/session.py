@@ -165,6 +165,10 @@ class MappingSession:
         self._learn = None
         self._probe = None
         self._monitor = []
+        # Which channels this surface actually uses. Worth tracking because a
+        # controller can spread its decks and pads across several, and that set
+        # is what the LED probe should sweep.
+        self.seen = {}
 
     # ------------------------------------------------------------ plumbing
 
@@ -175,6 +179,12 @@ class MappingSession:
             return []
         self._monitor.extend(events)
         del self._monitor[:-200]
+        for ev in events:
+            ch = self.seen.setdefault(ev["channel"], {"note": set(), "cc": set()})
+            if ev["status"] in ("note_on", "note_off"):
+                ch["note"].add(ev["number"])
+            elif ev["status"] == "cc":
+                ch["cc"].add(ev["number"])
         if self._learn is not None:
             self._learn["events"].extend(events)
         if self._probe is not None:
@@ -257,6 +267,21 @@ class MappingSession:
         self._learn = None
         self.mode = "idle"
 
+    def mark_local_led(self, control_id, layer=None):
+        """Record that a control's LED is driven by the device, not the host.
+
+        The output-side twin of `silent`. Some LEDs are wired into the
+        firmware -- the Reloop Ready's MODE buttons are lit permanently and
+        simply brighten on press -- so no note will ever control them. Without
+        somewhere to write that down, the only evidence is an absence, and the
+        next person re-probes the whole range looking for it.
+        """
+        self.profile.set_binding(control_id, layer or self.layer, "output",
+                                 {"status": "local"})
+        c = self.profile.get(control_id) or {}
+        self.note(f"{c.get('label', control_id)}: LED is firmware-driven, "
+                  f"not host-addressable")
+
     def mark_silent(self, control_id, layer=None):
         """Record that a control emits nothing, which is a real finding.
 
@@ -270,28 +295,45 @@ class MappingSession:
 
     # --------------------------------------------------------------- probe
 
-    def build_probe_queue(self, lo=0, hi=127, channel=1, strategy="smart"):
-        """Order the notes to try. Prior knowledge first, then the sweep."""
+    def build_probe_queue(self, lo=0, hi=127, channels=(1,), strategy="smart"):
+        """Order the (channel, note) pairs to try. Prior knowledge first.
+
+        Channels are a list, not a single value. A controller that splits its
+        surface across channels -- decks on 1 and 2, pads on 5 and 6 -- puts its
+        LEDs on those same channels, and a one-channel sweep silently misses
+        most of them.
+        """
+        channels = [int(c) for c in (channels or (1,))] or [1]
         known = []
         for c in self.profile.controls:
             for _layer, b in (c.get("bindings") or {}).items():
                 inp = b.get("input")
                 if inp and inp.get("status") == "note":
-                    n = inp.get("number")
-                    if lo <= n <= hi and n not in known:
-                        known.append(n)
-        if strategy == "linear":
-            order = list(range(lo, hi + 1))
+                    pair = (int(inp.get("channel", 1)), inp.get("number"))
+                    if pair[0] in channels and lo <= pair[1] <= hi \
+                            and pair not in known:
+                        known.append(pair)
+        if strategy == "observed":
+            # Only the (channel, note) pairs this surface has actually emitted.
+            # A button's LED answers to the button's own note on nearly all
+            # gear, so the traffic already tells you where to look -- 41 sends
+            # instead of 896 for a controller using seven channels.
+            pairs = sorted(
+                (ch, n) for ch, d in self.seen.items()
+                for n in d["note"] if ch in channels and lo <= n <= hi)
+            order = known + [p for p in pairs if p not in known]
+        elif strategy == "linear":
+            order = [(ch, n) for ch in channels for n in range(lo, hi + 1)]
         else:
-            rest = [n for n in range(lo, hi + 1) if n not in known]
-            order = known + rest
-        return [{"note": n, "channel": channel,
-                 "prior": n in known} for n in order]
+            allpairs = [(ch, n) for ch in channels for n in range(lo, hi + 1)]
+            order = known + [p for p in allpairs if p not in known]
+        return [{"note": n, "channel": ch, "prior": (ch, n) in known}
+                for ch, n in order]
 
-    def start_probe(self, lo=0, hi=127, channel=1, strategy="smart",
+    def start_probe(self, lo=0, hi=127, channels=(1,), strategy="smart",
                     hold_ms=900):
         self._probe = {
-            "queue": self.build_probe_queue(lo, hi, channel, strategy),
+            "queue": self.build_probe_queue(lo, hi, channels, strategy),
             "index": -1,
             "hold_ms": hold_ms,
             "results": [],
@@ -302,9 +344,11 @@ class MappingSession:
         self.mode = "probe"
         q = self._probe["queue"]
         priors = sum(1 for x in q if x["prior"])
+        chans = sorted({x["channel"] for x in q})
         self.note(
-            f"LED probe: {len(q)} notes, {priors} already known as button inputs "
-            f"and tried first")
+            f"LED probe: {len(q)} sends across channel(s) "
+            f"{','.join(str(c) for c in chans)}, {priors} already known as "
+            f"button inputs and tried first")
         return self.probe_next()
 
     def probe_next(self):
@@ -342,7 +386,12 @@ class MappingSession:
         if cur is None:
             return self.probe_status()
         entry = {"note": cur["note"], "channel": cur["channel"],
-                 "control_id": control_id}
+                 "control_id": control_id, "index": p["index"],
+                 "layer": self.layer,
+                 # Kept so undo restores what was there rather than just
+                 # deleting: this control may already have had an LED.
+                 "previous": self.profile.binding(control_id, self.layer, "output")
+                 if control_id else None}
         p["results"].append(entry)
         if control_id:
             self.profile.set_binding(
@@ -353,11 +402,42 @@ class MappingSession:
             self.note(f"LED {c.get('label', control_id)} = note {cur['note']}")
         return self.probe_next()
 
+    def probe_undo(self):
+        """Take back the last answer and light that note again.
+
+        Clicking the wrong region is the one mistake this loop invites, and
+        without a way back it silently writes an LED onto the wrong control and
+        moves on. Undo puts the binding back the way it was and re-lights the
+        note so it can be answered again.
+        """
+        if self._probe is None:
+            return {"active": False}
+        p = self._probe
+        if not p["results"]:
+            self.note("nothing to undo")
+            return self.probe_status()
+        last = p["results"].pop()
+        cid = last.get("control_id")
+        if cid:
+            self.profile.set_binding(cid, last.get("layer", self.layer),
+                                     "output", last.get("previous"))
+            c = self.profile.get(cid) or {}
+            self.note(f"undid LED {c.get('label', cid)} = note {last['note']}")
+        else:
+            self.note(f"undid 'nothing lit' for note {last['note']}")
+        self._probe_off()
+        p["index"] = last["index"] - 1      # probe_next steps forward onto it
+        return self.probe_next()
+
     def probe_status(self, done=False):
         if self._probe is None:
             return {"active": False}
         p = self._probe
         cur = p.get("current")
+        last = p["results"][-1] if p["results"] else None
+        if last:
+            c = self.profile.get(last.get("control_id") or "") or {}
+            last = dict(last, control_label=c.get("label"))
         return {
             "active": not done,
             "done": done,
@@ -367,6 +447,7 @@ class MappingSession:
             "hold_ms": p["hold_ms"],
             "found": sum(1 for r in p["results"] if r["control_id"]),
             "answered": len(p["results"]),
+            "last": last,
         }
 
     def stop_probe(self):
@@ -395,6 +476,10 @@ class MappingSession:
         return True
 
     def state(self):
+        # Drain on every status poll, not just while learning. A jog wheel
+        # emits thousands of messages a minute, and if nothing is reading the
+        # backend queue they simply accumulate until someone opens Learn.
+        self.pump()
         return {
             "mode": self.mode,
             "layer": self.layer,
@@ -404,4 +489,16 @@ class MappingSession:
             "probe": self.probe_status() if self._probe else {"active": False},
             "stats": self.profile.stats(),
             "log": self.log[-30:],
+            "seen": self.seen_summary(),
         }
+
+    def seen_summary(self):
+        """Channels observed so far, with how many distinct numbers on each."""
+        return sorted(
+            ({"channel": ch,
+              "notes": len(d["note"]),
+              "ccs": len(d["cc"]),
+              "note_lo": min(d["note"]) if d["note"] else None,
+              "note_hi": max(d["note"]) if d["note"] else None}
+             for ch, d in self.seen.items()),
+            key=lambda d: d["channel"])

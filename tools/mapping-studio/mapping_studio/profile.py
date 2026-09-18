@@ -36,6 +36,11 @@ KINDS = ("knob", "encoder", "fader", "jog", "button", "pad", "switch", "led", "m
 # Controls that report a continuous position, as opposed to an event.
 CONTINUOUS = ("knob", "fader", "jog")
 
+# Binding statuses that record a finding rather than a MIDI address. Two
+# controls can both be silent, or both have firmware-driven LEDs, without
+# clashing -- there is no address for them to clash over.
+NON_ADDRESSABLE = ("silent", "local")
+
 
 class ProfileError(ValueError):
     pass
@@ -233,9 +238,28 @@ class Profile:
         for c in self.controls:
             for lname, b in (c.get("bindings") or {}).items():
                 inp = b.get("input")
-                if not inp:
+                if not inp or inp.get("status") in NON_ADDRESSABLE:
                     continue
                 key = (lname, inp.get("status"), inp.get("channel", 1), inp.get("number"))
+                claims.setdefault(key, []).append(c["id"])
+        return {k: v for k, v in claims.items() if len(v) > 1}
+
+    def output_collisions(self):
+        """LED notes claimed by more than one control.
+
+        Separate from input collisions because the causes differ: an input
+        clash means two controls really do send the same message, while an
+        output clash almost always means someone clicked the wrong region
+        during an LED probe.
+        """
+        claims = {}
+        for c in self.controls:
+            for lname, b in (c.get("bindings") or {}).items():
+                out = b.get("output")
+                if not out or out.get("status") in NON_ADDRESSABLE:
+                    continue
+                key = (lname, out.get("status", "note"), out.get("channel", 1),
+                       out.get("number"))
                 claims.setdefault(key, []).append(c["id"])
         return {k: v for k, v in claims.items() if len(v) > 1}
 
@@ -258,4 +282,5 @@ class Profile:
             "mapped_outputs": outputs,
             "targeted": targeted,
             "collisions": len(self.collisions()),
+            "output_collisions": len(self.output_collisions()),
         }

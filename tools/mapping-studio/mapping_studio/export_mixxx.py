@@ -138,6 +138,11 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
                     comments.append(
                         f"{label}: also emits {m} -- mirror, intentionally unbound")
 
+        if out and out.get("status") == "local":
+            comments.append(
+                f"{label}: LED is driven by the device firmware and cannot be "
+                f"addressed from the host, so no output is possible")
+            out = None
         if out and not target.get("group"):
             comments.append(
                 f"{label}: LED answers to note {out.get('number')} but no Mixxx "

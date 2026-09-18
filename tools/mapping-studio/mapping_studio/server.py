@@ -182,6 +182,14 @@ class Handler(BaseHTTPRequestHandler):
                 ok = s.profile.remove_control(body["id"])
                 s.dirty = True
                 return self._json({"deleted": ok})
+            if path == "/api/binding/clear":
+                # Drop one captured binding without touching the region or its
+                # Mixxx target -- the fix for an LED recorded on the wrong
+                # control, after the probe has moved on.
+                s.profile.set_binding(body["id"], body.get("layer") or sess.layer,
+                                      body.get("direction", "output"), None)
+                s.dirty = True
+                return self._json({"control": s.profile.get(body["id"])})
             if path == "/api/control/target":
                 c = s.profile.update_control(body["id"], {"target": body.get("target")})
                 s.dirty = True
@@ -207,6 +215,10 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/learn/cancel":
                 sess.cancel_learn()
                 return self._json({"ok": True})
+            if path == "/api/led/local":
+                sess.mark_local_led(body["control_id"], body.get("layer"))
+                s.dirty = True
+                return self._json({"ok": True})
             if path == "/api/silent":
                 sess.mark_silent(body["control_id"], body.get("layer"))
                 s.dirty = True
@@ -214,14 +226,22 @@ class Handler(BaseHTTPRequestHandler):
 
             # -- probe --------------------------------------------------
             if path == "/api/probe/start":
+                chans = body.get("channels")
+                if not chans:
+                    chans = [int(body.get("channel", 1))]
+                elif chans == "seen":
+                    chans = [d["channel"] for d in sess.seen_summary()] or [1]
                 return self._json(sess.start_probe(
                     lo=int(body.get("lo", 0)), hi=int(body.get("hi", 127)),
-                    channel=int(body.get("channel", 1)),
+                    channels=chans,
                     strategy=body.get("strategy", "smart"),
                     hold_ms=int(body.get("hold_ms", 900))))
             if path == "/api/probe/answer":
                 s.dirty = True
                 return self._json(sess.probe_answer(body.get("control_id")))
+            if path == "/api/probe/undo":
+                s.dirty = True
+                return self._json(sess.probe_undo())
             if path == "/api/probe/skip":
                 return self._json(sess.probe_next())
             if path == "/api/probe/stop":

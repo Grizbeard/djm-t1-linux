@@ -373,11 +373,18 @@ class RtMidiBackend(Backend):
 
         self._out = rtmidi.MidiOut()
         onames = self._out.get_ports()
-        oidx = self._match(onames, self.port)
+        # Resolve the output from the input port's NAME, never from its index.
+        # The two lists are numbered independently -- on Windows "Reloop Ready
+        # In" is input 5 while output 5 is an unrelated virtual port -- so
+        # reusing the index would quietly send LED probes to someone else's
+        # device.
+        oidx = self._match_output(onames, names[idx])
         if oidx is not None:
             self._out.open_port(oidx)
+            self.out_name = onames[oidx]
         else:
             self._out = None
+            self.out_name = None
         self._running = True
         self.status = f"connected to {names[idx]}"
 
@@ -390,6 +397,31 @@ class RtMidiBackend(Backend):
         for i, n in enumerate(names):
             if low in n.lower():
                 return i
+        return None
+
+    @staticmethod
+    def _core_name(name):
+        """Strip a host's decoration from a port name.
+
+        Windows gives '2- Reloop Ready In 5': a device-instance prefix, the
+        direction, and the port index. What identifies the device is what is
+        left after all three come off.
+        """
+        s = re.sub(r"^\s*\d+\s*-\s*", "", str(name))    # '2- ' instance prefix
+        s = re.sub(r"\s+\d+\s*$", "", s)                # trailing port index
+        s = re.sub(r"\b(in|out|input|output)\b", " ", s, flags=re.I)
+        return re.sub(r"\s+", " ", s).strip()
+
+    @classmethod
+    def _match_output(cls, onames, in_name):
+        core = cls._core_name(in_name)
+        if core:
+            for i, n in enumerate(onames):
+                if core.lower() == cls._core_name(n).lower():
+                    return i
+            for i, n in enumerate(onames):
+                if core.lower() in n.lower():
+                    return i
         return None
 
     def stop(self):

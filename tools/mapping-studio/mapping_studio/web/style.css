@@ -276,3 +276,12 @@ kbd {
 }
 #toast.show { opacity: 1; }
 #toast.bad { border-color: var(--bad); color: var(--bad); }
+
+/* A binding line carries its own clear button, because the mistake this tool
+   invites most is answering an LED probe with the wrong region. */
+.bindline { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+.bindline .clearbind {
+  margin-left: auto; font-size: 10px; padding: 1px 7px;
+  color: var(--text-faint); border-color: var(--line-soft);
+}
+.bindline .clearbind:hover { color: var(--bad); border-color: #ff5c7255; }

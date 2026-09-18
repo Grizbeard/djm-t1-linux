@@ -83,7 +83,6 @@
    "id": "button_3",
    "label": "BUTTON 3",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.6,
    "evidence": [
     "size recurs 6x on panel"
@@ -97,13 +96,22 @@
     "h": 4.919,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 9,
+      "number": 0,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "fx_on_button",
    "label": "FX ON Button",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.7,
    "evidence": [
     "size recurs 6x on panel",
@@ -118,13 +126,22 @@
     "h": 4.919,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 9,
+      "number": 1,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "button_4",
    "label": "BUTTON 4",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.6,
    "evidence": [
     "size recurs 6x on panel"
@@ -138,7 +155,17 @@
     "h": 4.919,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 9,
+      "number": 2,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "loop_encoder",
@@ -164,7 +191,6 @@
    "id": "gain",
    "label": "Gain",
    "kind": "knob",
-   "provisional": true,
    "confidence": 0.99,
    "evidence": [
     "4 concentric outlines",
@@ -178,7 +204,19 @@
     "cy": 17.339,
     "d": 13.078
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 22,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 68
+     }
+    }
+   }
   },
   {
    "id": "gain_2",
@@ -224,7 +262,6 @@
    "id": "button_5",
    "label": "BUTTON 5",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.6,
    "evidence": [
     "size recurs 6x on panel"
@@ -238,13 +275,22 @@
     "h": 4.919,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 10,
+      "number": 0,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "fx_on_button_2",
    "label": "FX ON Button",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.7,
    "evidence": [
     "size recurs 6x on panel",
@@ -259,13 +305,22 @@
     "h": 4.919,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 10,
+      "number": 1,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "button_6",
    "label": "BUTTON 6",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.6,
    "evidence": [
     "size recurs 6x on panel"
@@ -279,7 +334,17 @@
     "h": 4.919,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 10,
+      "number": 2,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "loop_encoder_2",
@@ -499,7 +564,6 @@
    "id": "track_load_button",
    "label": "Track Load Button",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.85,
    "evidence": [
     "2 concentric outlines",
@@ -515,13 +579,22 @@
     "h": 6.802,
     "round": true
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 15,
+      "number": 2,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "track_load_button_2",
    "label": "Track Load Button",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.85,
    "evidence": [
     "2 concentric outlines",
@@ -537,7 +610,17 @@
     "h": 6.802,
     "round": true
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 15,
+      "number": 3,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "button_11",
@@ -623,7 +706,6 @@
    "id": "headphones_cue_buttons",
    "label": "Headphones/Cue Buttons",
    "kind": "knob",
-   "provisional": true,
    "confidence": 0.99,
    "evidence": [
     "5 concentric outlines",
@@ -637,7 +719,17 @@
     "cy": 111.464,
     "d": 8.783
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 27,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "filter",
@@ -704,7 +796,6 @@
    "id": "headphones_cue_buttons_2",
    "label": "Headphones/Cue Buttons",
    "kind": "knob",
-   "provisional": true,
    "confidence": 0.99,
    "evidence": [
     "5 concentric outlines",
@@ -718,7 +809,17 @@
     "cy": 111.464,
     "d": 8.783
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 2,
+      "number": 27,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "button_15",
@@ -800,7 +901,6 @@
    "id": "vinyl",
    "label": "Vinyl",
    "kind": "knob",
-   "provisional": true,
    "confidence": 0.9,
    "evidence": [
     "2 concentric outlines",
@@ -814,13 +914,22 @@
     "cy": 127.317,
     "d": 7.396
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 15,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "key_lock",
    "label": "Key Lock",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.7,
    "evidence": [
     "size recurs 6x on panel",
@@ -835,13 +944,22 @@
     "h": 6.901,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 13,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "parameter_button",
    "label": "Parameter Button",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.7,
    "evidence": [
     "size recurs 6x on panel",
@@ -856,13 +974,22 @@
     "h": 6.901,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 40,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "button_19",
    "label": "BUTTON 19",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.6,
    "evidence": [
     "size recurs 6x on panel"
@@ -876,13 +1003,22 @@
     "h": 6.901,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 41,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "vinyl_2",
    "label": "Vinyl",
    "kind": "knob",
-   "provisional": true,
    "confidence": 0.9,
    "evidence": [
     "2 concentric outlines",
@@ -896,13 +1032,22 @@
     "cy": 127.317,
     "d": 7.396
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 2,
+      "number": 15,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "key_lock_2",
    "label": "Key Lock",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.7,
    "evidence": [
     "size recurs 6x on panel",
@@ -917,13 +1062,22 @@
     "h": 6.901,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 2,
+      "number": 13,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "parameter_button_2",
    "label": "Parameter Button",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.7,
    "evidence": [
     "size recurs 6x on panel",
@@ -938,13 +1092,22 @@
     "h": 6.901,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 40,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "button_20",
    "label": "BUTTON 20",
    "kind": "button",
-   "provisional": true,
    "confidence": 0.6,
    "evidence": [
     "size recurs 6x on panel"
@@ -958,7 +1121,17 @@
     "h": 6.901,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 41,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   },
   {
    "id": "fader",
@@ -979,14 +1152,9 @@
    "bindings": {}
   },
   {
-   "id": "fader_2",
-   "label": "FADER 2",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "mode_a",
+   "label": "MODE A",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -996,17 +1164,19 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "fader_3",
-   "label": "FADER 3",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "sync_a",
+   "label": "SYNC A",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -1016,17 +1186,23 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 2,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "fader_4",
-   "label": "FADER 4",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "cue_a",
+   "label": "CUE A",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -1036,17 +1212,23 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 1,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "fader_5",
-   "label": "FADER 5",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "play_a",
+   "label": "PLAY A",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -1056,17 +1238,23 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 0,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "fader_6",
-   "label": "FADER 6",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "mode_b",
+   "label": "MODE B",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -1076,17 +1264,19 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "fader_7",
-   "label": "FADER 7",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "sync_b",
+   "label": "SYNC B",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -1096,17 +1286,23 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 2,
+      "number": 2,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "fader_8",
-   "label": "FADER 8",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "cue_b",
+   "label": "CUE B",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -1116,17 +1312,23 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 2,
+      "number": 1,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "fader_9",
-   "label": "FADER 9",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 8x on panel"
-   ],
+   "id": "play_b",
+   "label": "PLAY B",
+   "kind": "button",
    "tier": "control",
    "shape": {
     "type": "rect",
@@ -1136,7 +1338,418 @@
     "h": 9.378,
     "round": false
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 2,
+      "number": 0,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B"
+  },
+  {
+   "id": "pad_a1",
+   "label": "PAD A1",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 22.4,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 20,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_a2",
+   "label": "PAD A2",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 48.6,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 21,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_a3",
+   "label": "PAD A3",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 74.9,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 22,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_a4",
+   "label": "PAD A4",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 101.1,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 23,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_a5",
+   "label": "PAD A5",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 22.4,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 24,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_a6",
+   "label": "PAD A6",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 48.6,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 25,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_a7",
+   "label": "PAD A7",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 74.9,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 26,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_a8",
+   "label": "PAD A8",
+   "kind": "pad",
+   "section": "Deck A pads",
+   "shape": {
+    "type": "rect",
+    "cx": 101.1,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 5,
+      "number": 27,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b1",
+   "label": "PAD B1",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 217.1,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 20,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b2",
+   "label": "PAD B2",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 243.3,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 21,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b3",
+   "label": "PAD B3",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 269.6,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 22,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b4",
+   "label": "PAD B4",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 295.8,
+    "cy": 152.7,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 23,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b5",
+   "label": "PAD B5",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 217.1,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 24,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b6",
+   "label": "PAD B6",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 243.3,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 25,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b7",
+   "label": "PAD B7",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 269.6,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 26,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "pad_b8",
+   "label": "PAD B8",
+   "kind": "pad",
+   "section": "Deck B pads",
+   "shape": {
+    "type": "rect",
+    "cx": 295.8,
+    "cy": 177.0,
+    "w": 24.0,
+    "h": 22.0,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "note",
+      "channel": 6,
+      "number": 27,
+      "on": 127,
+      "off": 0
+     }
+    }
+   }
   }
  ],
  "controller_id": "Reloop Ready",

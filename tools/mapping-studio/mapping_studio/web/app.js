@@ -320,6 +320,7 @@ function renderEditor() {
     ${describeBindings(c)}
     <div class="row" style="margin-top:14px">
       <button id="e-save" class="primary">Apply</button>
+      <button id="e-led-local" class="ghost">LED is firmware-driven</button>
       <button id="e-del" class="ghost danger">Delete</button>
     </div>`;
 
@@ -347,20 +348,52 @@ function renderEditor() {
     select(null);
     toast('Deleted');
   };
+  $('#e-led-local').onclick = async () => {
+    await api('/api/led/local', { control_id: c.id });
+    await refreshProfile();
+    select(c.id);
+    toast('Recorded: LED is firmware-driven');
+  };
+  wireClearButtons(c.id);
 }
 
 function describeBindings(c) {
   const out = [];
+  const clear = (layer, dir) =>
+    `<button class="clearbind sm ghost" data-layer="${esc(layer)}"
+       data-dir="${dir}" title="clear this binding">clear</button>`;
   for (const [layer, b] of Object.entries(c.bindings || {})) {
     const i = b.input, o = b.output;
     if (i) {
-      out.push(i.status === 'silent'
-        ? `<div class="mono" style="color:var(--text-faint)">${layer}: sends no MIDI</div>`
-        : `<div class="mono" style="color:var(--ok)">${layer} in: ${i.status} ${i.number} ch${i.channel}${i.mode ? ' · ' + i.mode : ''}</div>`);
+      out.push(`<div class="bindline mono" style="color:${
+        i.status === 'silent' ? 'var(--text-faint)' : 'var(--ok)'}">${
+        i.status === 'silent'
+          ? `${layer}: sends no MIDI`
+          : `${layer} in: ${i.status} ${i.number} ch${i.channel}${
+              i.mode ? ' · ' + i.mode : ''}`}${clear(layer, 'input')}</div>`);
     }
-    if (o) out.push(`<div class="mono" style="color:var(--led)">${layer} LED: note ${o.number}</div>`);
+    if (o && o.status === 'local') {
+      out.push(`<div class="bindline mono" style="color:var(--text-faint)">${
+        layer} LED: firmware-driven${clear(layer, 'output')}</div>`);
+    } else if (o) {
+      out.push(`<div class="bindline mono" style="color:var(--led)">${
+        layer} LED: note ${o.number} ch${o.channel || 1}${
+        clear(layer, 'output')}</div>`);
+    }
   }
   return out.length ? `<div class="field" style="margin-top:10px">${out.join('')}</div>` : '';
+}
+
+function wireClearButtons(controlId) {
+  $$('#editor .clearbind').forEach(btn => {
+    btn.onclick = async () => {
+      await api('/api/binding/clear', {
+        id: controlId, layer: btn.dataset.layer, direction: btn.dataset.dir });
+      await refreshProfile();
+      select(controlId);
+      toast('Binding cleared');
+    };
+  });
 }
 
 const fmt = n => (n === undefined || n === null) ? '?' : (+n).toFixed(1);
@@ -454,10 +487,22 @@ function showCapture(res) {
 
 /* ------------------------------------------------------------- probe pane */
 
+function probeChannels() {
+  // "seen" means whatever channels this surface has actually used, which is
+  // the right default: a controller that splits decks and pads across
+  // channels hides its LEDs on those same channels.
+  const raw = ($('#pch').value || 'seen').trim().toLowerCase();
+  if (!raw || raw === 'seen' || raw === 'auto') return 'seen';
+  const list = raw.split(/[,\s]+/).map(Number)
+    .filter(n => Number.isInteger(n) && n >= 1 && n <= 16);
+  return list.length ? list : 'seen';
+}
+
 async function startProbe() {
   S.probe = await api('/api/probe/start', {
-    lo: +$('#plo').value, hi: +$('#phi').value, channel: +$('#pch').value,
-    strategy: $('#psmart').checked ? 'smart' : 'linear',
+    lo: +$('#plo').value, hi: +$('#phi').value,
+    channels: probeChannels(),
+    strategy: $('#pstrat').value,
   });
   $('#probesetup').hidden = true;
   $('#probebox').hidden = false;
@@ -468,6 +513,13 @@ async function answerProbe(controlId) {
   S.probe = await api('/api/probe/answer', { control_id: controlId || null });
   await refreshProfile();
   renderProbe();
+}
+
+async function undoProbe() {
+  S.probe = await api('/api/probe/undo', {});
+  await refreshProfile();
+  renderProbe();
+  toast('Undone — that note is lit again');
 }
 
 function renderProbe() {
@@ -490,15 +542,22 @@ function renderProbe() {
     <div class="probing">
       <div class="counter">${p.index + 1} / ${p.total} · found ${p.found}</div>
       <div class="note-num">note ${cur.note}</div>
+      <div class="prior">channel ${cur.channel} · 0x${
+        Number(cur.note).toString(16).toUpperCase().padStart(2, '0')}</div>
       <div class="ask">Which region just lit up?</div>
       ${cur.prior ? '<div class="prior">a button already sends this note</div>' : ''}
       <div class="progress"><i style="width:${(p.index / p.total * 100).toFixed(1)}%"></i></div>
       <div class="acts">
         <button id="p-none" class="ghost">Nothing lit</button>
+        <button id="p-undo" class="ghost"${p.answered ? '' : ' disabled'}>Undo last</button>
         <button id="p-stop" class="ghost danger">Stop</button>
       </div>
+      ${p.last ? `<div class="prior" style="margin-top:9px">last: note ${
+        p.last.note} ch${p.last.channel} &rarr; ${
+        esc(p.last.control_label || 'nothing lit')}</div>` : ''}
     </div>`;
   $('#p-none').onclick = () => answerProbe(null);
+  $('#p-undo').onclick = undoProbe;
   $('#p-stop').onclick = async () => {
     await api('/api/probe/stop', {});
     S.probe = null; box.hidden = true; $('#probesetup').hidden = false;
@@ -639,9 +698,41 @@ async function poll() {
     if (st.learn && st.learn.active) { S.learn = st.learn; renderLearn(); }
     else if (S.learn && S.learn.active) { S.learn = null; renderLearn(); }
 
+    // The probe lives on the server, so adopt its state rather than trusting
+    // ours: this page may have been reloaded mid-pass, or the pass may have
+    // been started from elsewhere. Without this the panel is clickable but
+    // shows no prompt, which looks like the probe is broken.
+    if (st.probe && st.probe.active) {
+      const cur = S.probe && S.probe.current;
+      const now = st.probe.current;
+      const changed = !S.probe || !cur || !now || cur.note !== now.note
+        || S.probe.index !== st.probe.index;
+      S.probe = st.probe;
+      if (changed) {
+        $('#probesetup').hidden = true;
+        $('#probebox').hidden = false;
+        renderProbe();
+      }
+    } else if (S.probe && S.probe.active) {
+      S.probe = null;
+      $('#probebox').hidden = true;
+      $('#probesetup').hidden = false;
+      hint('');
+    }
+
     $('#log').innerHTML = (st.log || []).slice(-24)
       .map(l => `<div>${esc(l.text)}</div>`).join('');
     $('#log').scrollTop = 1e6;
+
+    const sh = $('#seenhint');
+    if (sh) {
+      const seen = st.seen || [];
+      sh.textContent = seen.length
+        ? 'seen so far: ' + seen.map(s =>
+            `ch${s.channel} (${s.notes} notes${
+              s.note_lo === null ? '' : ` ${s.note_lo}-${s.note_hi}`})`).join(', ')
+        : 'nothing seen yet — press a few buttons and they will be listed here.';
+    }
 
     if (S.mode === 'learn') {
       const m = await api('/api/monitor?limit=28');

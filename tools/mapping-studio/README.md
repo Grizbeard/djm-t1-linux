@@ -67,10 +67,36 @@ analysed rather than just recorded, which is where the useful part is:
   The DJM-T1's master, booth and headphone knobs are analogue; writing that down
   is what stops the next person re-testing them.
 
-**LEDs** — the studio lights one note and asks which region lit. Notes already
-captured as button inputs are tried first, because on most gear a button's LED
-answers to the button's own note. Where that convention holds, the output map
-falls out in the first few dozen sends rather than after all 128.
+**LEDs** — the studio lights one note and asks which region lit.
+
+Probing sweeps **channels, plural**. A controller can split its surface across
+several: the Reloop Ready puts deck transport on channels 1 and 2, the eight
+pads per deck on 5 and 6, and more on 9, 10 and 15. Its LEDs live on those same
+channels, so a single-channel sweep silently finds almost nothing. `channels`
+defaults to `seen` — whatever channels the surface has actually transmitted on
+this session.
+
+Three strategies, and the default is not a sweep:
+
+| Strategy | Sends | When |
+|---|---|---|
+| `observed` (default) | only (channel, note) pairs the controller has emitted | a button's LED answers to its own note on nearly all gear, so the traffic already says where to look |
+| `smart` | full sweep, known button notes first | when `observed` missed LEDs that no button drives |
+| `linear` | full sweep, in order | last resort |
+
+On the Reloop Ready that is **41 sends instead of 896**. Press the buttons
+first: `observed` is built from what it heard.
+
+Clicking the wrong region is the mistake this loop invites, so **Undo last**
+restores the previous binding and re-lights that note. The panel also shows
+`last: note N chC -> PAD A2` as you go, and a note claimed by two controls is
+reported by `info` as an output collision, which is nearly always a mis-click.
+
+Not every LED can be driven. The Reloop Ready's MODE buttons are lit
+permanently by the device and merely brighten on press. Mark those **LED is
+firmware-driven**: it is the output-side twin of `silent`, it exports as a
+comment rather than an `<output>`, and it stops the next person sweeping 128
+notes looking for something that was never addressable.
 
 **Assign** — choose what each captured control drives in Mixxx. Deliberately
 separate from the capture: changing your mind about what a button does must
@@ -226,22 +252,31 @@ only).
 |---|---|
 | Region auto-detection from vector art | ✅ working; faders need a human |
 | Layout editing | ✅ |
-| Input learn, with mirror and relative detection | ✅ logic tested; **not yet run against hardware** |
-| LED probe loop | ✅ logic tested; **not yet run against hardware** |
+| Input learn, with mirror and relative detection | ✅ run against a Reloop Ready |
+| LED probe loop | ✅ run against a Reloop Ready: 40 LEDs in one pass |
 | Mixxx XML + script export | ✅ validated against the hand-written mapping |
 | SHIFT layer capture | ✅ supported; nobody has done the pass yet |
-| Reloop Ready profile | 🟡 geometry only, 56 regions, no bindings |
+| Reloop Ready profile | 🟡 72 regions, 40 LEDs mapped, inputs barely started |
 
 `profiles/reloop-ready.json` is geometry derived from the plan view in the
 Reloop Ready instruction manual (article 243598), named through the manual's own
 callout legend. Scaling it by the published 325 mm width reproduces the
 published 220 mm depth to 0.9%, which is the check that says the drawing is a
-true projection rather than a stylised one. Nothing on it is bound: no one has
-run a learn pass on that hardware. Jog wheels and faders still need placing by
-hand.
+true projection rather than a stylised one. Jog wheels and faders still need
+placing by hand; the 16 pads were placed by hand because the plan view does not
+draw them as findable shapes.
 
-The hardware-facing halves have been exercised end to end against the offline
-backend only. The ALSA reader is the mechanism `tools/calibrate.py` already
-proves out on this mixer, and the sender is the one `tools/probe-leds.sh` uses,
-but neither has been run against a DJM-T1 from this tool yet. Expect the first
-session on real hardware to find something.
+Its LED map came out of one probe pass and is regular enough to trust: pads A1-A8
+answer to notes 20-27 on channel 5, pads B1-B8 to the same notes on channel 6,
+and PLAY/CUE/SYNC to notes 0/1/2 on channels 1 and 2. Inputs are almost entirely
+unmapped -- only the left GAIN knob (CC 0x16) has been learned.
+
+The hardware that taught this tool about channels: the Reloop Ready spreads its
+surface over channels 1, 2, 5, 6, 9, 10 and 15.
+
+Both hardware-facing halves have now been run against a real controller: a
+Reloop Ready over the rtmidi backend on Windows, where the learn loop captured
+a full knob sweep and one LED pass identified 40 outputs. The DJM-T1 side is
+still offline-only -- the ALSA reader is the mechanism `tools/calibrate.py`
+already proves on that mixer, and the sender is `tools/probe-leds.sh`'s, but
+neither has been driven from this tool against a DJM-T1 yet.

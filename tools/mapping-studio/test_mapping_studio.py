@@ -220,6 +220,18 @@ class TestProfile(unittest.TestCase):
                       {"status": "note", "channel": 1, "number": 13})
         self.assertEqual(p.collisions(), {})
 
+    def test_findings_are_not_addresses_and_cannot_collide(self):
+        # 'silent' and 'local' record that there is no address, so any number
+        # of controls can carry them. Treating them as addresses reported every
+        # analogue knob on a mixer as clashing with every other one.
+        p = self.make()
+        p.set_binding("a", "base", "input", {"status": "silent"})
+        p.set_binding("b", "base", "input", {"status": "silent"})
+        p.set_binding("a", "base", "output", {"status": "local"})
+        p.set_binding("b", "base", "output", {"status": "local"})
+        self.assertEqual(p.collisions(), {})
+        self.assertEqual(p.output_collisions(), {})
+
     def test_editing_a_control_clears_its_provisional_flag(self):
         p = self.make()
         p.update_control("a", {"provisional": True, "confidence": 0.5})
@@ -288,6 +300,30 @@ class TestExport(unittest.TestCase):
         xml, _js, _fn = export_mixxx.export(p)
         self.assertIn("MASTER LEVEL", xml)
         self.assertIn("sends no MIDI", xml)
+
+    def test_firmware_driven_led_is_recorded_not_exported(self):
+        # The Reloop Ready's MODE buttons are lit permanently by the device and
+        # brighten on press; no note will ever drive them. Saying so has to
+        # survive into the mapping, or the absence looks like unfinished work.
+        p = self.make()
+        p.add_control({"id": "mode", "label": "MODE A", "kind": "button",
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 9, "h": 9},
+                       "target": {"group": "[Channel1]", "key": "pfl"}})
+        p.set_binding("mode", "base", "output", {"status": "local"})
+        xml, _js, _fn = export_mixxx.export(p)
+        ET.fromstring(xml)
+        self.assertIn("firmware", xml)
+        self.assertEqual(len(ET.fromstring(xml).findall(".//outputs/output")), 0)
+
+    def test_two_controls_claiming_one_led_note_is_reported(self):
+        p = self.make()
+        p.add_control({"id": "a2", "label": "A2", "kind": "button",
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 9, "h": 9}})
+        out = {"status": "note", "channel": 2, "number": 13}
+        p.set_binding("fader", "base", "output", dict(out))
+        p.set_binding("a2", "base", "output", dict(out))
+        self.assertEqual(len(p.output_collisions()), 1)
+        self.assertEqual(p.collisions(), {})   # inputs are unaffected
 
     def test_captured_but_unassigned_control_is_noted(self):
         p = self.make()
