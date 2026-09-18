@@ -39,12 +39,12 @@ def _comment_safe(text):
 
     A double hyphen may not appear in a comment and a comment may not end in
     one, which matters here because the capture notes are written in prose and
-    use ' -- ' freely.
+    use ' -- ' freely. Collapse to a single hyphen rather than substituting an
+    en dash: this file is parsed by Mixxx, and there is no reason to put a
+    non-ASCII character into it for the sake of a comment.
     """
-    s = str(text).replace("--", "–")
-    while s.endswith("-"):
-        s = s[:-1] + "–"
-    return s
+    s = re.sub(r"-{2,}", "-", str(text))
+    return s.rstrip("-") if s.endswith("-") else s
 
 
 def _status_for(binding):
