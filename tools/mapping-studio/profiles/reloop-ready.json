@@ -367,46 +367,6 @@
    "bindings": {}
   },
   {
-   "id": "button_7",
-   "label": "BUTTON 7",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 38.522,
-    "cy": 35.568,
-    "w": 10.078,
-    "h": 5.819,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_8",
-   "label": "BUTTON 8",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 233.212,
-    "cy": 35.568,
-    "w": 10.078,
-    "h": 5.819,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
    "id": "knob",
    "label": "KNOB",
    "kind": "knob",
@@ -441,82 +401,6 @@
     "cx": 170.982,
     "cy": 41.118,
     "d": 13.078
-   },
-   "bindings": {}
-  },
-  {
-   "id": "knob_3",
-   "label": "KNOB 3",
-   "kind": "knob",
-   "provisional": true,
-   "confidence": 0.55,
-   "evidence": [
-    "size recurs 2x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "circle",
-    "cx": 92.83,
-    "cy": 41.276,
-    "d": 8.218
-   },
-   "bindings": {}
-  },
-  {
-   "id": "knob_4",
-   "label": "KNOB 4",
-   "kind": "knob",
-   "provisional": true,
-   "confidence": 0.55,
-   "evidence": [
-    "size recurs 2x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "circle",
-    "cx": 287.519,
-    "cy": 41.276,
-    "d": 8.218
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_9",
-   "label": "BUTTON 9",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 104.183,
-    "cy": 56.902,
-    "w": 4.733,
-    "h": 10.632,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_10",
-   "label": "BUTTON 10",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 298.873,
-    "cy": 56.902,
-    "w": 4.734,
-    "h": 10.632,
-    "round": true
    },
    "bindings": {}
   },
@@ -621,86 +505,6 @@
      }
     }
    }
-  },
-  {
-   "id": "button_11",
-   "label": "BUTTON 11",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 104.183,
-    "cy": 94.689,
-    "w": 4.733,
-    "h": 10.632,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_12",
-   "label": "BUTTON 12",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 298.873,
-    "cy": 94.689,
-    "w": 4.734,
-    "h": 10.632,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_13",
-   "label": "BUTTON 13",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 2x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 24.168,
-    "cy": 103.099,
-    "w": 6.84,
-    "h": 9.415,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_14",
-   "label": "BUTTON 14",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 2x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 218.858,
-    "cy": 103.099,
-    "w": 6.84,
-    "h": 9.415,
-    "round": true
-   },
-   "bindings": {}
   },
   {
    "id": "headphones_cue_buttons",
@@ -820,82 +624,6 @@
      }
     }
    }
-  },
-  {
-   "id": "button_15",
-   "label": "BUTTON 15",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 38.522,
-    "cy": 116.024,
-    "w": 10.079,
-    "h": 5.819,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_16",
-   "label": "BUTTON 16",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 4x on panel"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 233.212,
-    "cy": 116.024,
-    "w": 10.079,
-    "h": 5.819,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_17",
-   "label": "BUTTON 17",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.3,
-   "evidence": [],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 156.874,
-    "cy": 125.662,
-    "w": 17.648,
-    "h": 4.802,
-    "round": true
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_18",
-   "label": "BUTTON 18",
-   "kind": "button",
-   "provisional": true,
-   "confidence": 0.3,
-   "evidence": [],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 167.69,
-    "cy": 125.661,
-    "w": 4.889,
-    "h": 4.802,
-    "round": false
-   },
-   "bindings": {}
   },
   {
    "id": "vinyl",
@@ -1132,24 +860,6 @@
      }
     }
    }
-  },
-  {
-   "id": "fader",
-   "label": "FADER",
-   "kind": "fader",
-   "provisional": true,
-   "confidence": 0.3,
-   "evidence": [],
-   "tier": "control",
-   "shape": {
-    "type": "rect",
-    "cx": 256.437,
-    "cy": 132.506,
-    "w": 31.938,
-    "h": 5.042,
-    "round": false
-   },
-   "bindings": {}
   },
   {
    "id": "mode_a",
@@ -1750,6 +1460,72 @@
      }
     }
    }
+  },
+  {
+   "label": "Jog Rotation A",
+   "kind": "jog",
+   "shape": {
+    "type": "circle",
+    "cx": 61.75,
+    "cy": 75.8,
+    "d": 100.5
+   },
+   "id": "jog_rotation_a",
+   "bindings": {},
+   "section": "Deck A Jog"
+  },
+  {
+   "label": "Jog Rotation B",
+   "kind": "jog",
+   "shape": {
+    "type": "circle",
+    "cx": 256.44,
+    "cy": 75.8,
+    "d": 100.5
+   },
+   "id": "jog_rotation_b",
+   "bindings": {},
+   "section": "Deck B Jog"
+  },
+  {
+   "label": "Jog Touch A",
+   "kind": "button",
+   "shape": {
+    "type": "circle",
+    "cx": 61.75,
+    "cy": 75.8,
+    "d": 82.0
+   },
+   "id": "jog_touch_a",
+   "bindings": {},
+   "section": "Deck A Jog"
+  },
+  {
+   "label": "Jog Touch B",
+   "kind": "button",
+   "shape": {
+    "type": "circle",
+    "cx": 256.44,
+    "cy": 75.8,
+    "d": 82.0
+   },
+   "id": "jog_touch_b",
+   "bindings": {},
+   "section": "Deck B Jog"
+  },
+  {
+   "label": "Browse",
+   "kind": "encoder",
+   "shape": {
+    "type": "rect",
+    "cx": 159.4,
+    "cy": 142.81,
+    "w": 14,
+    "h": 9,
+    "round": true
+   },
+   "id": "browse",
+   "bindings": {}
   }
  ],
  "controller_id": "Reloop Ready",

@@ -307,12 +307,17 @@ function renderEditor() {
     </div>
     <label class="chk"><input type="checkbox" id="e-detent"
       ${c.detent ? 'checked' : ''}> has a centre detent</label>
-    <div class="field" style="margin-top:12px"><label>Geometry (mm)</label>
-      <div class="mono" style="color:var(--text-faint)">
-        ${sh.type === 'circle'
-          ? `circle ⌀${fmt(sh.d)} at ${fmt(sh.cx)}, ${fmt(sh.cy)}`
-          : `rect ${fmt(sh.w)}×${fmt(sh.h)} at ${fmt(sh.cx)}, ${fmt(sh.cy)}`}
+    <div class="row" style="margin-top:12px">
+      <div class="field" style="flex:1;margin-bottom:0"><label>Shape</label>
+        <select id="e-shape">
+          <option value="rect"${sh.type !== 'circle' ? ' selected' : ''}>rectangle</option>
+          <option value="circle"${sh.type === 'circle' ? ' selected' : ''}>circle</option>
+        </select>
       </div>
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label>Geometry (mm)</label>
+      <div class="row" id="e-geom">${geomFields(sh)}</div>
     </div>
     ${c.provisional ? `<div class="note">Guessed by the first pass
       (confidence ${(c.confidence || 0).toFixed(2)}).
@@ -324,6 +329,12 @@ function renderEditor() {
       <button id="e-del" class="ghost danger">Delete</button>
     </div>`;
 
+  // Swapping shape re-renders just the geometry row, carrying the size over.
+  $('#e-shape').onchange = () => {
+    const next = readShape(c.shape || {});
+    $('#e-geom').innerHTML = geomFields(next);
+  };
+
   $('#e-save').onclick = async () => {
     const newId = $('#e-id').value.trim();
     const patch = {
@@ -331,6 +342,7 @@ function renderEditor() {
       kind: $('#e-kind').value,
       section: $('#e-section').value || null,
       detent: $('#e-detent').checked || null,
+      shape: readShape(c.shape || {}),
     };
     await api('/api/control/update', { id: c.id, patch });
     let finalId = c.id;
@@ -396,19 +408,53 @@ function wireClearButtons(controlId) {
   });
 }
 
+/* Geometry is typed, not just dragged. Dragging is fine for nudging a
+   detected region, but placing a 90 mm jog wheel or a fader on a panel whose
+   dimensions are known to a tenth of a millimetre wants numbers. */
+function geomFields(sh) {
+  const num = (id, label, v, step = 0.1) =>
+    `<label>${label} <input type="number" id="${id}" step="${step}"
+       value="${(+v || 0).toFixed(1)}"></label>`;
+  const common = num('e-cx', 'x', sh.cx) + num('e-cy', 'y', sh.cy);
+  return sh.type === 'circle'
+    ? common + num('e-d', '⌀', sh.d != null ? sh.d : 16)
+    : common + num('e-w', 'w', sh.w != null ? sh.w : 14)
+             + num('e-h', 'h', sh.h != null ? sh.h : 9);
+}
+
+/* Converting between shapes keeps the area roughly, so a region does not jump
+   in size when you change your mind about what it is. */
+function readShape(prev) {
+  const type = $('#e-shape').value;
+  const cx = +$('#e-cx').value, cy = +$('#e-cy').value;
+  if (type === 'circle') {
+    const d = $('#e-d') ? +$('#e-d').value
+      : Math.max(2, ((+prev.w || 14) + (+prev.h || 9)) / 2);
+    return { type: 'circle', cx, cy, d: Math.max(1, d) };
+  }
+  const w = $('#e-w') ? +$('#e-w').value : Math.max(2, +prev.d || 16);
+  const h = $('#e-h') ? +$('#e-h').value : Math.max(2, +prev.d || 16);
+  return { type: 'rect', cx, cy, w: Math.max(1, w), h: Math.max(1, h),
+           round: prev.round !== false };
+}
+
 const fmt = n => (n === undefined || n === null) ? '?' : (+n).toFixed(1);
 const esc = s => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
-async function addControl() {
+async function addControl(type = 'rect') {
   const p = S.profile.panel;
+  const circle = type === 'circle';
   const c = await api('/api/control/add', {
-    label: 'New control', kind: 'button',
-    shape: { type: 'rect', cx: p.w / 2, cy: p.h / 2, w: 14, h: 9, round: true },
+    label: circle ? 'New knob' : 'New button',
+    kind: circle ? 'knob' : 'button',
+    shape: circle
+      ? { type: 'circle', cx: p.w / 2, cy: p.h / 2, d: 16 }
+      : { type: 'rect', cx: p.w / 2, cy: p.h / 2, w: 14, h: 9, round: true },
   });
   await refreshProfile();
   select(c.control.id);
-  toast('Added — drag it into place');
+  toast(`Added a ${circle ? 'circle' : 'rectangle'} — drag it into place`);
 }
 
 /* ------------------------------------------------------------- learn pane */
@@ -820,7 +866,9 @@ function wire() {
     if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
     if (e.key === 'Escape') { select(null); }
     else if (e.key === 'n' || e.key === 'N') {
-      if (S.mode === 'layout') addControl();
+      if (S.mode === 'layout') addControl('rect');
+    } else if (e.key === 'c' || e.key === 'C') {
+      if (S.mode === 'layout') addControl('circle');
     } else if ((e.key === 'Delete' || e.key === 'Backspace') && S.sel
                && S.mode === 'layout') {
       api('/api/control/delete', { id: S.sel })
