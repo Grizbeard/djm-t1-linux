@@ -98,6 +98,37 @@ firmware-driven**: it is the output-side twin of `silent`, it exports as a
 comment rather than an `<output>`, and it stops the next person sweeping 128
 notes looking for something that was never addressable.
 
+### Colour pads
+
+A probe that only ever sends velocity 127 can discover *which* note lights a
+pad, never what colour it shows. Controllers with RGB pads usually pack the
+components into the velocity byte; there is no standard for it, but the shape
+recurs.
+
+The Reloop Ready's was recovered the same way everything else here works --
+light something, ask a human what they see:
+
+    velocity = bright<<6 | R<<4 | G<<2 | B          R, G, B each 0..3
+
+Two bits per channel, 64 colours, one brightness bit that leaves hue alone. It
+was confirmed by *prediction*: eight pure colours computed from the model, sent
+without ever having been tried, all correct.
+
+What a profile stores is the **encoding, not a palette**. A table describes one
+controller; an encoding describes a family, and a device with a different depth
+or component order is the same code with different numbers. An encoding too
+wide for a velocity is refused rather than silently truncated.
+
+Pick a colour in the Layout pane and it appears on the pad immediately, which is
+the only way to be sure the encoding is right for a given device. Export emits a
+`colourValue` / `setPadColour` helper plus named constants, because Mixxx's
+`<output>` carries a single on-value and cannot express colour at all -- the
+mapping declares the script file even when nothing else is script-bound.
+
+Not every LED is addressable, and not every addressable one is RGB. The Reloop's
+MODE, CUE and PLAY are fixed-colour (blue, red, green); marking them `rgb: false`
+records that so nobody tries to colour them later.
+
 **Assign** — choose what each captured control drives in Mixxx. Deliberately
 separate from the capture: changing your mind about what a button does must
 never cost you the measurement of what it emits.

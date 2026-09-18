@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from mapping_studio import autodetect, export_mixxx, midi, svgpath  # noqa: E402
+from mapping_studio import autodetect, colour, export_mixxx, midi, svgpath  # noqa: E402
 from mapping_studio.profile import Profile, ProfileError            # noqa: E402
 from mapping_studio.session import analyse                          # noqa: E402
 
@@ -346,6 +346,115 @@ class TestExport(unittest.TestCase):
         xml, js, _fn = export_mixxx.export(p)
         self.assertIn("<script-binding/>", xml)
         self.assertIn("engine.getValue(\"[Channel1]\", \"pfl\") ? 0 : 1", js)
+
+
+class TestColour(unittest.TestCase):
+    """Pinned against colours actually observed on a Reloop Ready."""
+
+    # Velocity -> what the panel showed, read off the hardware.
+    OBSERVED = [
+        (64, 0, 0, 0, "off"),
+        (68, 0, 1, 0, "dim green"),
+        (76, 0, 3, 0, "green"),
+        (80, 1, 0, 0, "dim red"),
+        (88, 1, 2, 0, "lime"),
+        (100, 2, 1, 0, "yellow-orange"),
+        (104, 2, 2, 0, "yellow"),
+        (112, 3, 0, 0, "bright red"),
+        (124, 3, 3, 0, "yellow"),
+        (127, 3, 3, 3, "white"),
+    ]
+
+    def test_encoding_reproduces_observed_velocities(self):
+        for vel, r, g, b, seen in self.OBSERVED:
+            got = colour.encode(r / 3, g / 3, b / 3, bright=True)
+            self.assertEqual(got, vel, f"{seen}: expected {vel}, got {got}")
+
+    def test_decode_round_trips(self):
+        for vel, r, g, b, _seen in self.OBSERVED:
+            dr, dg, db, bright = colour.decode(vel)
+            self.assertTrue(bright)
+            self.assertEqual(
+                [round(dr * 3), round(dg * 3), round(db * 3)], [r, g, b])
+
+    def test_low_range_explains_the_early_readings(self):
+        # Before the encoding was understood these looked like an unordered
+        # palette. They are just the same packing with the brightness bit clear.
+        self.assertEqual(colour.named("blue", bright=False), 3)
+        self.assertEqual(colour.named("pink", bright=False), 54)   # seen as pink
+        self.assertEqual(colour.named("white", bright=False), 63)
+
+    def test_brightness_bit_does_not_change_hue(self):
+        for name in ("red", "green", "blue", "magenta"):
+            hi = colour.named(name, bright=True)
+            lo = colour.named(name, bright=False)
+            self.assertEqual(hi - lo, 64)
+            self.assertEqual(colour.decode(hi)[:3], colour.decode(lo)[:3])
+
+    def test_palette_covers_every_colour_exactly_once(self):
+        p = colour.palette()
+        self.assertEqual(len(p), 4 ** 3)
+        self.assertEqual(len({x["velocity"] for x in p}), 64)
+
+    def test_encoding_is_not_hardcoded_to_this_device(self):
+        # A device with the components in a different order, and no brightness
+        # bit, is the same code with different numbers. That is the point of
+        # storing the encoding rather than a scanned table.
+        led = {"levels": 4, "shift": {"r": 0, "g": 2, "b": 4}, "bright_bit": None}
+        self.assertEqual(colour.encode(1.0, 0, 0, led=led), 3)
+        self.assertEqual(colour.encode(0, 1.0, 0, led=led), 3 << 2)
+        self.assertEqual(colour.encode(0, 0, 1.0, led=led), 3 << 4)
+        self.assertEqual(len(colour.palette(led)), 4 ** 3)
+
+    def test_an_encoding_too_wide_for_a_velocity_is_refused(self):
+        # Three bits per channel is nine bits and cannot fit in the seven a
+        # velocity has. Better to fail loudly than to emit a truncated colour.
+        led = {"levels": 8, "shift": {"r": 0, "g": 3, "b": 6}, "bright_bit": None}
+        with self.assertRaises(colour.ColourError):
+            colour.encode(0, 0, 1.0, led=led)
+
+    def test_unknown_colour_name_is_refused(self):
+        with self.assertRaises(colour.ColourError):
+            colour.named("burnt sienna")
+
+
+class TestColourExport(unittest.TestCase):
+    def make(self):
+        p = Profile.new("t", "Pad Device", {"w": 100, "h": 100})
+        p.data["led"] = dict(colour.DEFAULT)
+        p.add_control({"id": "pad_1", "label": "PAD 1", "kind": "pad",
+                       "shape": {"type": "rect", "cx": 10, "cy": 10,
+                                 "w": 20, "h": 20}})
+        p.set_binding("pad_1", "base", "output",
+                      {"status": "note", "channel": 5, "number": 20})
+        return p
+
+    def test_colour_helper_is_emitted_and_declared(self):
+        p = self.make()
+        xml, js, _fn = export_mixxx.export(p)
+        self.assertIn("setPadColour", js)
+        self.assertIn("midi.sendShortMsg", js)
+        # Mixxx will not load the script unless the mapping declares it, even
+        # though nothing here is script-bound.
+        self.assertIn("<scriptfiles>", xml)
+
+    def test_helper_matches_the_profile_encoding(self):
+        p = self.make()
+        p.data["led"] = {"levels": 4, "shift": {"r": 0, "g": 2, "b": 4},
+                         "bright_bit": None}
+        _xml, js, _fn = export_mixxx.export(p)
+        self.assertIn("(r << 0) | (g << 2) | (b << 4)", js)
+        self.assertNotIn("1 << 6", js)
+
+    def test_fixed_colour_control_gets_no_picker_or_helper_entry(self):
+        p = self.make()
+        p.add_control({"id": "play", "label": "PLAY", "kind": "button",
+                       "rgb": False, "fixed_colour": "green",
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 9, "h": 9}})
+        p.set_binding("play", "base", "output",
+                      {"status": "note", "channel": 1, "number": 0})
+        _xml, js, _fn = export_mixxx.export(p)
+        self.assertNotIn("play:", js)
 
 
 class TestMidi(unittest.TestCase):
