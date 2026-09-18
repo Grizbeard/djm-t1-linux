@@ -98,6 +98,32 @@ class TestAutodetect(unittest.TestCase):
         self.assertEqual(controls[0]["label"], "TRIM")
         self.assertEqual(controls[0]["id"], "trim")
 
+    def test_declared_callout_boxes_are_removed(self):
+        # A manual that numbers its diagram draws each number in a small box.
+        # Those are the right size to look like buttons, and the number sits
+        # dead centre in one, so naive matching names the box instead of the
+        # control it points at.
+        body = "".join(self.knob(30 + 40 * i, 50, 16.5) for i in range(6))
+        body += "".join(f'<rect x="{25 + 40 * i}" y="{62}" width="8" height="7"/>'
+                        for i in range(6))
+        labels = [{"text": f"Control {i}", "x": 29 + 40 * i, "y": 65.5,
+                   "number": i + 1} for i in range(6)]
+        _p, controls = autodetect.detect_from_string(
+            svg(body, w=280, h=100), labels=labels)
+        self.assertEqual(len(controls), 6)
+        self.assertTrue(all(c["kind"] == "knob" for c in controls), controls)
+
+    def test_a_button_with_text_on_it_is_not_treated_as_a_callout(self):
+        # The regression this guards: panel labels printed inside button
+        # apertures made the detector delete 46 real controls.
+        body = "".join(
+            f'<path d="M{20 + 30 * i},45 h15 v9 h-15 z"/>' for i in range(6))
+        labels = [{"text": "SYNC", "x": 27.5 + 30 * i, "y": 49.5}
+                  for i in range(6)]
+        _p, controls = autodetect.detect_from_string(
+            svg(body, w=220, h=100), labels=labels)
+        self.assertEqual(len(controls), 6)
+
     def test_everything_detected_is_marked_provisional(self):
         _panel, controls = autodetect.detect_from_string(
             svg(self.knob(50, 50, 16.5)))

@@ -133,10 +133,23 @@ SYNC, DRY/WET — rather than `button_37`. It gets there on three signals:
   aperture classes recur 13, 11, 8 and 4 times; a one-off shape is probably
   decoration.
 
-**It does not find faders.** A fader is drawn as a ladder of scale ticks plus a
-cap, so there is no single shape to detect. The three on the DJM-T1 are placed
-by hand in the shipped profile and marked provisional. Expect to draw fader
-regions yourself on any new controller.
+Diagrams that number their controls get a fourth signal. A manual's callout is
+a number in a small box with a leader to the control, and those boxes are
+exactly the size and shape of buttons — so naive matching names *the box*, which
+is worse than no name. Boxes are recognised and removed when a label says it is
+a callout (`"callout": true` or `"number": N` in the sidecar) and nearly every
+box of that size holds one. On the Reloop Ready that removes **37** of them and
+the names then land on real controls.
+
+The detector will not infer this from the text being numeric. That was tried:
+panels legitimately label controls 1, 2, 3, and guessing deleted 46 real
+controls from the DJM-T1 pass. Declaring it is cheap; guessing is not.
+
+**It does not find faders or jog wheels.** A fader is drawn as a ladder of
+scale ticks plus a cap, and a jog wheel is a ring enclosing its own tick marks,
+so neither is a single findable shape. The three faders on the DJM-T1 are placed
+by hand in the shipped profile and marked provisional. Expect to draw these
+yourself on any new controller — it is a few seconds each.
 
 Everything it emits is provisional, carries a confidence and lists its evidence.
 A wrong region that looks confident costs more than a missing one.
@@ -217,7 +230,15 @@ only).
 | LED probe loop | ✅ logic tested; **not yet run against hardware** |
 | Mixxx XML + script export | ✅ validated against the hand-written mapping |
 | SHIFT layer capture | ✅ supported; nobody has done the pass yet |
-| Reloop Ready profile | ⬜ artwork not yet sourced |
+| Reloop Ready profile | 🟡 geometry only, 56 regions, no bindings |
+
+`profiles/reloop-ready.json` is geometry derived from the plan view in the
+Reloop Ready instruction manual (article 243598), named through the manual's own
+callout legend. Scaling it by the published 325 mm width reproduces the
+published 220 mm depth to 0.9%, which is the check that says the drawing is a
+true projection rather than a stylised one. Nothing on it is bound: no one has
+run a learn pass on that hardware. Jog wheels and faders still need placing by
+hand.
 
 The hardware-facing halves have been exercised end to end against the offline
 backend only. The ALSA reader is the mechanism `tools/calibrate.py` already

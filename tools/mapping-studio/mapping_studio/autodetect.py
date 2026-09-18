@@ -52,6 +52,12 @@ DEFAULTS = {
     "indicator_min_area": 4.0,
     "indicator_recurrence": 4,
 
+    # How many identically sized label-enclosing boxes make a callout scheme
+    # rather than a coincidence.
+    "callout_recurrence": 5,
+    "callout_max_size": 24.0,   # a callout box is small; a real section is not
+    "callout_fill_ratio": 0.85,  # share of that size class that holds a number
+
     "cluster_tol": 1.2,      # centres this close are the same control
     "circle_aspect": 0.18,   # |w-h|/w below this is "round"
     "slot_aspect": 2.8,      # length/width above this is "slot-like"
@@ -208,6 +214,66 @@ def _slug(text, taken):
     return s
 
 
+def _drop_callout_boxes(cands, texts, cfg):
+    """Remove the numbered boxes that manuals draw on an exploded diagram.
+
+    A manual that numbers its controls draws each number in a small box with a
+    leader to the control. Those boxes are the right size and shape to look like
+    buttons, and because the number sits dead centre in one, naive label
+    matching names the *box* rather than the control it points at -- which is
+    worse than no name, since every callout then lands on a region that is not a
+    control at all.
+
+    They are separable: a callout box encloses a label, and every callout box on
+    a sheet is the same size. A real button that happens to contain text is not
+    one of forty identically sized boxes that each contain a number.
+
+    Returns (kept, dropped).
+    """
+    limit = cfg["callout_max_size"]
+
+    def size_key(c):
+        return (c.shape, round(c.w / 0.5), round(c.h / 0.5))
+
+    census = Counter(size_key(c) for c in cands)
+
+    # Every enclosing candidate counts, not just the first: callout boxes are
+    # drawn as nested outlines, and removing only the outer one leaves the inner
+    # one to collect the label instead.
+    holders = defaultdict(dict)
+    contents = defaultdict(list)
+    for t in texts:
+        for c in cands:
+            if max(c.w, c.h) > limit:
+                continue
+            if abs(t["x"] - c.cx) <= c.w / 2 and abs(t["y"] - c.cy) <= c.h / 2:
+                holders[size_key(c)][id(c)] = c
+                contents[size_key(c)].append(bool(t.get("callout")))
+
+    boxes = {}
+    for key, group in holders.items():
+        if len(group) < cfg["callout_recurrence"]:
+            continue
+        # A callout box exists only to hold its number, so essentially every
+        # box of that size holds one. A button aperture that happens to have
+        # SYNC printed in it belongs to a size class where most members hold
+        # nothing -- which is what tells the two apart.
+        if len(group) / max(1, census[key]) < cfg["callout_fill_ratio"]:
+            continue
+        # The label has to SAY it is a callout. Inferring it from the text being
+        # numeric was tried and is not safe: panels legitimately label controls
+        # 1, 2, 3, and guessing wrong deletes real controls, which is a worse
+        # failure than leaving a few boxes in for the human to delete.
+        if not all(flag for flag in contents[key]):
+            continue
+        boxes.update(group)
+
+    if not boxes:
+        return cands, []
+    kept = [c for c in cands if id(c) not in boxes]
+    return kept, list(boxes.values())
+
+
 def _attach_labels(cands, texts, cfg):
     """Name each candidate from the nearest plausible label.
 
@@ -267,7 +333,7 @@ def _detect(doc, labels=None, config=None, panel=None):
 
     texts = list(doc.texts)
     if labels:
-        texts.extend(labels)
+        texts.extend(_normalise_labels(labels))
 
     raw_control, raw_indicator = [], []
     for sp in doc.subpaths:
@@ -313,6 +379,8 @@ def _detect(doc, labels=None, config=None, panel=None):
         keep.append(c)
     cands = keep
 
+    cands, callouts = _drop_callout_boxes(cands, texts, cfg)
+
     modal = _modal_sizes(cands)
     for c in cands:
         c.kind = _assign_kind(c)
@@ -350,6 +418,12 @@ def _detect(doc, labels=None, config=None, panel=None):
         "h": round(doc.height, 3),
         "units": "mm",
     }
+    panel_dict["detect"] = {
+        "subpaths": len(doc.subpaths),
+        "candidates": len(controls),
+        "callout_boxes_dropped": len(callouts),
+        "labels_available": len(texts),
+    }
     return panel_dict, controls
 
 
@@ -366,13 +440,29 @@ def summarise(controls):
     return "\n".join(lines)
 
 
-def load_labels(path):
-    """Read a labels sidecar: a JSON list of {text,x,y}."""
-    with open(path, encoding="utf-8") as fh:
-        data = json.load(fh)
+def _normalise_labels(labels):
+    """Coerce caller-supplied labels into the shape the detector expects.
+
+    Done here rather than only in load_labels so that passing labels straight
+    into detect() behaves identically to reading them from a sidecar.
+    """
     out = []
-    for d in data:
-        if "text" in d and "x" in d and "y" in d:
-            out.append({"text": d["text"], "x": float(d["x"]), "y": float(d["y"]),
-                        "size": float(d.get("size", 0) or 0)})
+    for d in labels or ():
+        if "text" not in d or "x" not in d or "y" not in d:
+            continue
+        out.append({"text": d["text"], "x": float(d["x"]), "y": float(d["y"]),
+                    "size": float(d.get("size", 0) or 0),
+                    "callout": bool(d.get("callout") or d.get("number"))})
     return out
+
+
+def load_labels(path):
+    """Read a labels sidecar: a JSON list of {text, x, y}.
+
+    An entry may also carry "callout" (or "number"): the label is a numbered
+    marker drawn in a box on the diagram rather than text printed on the panel
+    itself. Say so if you know it; the detector will not guess, because
+    guessing wrong deletes real controls.
+    """
+    with open(path, encoding="utf-8") as fh:
+        return _normalise_labels(json.load(fh))

@@ -1,0 +1,1154 @@
+{
+ "schema": 1,
+ "id": "reloop-ready",
+ "name": "Reloop Ready",
+ "created": "2026-09-17",
+ "units": "mm",
+ "panel": {
+  "w": 325.0,
+  "h": 217.974
+ },
+ "backdrop": {
+  "kind": "schematic"
+ },
+ "layers": [
+  "base",
+  "shift"
+ ],
+ "midi": {
+  "channel": 1
+ },
+ "controls": [
+  {
+   "id": "button",
+   "label": "BUTTON",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 101.379,
+    "cy": 15.071,
+    "w": 17.845,
+    "h": 12.806,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_2",
+   "label": "BUTTON 2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 296.069,
+    "cy": 15.071,
+    "w": 17.844,
+    "h": 12.806,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx_control",
+   "label": "FX Control",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'FX Control' at 9.9"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 22.116,
+    "cy": 17.339,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_3",
+   "label": "BUTTON 3",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 6x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 41.931,
+    "cy": 17.34,
+    "w": 12.845,
+    "h": 4.919,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx_on_button",
+   "label": "FX ON Button",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.7,
+   "evidence": [
+    "size recurs 6x on panel",
+    "label 'FX ON Button' at 8.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 61.747,
+    "cy": 17.34,
+    "w": 12.845,
+    "h": 4.919,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_4",
+   "label": "BUTTON 4",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 6x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 81.563,
+    "cy": 17.34,
+    "w": 12.845,
+    "h": 4.919,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "loop_encoder",
+   "label": "Loop Encoder",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'Loop Encoder' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 101.379,
+    "cy": 17.339,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "gain",
+   "label": "Gain",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'Gain' at 22.5"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 147.203,
+    "cy": 17.339,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "gain_2",
+   "label": "Gain",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'Gain' at 23.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 170.982,
+    "cy": 17.339,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx_control_2",
+   "label": "FX Control",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'FX Control' at 10.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 216.806,
+    "cy": 17.339,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_5",
+   "label": "BUTTON 5",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 6x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 236.622,
+    "cy": 17.34,
+    "w": 12.846,
+    "h": 4.919,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx_on_button_2",
+   "label": "FX ON Button",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.7,
+   "evidence": [
+    "size recurs 6x on panel",
+    "label 'FX ON Button' at 7.8"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 256.437,
+    "cy": 17.34,
+    "w": 12.845,
+    "h": 4.919,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_6",
+   "label": "BUTTON 6",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 6x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 276.253,
+    "cy": 17.34,
+    "w": 12.846,
+    "h": 4.919,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "loop_encoder_2",
+   "label": "Loop Encoder",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'Loop Encoder' at 3.6"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 296.069,
+    "cy": 17.339,
+    "d": 13.079
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_7",
+   "label": "BUTTON 7",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 38.522,
+    "cy": 35.568,
+    "w": 10.078,
+    "h": 5.819,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_8",
+   "label": "BUTTON 8",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 233.212,
+    "cy": 35.568,
+    "w": 10.078,
+    "h": 5.819,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "knob",
+   "label": "KNOB",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 147.203,
+    "cy": 41.118,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "knob_2",
+   "label": "KNOB 2",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 170.982,
+    "cy": 41.118,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "knob_3",
+   "label": "KNOB 3",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.55,
+   "evidence": [
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.83,
+    "cy": 41.276,
+    "d": 8.218
+   },
+   "bindings": {}
+  },
+  {
+   "id": "knob_4",
+   "label": "KNOB 4",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.55,
+   "evidence": [
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 287.519,
+    "cy": 41.276,
+    "d": 8.218
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_9",
+   "label": "BUTTON 9",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 104.183,
+    "cy": 56.902,
+    "w": 4.733,
+    "h": 10.632,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_10",
+   "label": "BUTTON 10",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 298.873,
+    "cy": 56.902,
+    "w": 4.734,
+    "h": 10.632,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "equalizer_2_band",
+   "label": "Equalizer (2-band)",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'Equalizer (2-band)' at 22.6"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 147.203,
+    "cy": 64.897,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "equalizer_2_band_2",
+   "label": "Equalizer (2-band)",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 10x on panel",
+    "label 'Equalizer (2-band)' at 23.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 170.982,
+    "cy": 64.897,
+    "d": 13.078
+   },
+   "bindings": {}
+  },
+  {
+   "id": "track_load_button",
+   "label": "Track Load Button",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Track Load Button' at 7.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 137.295,
+    "cy": 90.36,
+    "w": 14.728,
+    "h": 6.802,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "track_load_button_2",
+   "label": "Track Load Button",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Track Load Button' at 7.3"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 180.891,
+    "cy": 90.36,
+    "w": 14.728,
+    "h": 6.802,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_11",
+   "label": "BUTTON 11",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 104.183,
+    "cy": 94.689,
+    "w": 4.733,
+    "h": 10.632,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_12",
+   "label": "BUTTON 12",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 298.873,
+    "cy": 94.689,
+    "w": 4.734,
+    "h": 10.632,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_13",
+   "label": "BUTTON 13",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 24.168,
+    "cy": 103.099,
+    "w": 6.84,
+    "h": 9.415,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_14",
+   "label": "BUTTON 14",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 218.858,
+    "cy": 103.099,
+    "w": 6.84,
+    "h": 9.415,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "headphones_cue_buttons",
+   "label": "Headphones/Cue Buttons",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Headphones/Cue Buttons' at 6.9"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 121.443,
+    "cy": 111.464,
+    "d": 8.783
+   },
+   "bindings": {}
+  },
+  {
+   "id": "filter",
+   "label": "Filter",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Filter' at 4.5"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 137.295,
+    "cy": 111.464,
+    "d": 17.042
+   },
+   "bindings": {}
+  },
+  {
+   "id": "shift",
+   "label": "SHIFT",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.65,
+   "evidence": [
+    "2 concentric outlines",
+    "label 'SHIFT' at 5.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 159.092,
+    "cy": 111.464,
+    "w": 12.763,
+    "h": 4.954,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "filter_2",
+   "label": "Filter",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Filter' at 4.6"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 180.89,
+    "cy": 111.464,
+    "d": 17.042
+   },
+   "bindings": {}
+  },
+  {
+   "id": "headphones_cue_buttons_2",
+   "label": "Headphones/Cue Buttons",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Headphones/Cue Buttons' at 7.3"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 196.743,
+    "cy": 111.464,
+    "d": 8.783
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_15",
+   "label": "BUTTON 15",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 38.522,
+    "cy": 116.024,
+    "w": 10.079,
+    "h": 5.819,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_16",
+   "label": "BUTTON 16",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.5,
+   "evidence": [
+    "size recurs 4x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 233.212,
+    "cy": 116.024,
+    "w": 10.079,
+    "h": 5.819,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_17",
+   "label": "BUTTON 17",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.3,
+   "evidence": [],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 156.874,
+    "cy": 125.662,
+    "w": 17.648,
+    "h": 4.802,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_18",
+   "label": "BUTTON 18",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.3,
+   "evidence": [],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 167.69,
+    "cy": 125.661,
+    "w": 4.889,
+    "h": 4.802,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "vinyl",
+   "label": "Vinyl",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.9,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Vinyl' at 21.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 15.428,
+    "cy": 127.317,
+    "d": 7.396
+   },
+   "bindings": {}
+  },
+  {
+   "id": "key_lock",
+   "label": "Key Lock",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.7,
+   "evidence": [
+    "size recurs 6x on panel",
+    "label 'Key Lock' at 20.6"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 29.299,
+    "cy": 127.317,
+    "w": 7.892,
+    "h": 6.901,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "parameter_button",
+   "label": "Parameter Button",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.7,
+   "evidence": [
+    "size recurs 6x on panel",
+    "label 'Parameter Button' at 20.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 94.196,
+    "cy": 127.317,
+    "w": 7.892,
+    "h": 6.901,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_19",
+   "label": "BUTTON 19",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 6x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 108.067,
+    "cy": 127.317,
+    "w": 7.892,
+    "h": 6.901,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "vinyl_2",
+   "label": "Vinyl",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.9,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'Vinyl' at 18.5"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 210.118,
+    "cy": 127.317,
+    "d": 7.396
+   },
+   "bindings": {}
+  },
+  {
+   "id": "key_lock_2",
+   "label": "Key Lock",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.7,
+   "evidence": [
+    "size recurs 6x on panel",
+    "label 'Key Lock' at 20.7"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 223.989,
+    "cy": 127.317,
+    "w": 7.892,
+    "h": 6.901,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "parameter_button_2",
+   "label": "Parameter Button",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.7,
+   "evidence": [
+    "size recurs 6x on panel",
+    "label 'Parameter Button' at 20.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 288.885,
+    "cy": 127.317,
+    "w": 7.892,
+    "h": 6.901,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_20",
+   "label": "BUTTON 20",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 6x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 302.757,
+    "cy": 127.317,
+    "w": 7.892,
+    "h": 6.901,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader",
+   "label": "FADER",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.3,
+   "evidence": [],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 256.437,
+    "cy": 132.506,
+    "w": 31.938,
+    "h": 5.042,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_2",
+   "label": "FADER 2",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.364,
+    "cy": 200.14,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_3",
+   "label": "FADER 3",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 48.619,
+    "cy": 200.139,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_4",
+   "label": "FADER 4",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 74.875,
+    "cy": 200.14,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_5",
+   "label": "FADER 5",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 101.132,
+    "cy": 200.14,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_6",
+   "label": "FADER 6",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 217.054,
+    "cy": 200.14,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_7",
+   "label": "FADER 7",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 243.309,
+    "cy": 200.139,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_8",
+   "label": "FADER 8",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 269.565,
+    "cy": 200.14,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fader_9",
+   "label": "FADER 9",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.6,
+   "evidence": [
+    "size recurs 8x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 295.822,
+    "cy": 200.14,
+    "w": 21.763,
+    "h": 9.378,
+    "round": false
+   },
+   "bindings": {}
+  }
+ ],
+ "controller_id": "Reloop Ready",
+ "provenance": {
+  "geometry": "auto-detected from the plan view in the Reloop Ready instruction manual (article 243598), scaled to the published 325 x 220 mm; deriving the scale from width alone reproduces the published depth to 0.9%, so the drawing is a true orthographic projection",
+  "names": "from the manual's numbered callouts resolved through its DESIGNATIONS legend",
+  "bindings": "none: nobody has run a learn pass on this hardware yet",
+  "detect": {
+   "subpaths": 8632,
+   "candidates": 103,
+   "callout_boxes_dropped": 37,
+   "labels_available": 39
+  }
+ }
+}
