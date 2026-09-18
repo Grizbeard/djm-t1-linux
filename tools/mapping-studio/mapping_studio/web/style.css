@@ -285,3 +285,12 @@ kbd {
   color: var(--text-faint); border-color: var(--line-soft);
 }
 .bindline .clearbind:hover { color: var(--bad); border-color: #ff5c7255; }
+
+/* Colour swatches: picked against the hardware, so they only need to be close
+   enough to recognise. */
+.swatches { display: flex; flex-wrap: wrap; gap: 5px; }
+.sw {
+  width: 26px; height: 26px; padding: 0; border-radius: 5px;
+  border: 1px solid #ffffff22; cursor: pointer;
+}
+.sw:hover { outline: 2px solid var(--accent); outline-offset: 1px; }

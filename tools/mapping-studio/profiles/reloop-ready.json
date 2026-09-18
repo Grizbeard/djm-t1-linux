@@ -1325,7 +1325,9 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "rgb": false,
+   "fixed_colour": "blue"
   },
   {
    "id": "sync_a",
@@ -1409,7 +1411,9 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "rgb": false,
+   "fixed_colour": "red"
   },
   {
    "id": "play_a",
@@ -1451,7 +1455,9 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "rgb": false,
+   "fixed_colour": "green"
   },
   {
    "id": "mode_b",
@@ -1489,7 +1495,9 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "rgb": false,
+   "fixed_colour": "blue"
   },
   {
    "id": "sync_b",
@@ -1573,7 +1581,9 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "rgb": false,
+   "fixed_colour": "red"
   },
   {
    "id": "play_b",
@@ -1615,7 +1625,9 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "rgb": false,
+   "fixed_colour": "green"
   },
   {
    "id": "pad_a1",
@@ -1656,6 +1668,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 0.0,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 112
    }
   },
   {
@@ -1697,6 +1717,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 0.3333333333333333,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 116
    }
   },
   {
@@ -1738,6 +1766,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 0.6666666666666666,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 120
    }
   },
   {
@@ -1779,6 +1815,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 124
    }
   },
   {
@@ -1820,6 +1864,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.6666666666666666,
+    "g": 1.0,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 108
    }
   },
   {
@@ -1861,6 +1913,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.0,
+    "g": 1.0,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 76
    }
   },
   {
@@ -1902,6 +1962,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.0,
+    "g": 1.0,
+    "b": 0.6666666666666666,
+    "bright": true,
+    "velocity": 78
    }
   },
   {
@@ -1943,6 +2011,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.0,
+    "g": 1.0,
+    "b": 1.0,
+    "bright": true,
+    "velocity": 79
    }
   },
   {
@@ -1984,6 +2060,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.0,
+    "g": 0.6666666666666666,
+    "b": 1.0,
+    "bright": true,
+    "velocity": 75
    }
   },
   {
@@ -2025,6 +2109,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.0,
+    "g": 0.0,
+    "b": 1.0,
+    "bright": true,
+    "velocity": 67
    }
   },
   {
@@ -2066,6 +2158,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.3333333333333333,
+    "g": 0.0,
+    "b": 1.0,
+    "bright": true,
+    "velocity": 83
    }
   },
   {
@@ -2107,6 +2207,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 0.0,
+    "b": 1.0,
+    "bright": true,
+    "velocity": 115
    }
   },
   {
@@ -2148,6 +2256,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 0.3333333333333333,
+    "b": 0.6666666666666666,
+    "bright": true,
+    "velocity": 118
    }
   },
   {
@@ -2189,6 +2305,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "bright": true,
+    "velocity": 127
    }
   },
   {
@@ -2230,6 +2354,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 1.0,
+    "g": 0.0,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 112
    }
   },
   {
@@ -2271,6 +2403,14 @@
       "press_value": 127
      }
     }
+   },
+   "rgb": true,
+   "colour": {
+    "r": 0.0,
+    "g": 1.0,
+    "b": 0.0,
+    "bright": true,
+    "velocity": 76
    }
   },
   {
@@ -2673,6 +2813,18 @@
    "candidates": 103,
    "callout_boxes_dropped": 37,
    "labels_available": 39
-  }
+  },
+  "led_colour": "RGB encoding recovered on hardware 2026-09-18 by lighting pads at computed velocities and reading the colours off the panel; confirmed by predicting eight pure colours that had never been sent"
+ },
+ "led": {
+  "encoding": "packed_rgb",
+  "levels": 4,
+  "shift": {
+   "r": 4,
+   "g": 2,
+   "b": 0
+  },
+  "bright_bit": 6,
+  "note": "velocity = bright<<6 | R<<4 | G<<2 | B, each component 0..3. Verified on hardware: 64 colours, two brightness levels. Only the performance pads are RGB."
  }
 }

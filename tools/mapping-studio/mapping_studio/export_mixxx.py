@@ -24,6 +24,7 @@ SPDX-License-Identifier: MIT
 
 import re
 import time
+from . import colour
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -177,7 +178,10 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
              f"        <description>{escape(description)}</description>",
              "    </info>",
              f'    <controller id="{escape(controller_id)}">']
-    if scripted:
+    # The script file is also needed when nothing is script-bound but the
+    # controller has colour pads: the helper lives there and Mixxx will not load
+    # it unless the mapping declares it.
+    if scripted or _colour_helper(p, prefix, layer):
         lines += ["        <scriptfiles>",
                   f'            <file functionprefix="{escape(prefix)}" '
                   f'filename="{escape(script_file)}"/>',
@@ -263,8 +267,10 @@ def build_script(profile, scripted, prefix, layer="base"):
         "};",
         "",
     ]
+    out.extend(_colour_helper(profile, prefix, layer))
+
     if not scripted:
-        out.append("// No scripted bindings: everything is declarative in the XML.")
+        out.append("// No scripted bindings beyond the colour helper above.")
         out.append("")
         return "\n".join(out)
 
@@ -308,6 +314,84 @@ def build_script(profile, scripted, prefix, layer="base"):
         out.append("};")
         out.append("")
     return "\n".join(out)
+
+
+def _colour_helper(profile, prefix, layer):
+    """Emit the RGB pad helper, if this controller has colour LEDs.
+
+    Mixxx's <output> carries a single on-value, so it can turn an LED on and
+    off and nothing else. Colour has to be script. What goes in the file is the
+    *encoder*, not a captured table: the device packs its components into the
+    velocity byte arithmetically, so every colour it can show is computable.
+    """
+    pads = [c for c in profile.controls
+            if (c.get("bindings", {}).get(layer, {}) or {}).get("output")
+            and (c["bindings"][layer]["output"].get("status") != "local")
+            and c.get("kind") in ("pad", "button")
+            and c.get("rgb") is not False
+            and (c.get("colour") or c.get("kind") == "pad")]
+    if not pads:
+        return []
+
+    led = colour_spec(profile)
+    sh = led.get("shift") or {"r": 4, "g": 2, "b": 0}
+    levels = int(led.get("levels", 4))
+    bit = led.get("bright_bit")
+    lines = [
+        "// ---------------------------------------------------------------",
+        "// RGB pad LEDs.",
+        f"// {colour.describe(led)}",
+        "// Recovered by lighting pads and reading the colours off the panel,",
+        "// so this is measured behaviour, not a guess from a datasheet.",
+        "",
+        f"{prefix}.LEVELS = {levels};   // values per channel, 0..{levels - 1}",
+        "",
+        "// Components are 0..%d. Returns the velocity byte to send." % (levels - 1),
+        f"{prefix}.colourValue = function (r, g, b, bright) {{",
+        f"    var v = (r << {int(sh['r'])}) | (g << {int(sh['g'])}) "
+        f"| (b << {int(sh['b'])});",
+    ]
+    if bit is not None:
+        lines += [f"    if (bright !== false) {{",
+                  f"        v |= 1 << {int(bit)};",
+                  "    }"]
+    lines += [
+        "    return v & 0x7F;",
+        "};",
+        "",
+        "// Light one pad. channel is 1-based, as printed in the mapping.",
+        f"{prefix}.setPadColour = function (channel, note, r, g, b, bright) {{",
+        "    midi.sendShortMsg(0x90 + (channel - 1), note,",
+        f"                      {prefix}.colourValue(r, g, b, bright));",
+        "};",
+        "",
+        "// Named colours, as component triples at this device's depth.",
+        f"{prefix}.COLOUR = {{",
+    ]
+    span = levels - 1
+    for name, (r, g, b) in colour.NAMED.items():
+        trip = [int(round(v * span)) for v in (r, g, b)]
+        lines.append(f"    {name.upper()}: [{trip[0]}, {trip[1]}, {trip[2]}],")
+    lines += ["};", ""]
+
+    named_pads = [c for c in pads if c.get("colour")]
+    if named_pads:
+        lines.append("// Colours chosen for specific controls in the studio.")
+        lines.append(f"{prefix}.PAD_DEFAULT = {{")
+        for c in named_pads:
+            col = c["colour"]
+            out = c["bindings"][layer]["output"]
+            trip = [colour.quantise(col.get(k, 0), levels) for k in ("r", "g", "b")]
+            lines.append(
+                f"    {_ident(c['id'])}: {{ channel: {out.get('channel', 1)}, "
+                f"note: {out['number']}, rgb: [{trip[0]}, {trip[1]}, {trip[2]}], "
+                f"bright: {str(bool(col.get('bright', True))).lower()} }},")
+        lines += ["};", ""]
+    return lines
+
+
+def colour_spec(profile):
+    return colour.spec_from(profile.data.get("led") or {})
 
 
 def export(profile, layer="base", **kw):

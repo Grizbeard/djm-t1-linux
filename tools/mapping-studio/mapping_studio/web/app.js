@@ -323,6 +323,7 @@ function renderEditor() {
       (confidence ${(c.confidence || 0).toFixed(2)}).
       ${(c.evidence || []).join('; ')}</div>` : ''}
     ${describeBindings(c)}
+    ${colourPicker(c)}
     <div class="row" style="margin-top:14px">
       <button id="e-save" class="primary">Apply</button>
       <button id="e-led-local" class="ghost">LED is firmware-driven</button>
@@ -367,6 +368,7 @@ function renderEditor() {
     toast('Recorded: LED is firmware-driven');
   };
   wireClearButtons(c.id);
+  wireColourPicker(c);
 }
 
 function describeBindings(c) {
@@ -394,6 +396,50 @@ function describeBindings(c) {
     }
   }
   return out.length ? `<div class="field" style="margin-top:10px">${out.join('')}</div>` : '';
+}
+
+/* Colour is picked against the hardware, not guessed from a swatch: clicking
+   one lights the real pad immediately. That is the same click-and-confirm loop
+   as the rest of the tool, and the only way to be sure the encoding is right. */
+function colourPicker(c) {
+  if (c.rgb === false || !S.palette) return '';
+  const out = bindingOf(c, 'output');
+  if (!out || out.status === 'local') {
+    return c.fixed_colour
+      ? `<div class="field"><label>LED colour</label>
+           <div class="mono" style="color:var(--text-faint)">fixed
+           ${esc(c.fixed_colour)} — not addressable</div></div>`
+      : '';
+  }
+  if (c.kind !== 'pad' && !c.colour) return '';
+  const cur = c.colour || {};
+  return `
+    <div class="field" style="margin-top:12px">
+      <label>LED colour${cur.velocity ? ` — velocity ${cur.velocity}` : ''}</label>
+      <div class="swatches">${Object.keys(S.palette.named).map(n => {
+        const hex = S.paletteHex[n] || '#000';
+        return `<button class="sw" data-colour="${esc(n)}" title="${esc(n)}"
+                  style="background:${hex}"></button>`;
+      }).join('')}</div>
+      <label class="chk" style="margin-top:8px"><input type="checkbox"
+        id="c-bright" ${cur.bright === false ? '' : 'checked'}> bright</label>
+      <div class="mono" style="color:var(--text-faint);margin-top:6px">
+        ${esc(S.palette.describe || '')}</div>
+    </div>`;
+}
+
+function wireColourPicker(c) {
+  $$('#editor .sw').forEach(sw => {
+    sw.onclick = async () => {
+      await api('/api/colour', {
+        control_id: c.id, name: sw.dataset.colour,
+        bright: $('#c-bright') ? $('#c-bright').checked : true,
+        remember: true });
+      await refreshProfile();
+      select(c.id);
+      toast(`${sw.dataset.colour} — check the pad`);
+    };
+  });
 }
 
 function wireClearButtons(controlId) {
@@ -920,8 +966,22 @@ function wire() {
   });
 }
 
+async function loadPalette() {
+  try {
+    const p = await api('/api/palette');
+    S.palette = p;
+    // Index each named colour's hex by encoding it the same way the device
+    // does, so a swatch shows roughly what the pad will show.
+    S.paletteHex = {};
+    for (const [n, info] of Object.entries(p.named || {})) {
+      S.paletteHex[n] = info.hex;
+    }
+  } catch (e) { S.palette = null; }
+}
+
 (async function boot() {
   wire();
+  await loadPalette();
   await refreshProfile();
   setMode('layout');
   // Fit once the stage actually has a size to measure.

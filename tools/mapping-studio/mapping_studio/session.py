@@ -21,6 +21,8 @@ SPDX-License-Identifier: MIT
 import time
 from collections import Counter, defaultdict
 
+from . import colour
+
 # A relative encoder parks on a couple of sentinel values (commonly 1 and 127,
 # or 63/65) instead of sweeping. If nearly every message is one of a tiny set of
 # values but there are many messages, it is counting, not positioning.
@@ -460,6 +462,39 @@ class MappingSession:
         self.mode = "idle"
 
     # --------------------------------------------------------------- verify
+
+    # --------------------------------------------------------------- colour
+
+    def light(self, control_id, r, g, b, bright=True, remember=False):
+        """Show a colour on a control's LED, optionally storing it as its default.
+
+        Sending immediately is the whole point: picking a colour and seeing it
+        on the pad is the same click-and-confirm loop as the rest of the tool,
+        and it is the only way to be sure the encoding is right for a given
+        device.
+        """
+        out = self.profile.binding(control_id, self.layer, "output")
+        if not out or out.get("status") == "local":
+            return False
+        led = (self.profile.data.get("led") or {})
+        vel = colour.encode(r, g, b, bright=bright, led=led)
+        ok = self.backend.send("note_on", out.get("channel", 1), out["number"], vel)
+        if remember:
+            c = self.profile.get(control_id)
+            if c is not None:
+                c["colour"] = {"r": r, "g": g, "b": b, "bright": bool(bright),
+                               "velocity": vel}
+        return ok
+
+    def light_all(self, r, g, b, bright=True, kinds=("pad",)):
+        """Set every control of the given kinds at once, for checking a colour."""
+        n = 0
+        for c in self.profile.controls:
+            if kinds and c.get("kind") not in kinds:
+                continue
+            if self.light(c["id"], r, g, b, bright=bright):
+                n += 1
+        return n
 
     def blink(self, control_id, times=2, ms=250):
         """Flash a control's known LED, to confirm a binding points where it should."""

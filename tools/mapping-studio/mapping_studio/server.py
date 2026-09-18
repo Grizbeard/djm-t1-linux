@@ -20,7 +20,7 @@ import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-from . import export_mixxx, midi
+from . import colour, export_mixxx, midi
 from .profile import Profile, ProfileError
 
 WEB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
@@ -140,6 +140,21 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"events": s.session.monitor(n)})
             if path == "/api/ports":
                 return self._json({"ports": midi.list_ports()})
+            if path == "/api/palette":
+                led = s.profile.data.get("led") or {}
+                named = {}
+                for n, (r, g, b) in colour.NAMED.items():
+                    named[n] = {
+                        "hex": colour.hex_of(r, g, b),
+                        "bright": colour.named(n, bright=True, led=led),
+                        "dim": colour.named(n, bright=False, led=led),
+                    }
+                return self._json({
+                    "spec": colour.spec_from(led),
+                    "describe": colour.describe(led),
+                    "named": named,
+                    "colours": colour.palette(led),
+                })
             if path == "/api/export":
                 layer = (q.get("layer") or [s.session.layer])[0]
                 xml, js, fname = export_mixxx.export(s.profile, layer=layer)
@@ -247,6 +262,20 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/probe/stop":
                 sess.stop_probe()
                 return self._json({"ok": True})
+            if path == "/api/colour":
+                r, g, b = (float(body.get(k, 0)) for k in ("r", "g", "b"))
+                bright = bool(body.get("bright", True))
+                if body.get("name"):
+                    r, g, b = colour.NAMED[str(body["name"]).lower()]
+                if body.get("all_kinds"):
+                    n = sess.light_all(r, g, b, bright=bright,
+                                       kinds=tuple(body["all_kinds"]))
+                    return self._json({"lit": n})
+                ok = sess.light(body["control_id"], r, g, b, bright=bright,
+                                remember=bool(body.get("remember")))
+                if body.get("remember"):
+                    s.dirty = True
+                return self._json({"ok": ok})
             if path == "/api/blink":
                 return self._json({"ok": sess.blink(body["control_id"])})
             if path == "/api/send":
