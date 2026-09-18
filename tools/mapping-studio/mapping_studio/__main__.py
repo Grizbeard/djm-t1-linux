@@ -94,14 +94,14 @@ def cmd_export(args):
     os.makedirs(args.dir, exist_ok=True)
     base = (prof.data.get("name") or "mapping").replace(" ", "-")
     xml_path = os.path.join(args.dir, f"{base}.midi.xml")
-    with open(xml_path, "w", encoding="utf-8") as fh:
+    with open(xml_path, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(xml)
     print(f"wrote {xml_path}")
     js_path = os.path.join(args.dir, fname)
     if os.path.exists(js_path):
         js_path += ".new"
         print(f"  (script exists; writing {js_path} rather than overwriting)")
-    with open(js_path, "w", encoding="utf-8") as fh:
+    with open(js_path, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(js)
     print(f"wrote {js_path}")
     return 0

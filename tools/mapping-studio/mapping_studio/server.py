@@ -256,15 +256,16 @@ class Handler(BaseHTTPRequestHandler):
                 base = (s.profile.data.get("name") or "mapping").replace(" ", "-")
                 xml_path = os.path.join(outdir, f"{base}.midi.xml")
                 js_path = os.path.join(outdir, fname)
-                with open(xml_path, "w", encoding="utf-8") as fh:
+                with open(xml_path, "w", encoding="utf-8", newline="\n") as fh:
                     fh.write(xml)
                 written = [xml_path]
                 if not os.path.exists(js_path):
-                    with open(js_path, "w", encoding="utf-8") as fh:
+                    with open(js_path, "w", encoding="utf-8", newline="\n") as fh:
                         fh.write(js)
                     written.append(js_path)
                 else:
-                    with open(js_path + ".new", "w", encoding="utf-8") as fh:
+                    with open(js_path + ".new", "w", encoding="utf-8",
+                              newline="\n") as fh:
                         fh.write(js)
                     written.append(js_path + ".new")
                 return self._json({"written": written})

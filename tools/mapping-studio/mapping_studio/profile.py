@@ -80,8 +80,10 @@ class Profile:
         return p
 
     def save(self, path):
+        # newline="\n" so a profile written on Windows is byte-identical to one
+        # written on the Pi; these get committed and diffed.
         tmp = f"{path}.tmp"
-        with open(tmp, "w", encoding="utf-8") as fh:
+        with open(tmp, "w", encoding="utf-8", newline="\n") as fh:
             json.dump(self.data, fh, indent=1, ensure_ascii=False)
             fh.write("\n")
         os.replace(tmp, path)
