@@ -485,6 +485,10 @@ class MappingSession:
             "layer": self.layer,
             "backend": self.backend.name,
             "backend_status": self.backend.status,
+            # Reported separately: a controller can read perfectly while
+            # nothing you send reaches it, which is invisible until an LED
+            # pass quietly does nothing.
+            "output_status": self.backend.out_status,
             "learn": self.learn_status(),
             "probe": self.probe_status() if self._probe else {"active": False},
             "stats": self.profile.stats(),

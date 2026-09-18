@@ -88,6 +88,16 @@ class Backend:
     def send(self, status, channel, number, value):
         raise NotImplementedError
 
+    @property
+    def out_status(self):
+        """Whether output is actually usable, reported separately from input.
+
+        A controller can be perfectly readable while nothing you send reaches
+        it, and conflating the two hides exactly the failure that matters
+        during an LED pass.
+        """
+        return "output not described by this backend"
+
     # -- helpers ---------------------------------------------------------
 
     @staticmethod
@@ -114,6 +124,10 @@ class OfflineBackend(Backend):
     def send(self, status, channel, number, value):
         self.sent.append(self.event(status, channel, number, value, raw="sent"))
         return True
+
+    @property
+    def out_status(self):
+        return "offline: sends are recorded, not transmitted"
 
     def inject(self, status, channel, number, value):
         self.emit(self.event(status, channel, number, value, raw="injected"))
@@ -254,6 +268,12 @@ class AlsaBackend(Backend):
 
     # -- writer ----------------------------------------------------------
 
+    @property
+    def out_status(self):
+        if self.sender == "amidi" and self.rawmidi:
+            return f"out: amidi {self.rawmidi}"
+        return f"out: aplaymidi {self.resolve(self.port) or self.port}"
+
     def send(self, status, channel, number, value):
         ch = max(0, min(15, int(channel) - 1))
         if status in ("note_on", "note_off"):
@@ -335,6 +355,9 @@ class RtMidiBackend(Backend):
         self.port = port
         self._in = None
         self._out = None
+        self.in_name = None
+        self.out_name = None
+        self.out_error = None
 
     @staticmethod
     def _mod():
@@ -370,21 +393,12 @@ class RtMidiBackend(Backend):
             raise MidiError(f"no input port matching {self.port!r}; have {names}")
         self._in.open_port(idx)
         self._in.set_callback(self._on_message)
+        self.in_name = names[idx]
 
-        self._out = rtmidi.MidiOut()
-        onames = self._out.get_ports()
-        # Resolve the output from the input port's NAME, never from its index.
-        # The two lists are numbered independently -- on Windows "Reloop Ready
-        # In" is input 5 while output 5 is an unrelated virtual port -- so
-        # reusing the index would quietly send LED probes to someone else's
-        # device.
-        oidx = self._match_output(onames, names[idx])
-        if oidx is not None:
-            self._out.open_port(oidx)
-            self.out_name = onames[oidx]
-        else:
-            self._out = None
-            self.out_name = None
+        # The output is resolved from the input port's NAME, never its index:
+        # the two lists are numbered independently, so on Windows "Reloop Ready
+        # In" is input 5 while output 5 is an unrelated virtual port.
+        self._open_output()
         self._running = True
         self.status = f"connected to {names[idx]}"
 
@@ -453,14 +467,64 @@ class RtMidiBackend(Backend):
             self.emit(self.event("pitch", ch, 0, val))
 
     def send(self, status, channel, number, value):
-        if not self._out:
-            return False
+        """Send, and only report success if the port was actually open.
+
+        rtmidi will accept a message into a port that is no longer live and
+        raise nothing, so returning True because send_message() did not throw
+        says only that the call was made. That is how an entire LED session can
+        report ok while nothing reaches the device.
+        """
         ch = max(0, min(15, int(channel) - 1))
         sb = {"note_on": 0x90, "note_off": 0x80, "cc": 0xB0}.get(status)
         if sb is None:
             raise MidiError(f"cannot send status {status!r}")
-        self._out.send_message([sb | ch, int(number) & 0x7F, int(value) & 0x7F])
+        if not self._open_output():
+            return False
+        try:
+            self._out.send_message([sb | ch, int(number) & 0x7F, int(value) & 0x7F])
+        except Exception as exc:                      # noqa: BLE001
+            self.out_error = f"send failed: {exc}"
+            self._out = None
+            return False
+        self.out_error = None
         return True
+
+    def _open_output(self):
+        """Ensure an output port is open, re-opening if the device came back."""
+        try:
+            if self._out is not None and self._out.is_port_open():
+                return True
+        except Exception:                             # noqa: BLE001
+            self._out = None
+        rtmidi = self._mod()
+        if rtmidi is None:
+            self.out_error = "python-rtmidi is not installed"
+            return False
+        try:
+            out = rtmidi.MidiOut()
+            names = out.get_ports()
+            idx = self._match_output(names, self.in_name or str(self.port))
+            if idx is None:
+                idx = self._match(names, self.port)
+            if idx is None:
+                self.out_error = f"no output port matching {self.port!r}"
+                self._out = None
+                return False
+            out.open_port(idx)
+            self._out = out
+            self.out_name = names[idx]
+            self.out_error = None
+            return True
+        except Exception as exc:                      # noqa: BLE001
+            self.out_error = f"cannot open output: {exc}"
+            self._out = None
+            return False
+
+    @property
+    def out_status(self):
+        if self.out_error:
+            return self.out_error
+        return f"out: {self.out_name}" if self.out_name else "no output port"
 
 
 # ------------------------------------------------------------------ choose

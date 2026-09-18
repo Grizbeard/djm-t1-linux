@@ -20,80 +20,122 @@
  },
  "controls": [
   {
-   "id": "button",
-   "label": "BUTTON",
+   "id": "loop_a",
+   "label": "Loop A",
    "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 2x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 101.379,
-    "cy": 15.071,
-    "w": 17.845,
-    "h": 12.806,
+    "cx": 101.4,
+    "cy": 15.1,
+    "w": 17.8,
+    "h": 12.8,
     "round": true
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 64,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 9,
+      "number": 4,
+      "mode": "button",
+      "press_value": 127
+     }
+    }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "button_2",
-   "label": "BUTTON 2",
+   "id": "loop_b",
+   "label": "Loob B",
    "kind": "button",
-   "provisional": true,
-   "confidence": 0.5,
-   "evidence": [
-    "size recurs 2x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 296.069,
-    "cy": 15.071,
-    "w": 17.844,
-    "h": 12.806,
+    "cx": 296.1,
+    "cy": 15.1,
+    "w": 17.8,
+    "h": 12.8,
     "round": true
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 64,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 10,
+      "number": 4,
+      "mode": "button",
+      "press_value": 127
+     }
+    }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "fx_control",
-   "label": "FX Control",
+   "id": "fx1_level",
+   "label": "FX1 Level",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'FX Control' at 9.9"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 22.116,
-    "cy": 17.339,
-    "d": 13.078
+    "cx": 22.1,
+    "cy": 17.3,
+    "d": 13.1
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 9,
+      "number": 0,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 9,
+      "number": 0,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    }
+   }
   },
   {
-   "id": "button_3",
-   "label": "BUTTON 3",
+   "id": "fx1_1_on",
+   "label": "FX1_1 On",
    "kind": "button",
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 6x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 41.931,
-    "cy": 17.34,
-    "w": 12.845,
-    "h": 4.919,
+    "cx": 41.9,
+    "cy": 17.3,
+    "w": 12.8,
+    "h": 4.9,
     "round": false
    },
    "bindings": {
@@ -104,26 +146,37 @@
       "number": 0,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 9,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 9,
+      "number": 10,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
   },
   {
-   "id": "fx_on_button",
-   "label": "FX ON Button",
+   "id": "fx1_2_on",
+   "label": "FX1_2 On",
    "kind": "button",
-   "confidence": 0.7,
-   "evidence": [
-    "size recurs 6x on panel",
-    "label 'FX ON Button' at 8.0"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 61.747,
-    "cy": 17.34,
-    "w": 12.845,
-    "h": 4.919,
+    "cx": 61.7,
+    "cy": 17.3,
+    "w": 12.8,
+    "h": 4.9,
     "round": false
    },
    "bindings": {
@@ -134,25 +187,37 @@
       "number": 1,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 9,
+      "number": 1,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 9,
+      "number": 11,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
   },
   {
-   "id": "button_4",
-   "label": "BUTTON 4",
+   "id": "fx1_3_on",
+   "label": "FX1_3 On",
    "kind": "button",
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 6x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 81.563,
-    "cy": 17.34,
-    "w": 12.845,
-    "h": 4.919,
+    "cx": 81.6,
+    "cy": 17.3,
+    "w": 12.8,
+    "h": 4.9,
     "round": false
    },
    "bindings": {
@@ -163,46 +228,75 @@
       "number": 2,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 9,
+      "number": 2,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 9,
+      "number": 12,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
   },
   {
-   "id": "loop_encoder",
-   "label": "Loop Encoder",
+   "id": "loop_encoder_a",
+   "label": "Loop Encoder A",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "5 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'Loop Encoder' at 3.1"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 101.379,
-    "cy": 17.339,
-    "d": 13.078
+    "cx": 101.4,
+    "cy": 17.3,
+    "d": 13.1
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 5,
+      "number": 52,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 9,
+      "number": 3,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "gain",
-   "label": "Gain",
+   "id": "gain_a",
+   "label": "Gain A",
    "kind": "knob",
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'Gain' at 22.5"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 147.203,
-    "cy": 17.339,
-    "d": 13.078
+    "cx": 147.2,
+    "cy": 17.3,
+    "d": 13.1
    },
    "bindings": {
     "base": {
@@ -215,64 +309,105 @@
       "max": 127,
       "resting": 68
      }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 22,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 27
+     }
+    }
+   },
+   "section": "Deck A"
+  },
+  {
+   "id": "gain_b",
+   "label": "Gain B",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 171,
+    "cy": 17.3,
+    "d": 13.1
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 22,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 22,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 56
+     }
+    }
+   },
+   "section": "Deck B"
+  },
+  {
+   "id": "fx2_level",
+   "label": "FX2 Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 216.8,
+    "cy": 17.3,
+    "d": 13.1
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 10,
+      "number": 0,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 10,
+      "number": 0,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
     }
    }
   },
   {
-   "id": "gain_2",
-   "label": "Gain",
-   "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'Gain' at 23.0"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "circle",
-    "cx": 170.982,
-    "cy": 17.339,
-    "d": 13.078
-   },
-   "bindings": {}
-  },
-  {
-   "id": "fx_control_2",
-   "label": "FX Control",
-   "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'FX Control' at 10.0"
-   ],
-   "tier": "control",
-   "shape": {
-    "type": "circle",
-    "cx": 216.806,
-    "cy": 17.339,
-    "d": 13.078
-   },
-   "bindings": {}
-  },
-  {
-   "id": "button_5",
-   "label": "BUTTON 5",
+   "id": "fx2_1_on",
+   "label": "FX2_1 On",
    "kind": "button",
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 6x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 236.622,
-    "cy": 17.34,
-    "w": 12.846,
-    "h": 4.919,
+    "cx": 236.6,
+    "cy": 17.3,
+    "w": 12.8,
+    "h": 4.9,
     "round": false
    },
    "bindings": {
@@ -283,26 +418,37 @@
       "number": 0,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 10,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 10,
+      "number": 10,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
   },
   {
-   "id": "fx_on_button_2",
-   "label": "FX ON Button",
+   "id": "fx2_2_on",
+   "label": "FX2_2 On",
    "kind": "button",
-   "confidence": 0.7,
-   "evidence": [
-    "size recurs 6x on panel",
-    "label 'FX ON Button' at 7.8"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 256.437,
-    "cy": 17.34,
-    "w": 12.845,
-    "h": 4.919,
+    "cx": 256.4,
+    "cy": 17.3,
+    "w": 12.8,
+    "h": 4.9,
     "round": false
    },
    "bindings": {
@@ -313,25 +459,37 @@
       "number": 1,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 10,
+      "number": 1,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 10,
+      "number": 11,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
   },
   {
-   "id": "button_6",
-   "label": "BUTTON 6",
+   "id": "fx2_3_on",
+   "label": "FX2_3 On",
    "kind": "button",
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 6x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 276.253,
-    "cy": 17.34,
-    "w": 12.846,
-    "h": 4.919,
+    "cx": 276.3,
+    "cy": 17.3,
+    "w": 12.8,
+    "h": 4.9,
     "round": false
    },
    "bindings": {
@@ -342,125 +500,228 @@
       "number": 2,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 10,
+      "number": 2,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 10,
+      "number": 12,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
   },
   {
-   "id": "loop_encoder_2",
-   "label": "Loop Encoder",
+   "id": "loop_encoder_b",
+   "label": "Loop Encoder B",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "5 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'Loop Encoder' at 3.6"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 296.069,
-    "cy": 17.339,
-    "d": 13.079
+    "cx": 296.1,
+    "cy": 17.3,
+    "d": 13.1
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 6,
+      "number": 52,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 10,
+      "number": 3,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "knob",
-   "label": "KNOB",
+   "id": "high_a",
+   "label": "High A",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 147.203,
-    "cy": 41.118,
-    "d": 13.078
+    "cx": 147.2,
+    "cy": 41.1,
+    "d": 13.1
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 23,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 23,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 64
+     }
+    }
+   },
+   "section": "Deck A",
+   "detent": true
   },
   {
-   "id": "knob_2",
-   "label": "KNOB 2",
+   "id": "high_b",
+   "label": "High B",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 170.982,
-    "cy": 41.118,
-    "d": 13.078
+    "cx": 171,
+    "cy": 41.1,
+    "d": 13.1
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 23,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 62
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 23,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 61
+     }
+    }
+   },
+   "section": "Deck B",
+   "detent": true
   },
   {
-   "id": "equalizer_2_band",
-   "label": "Equalizer (2-band)",
+   "id": "low_a",
+   "label": "Low A",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'Equalizer (2-band)' at 22.6"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 147.203,
-    "cy": 64.897,
-    "d": 13.078
+    "cx": 147.2,
+    "cy": 64.9,
+    "d": 13.1
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 25,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 62
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 25,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "Deck A",
+   "detent": true
   },
   {
-   "id": "equalizer_2_band_2",
-   "label": "Equalizer (2-band)",
+   "id": "low_b",
+   "label": "Low B",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "4 concentric outlines",
-    "size recurs 10x on panel",
-    "label 'Equalizer (2-band)' at 23.1"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 170.982,
-    "cy": 64.897,
-    "d": 13.078
+    "cx": 171,
+    "cy": 64.9,
+    "d": 13.1
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 25,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 64
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 25,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 66
+     }
+    }
+   },
+   "section": "Low B",
+   "detent": true
   },
   {
-   "id": "track_load_button",
-   "label": "Track Load Button",
+   "id": "track_load_button_a",
+   "label": "Track Load Button A",
    "kind": "button",
-   "confidence": 0.85,
-   "evidence": [
-    "2 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Track Load Button' at 7.2"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 137.295,
-    "cy": 90.36,
-    "w": 14.728,
-    "h": 6.802,
+    "cx": 137.3,
+    "cy": 90.4,
+    "w": 14.7,
+    "h": 6.8,
     "round": true
    },
    "bindings": {
@@ -471,27 +732,38 @@
       "number": 2,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 27,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 27,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "track_load_button_2",
-   "label": "Track Load Button",
+   "id": "track_load_button_b",
+   "label": "Track Load Button B",
    "kind": "button",
-   "confidence": 0.85,
-   "evidence": [
-    "2 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Track Load Button' at 7.3"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 180.891,
-    "cy": 90.36,
-    "w": 14.728,
-    "h": 6.802,
+    "cx": 180.9,
+    "cy": 90.4,
+    "w": 14.7,
+    "h": 6.8,
     "round": true
    },
    "bindings": {
@@ -502,26 +774,37 @@
       "number": 3,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 3,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 16,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "headphones_cue_buttons",
-   "label": "Headphones/Cue Buttons",
+   "id": "hp_cue_a",
+   "label": "HP Cue A",
    "kind": "knob",
-   "confidence": 0.99,
-   "evidence": [
-    "5 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Headphones/Cue Buttons' at 6.9"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 121.443,
-    "cy": 111.464,
-    "d": 8.783
+    "cx": 121.4,
+    "cy": 111.5,
+    "d": 8.8
    },
    "bindings": {
     "base": {
@@ -531,87 +814,147 @@
       "number": 27,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 27,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 14,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "filter",
-   "label": "Filter",
+   "id": "filter_a",
+   "label": "Filter A",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "5 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Filter' at 4.5"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 137.295,
-    "cy": 111.464,
-    "d": 17.042
+    "cx": 137.3,
+    "cy": 111.5,
+    "d": 17
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 26,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 26,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    }
+   },
+   "section": "Deck A",
+   "detent": true
   },
   {
    "id": "shift",
    "label": "SHIFT",
    "kind": "button",
-   "provisional": true,
-   "confidence": 0.65,
-   "evidence": [
-    "2 concentric outlines",
-    "label 'SHIFT' at 5.2"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 159.092,
-    "cy": 111.464,
-    "w": 12.763,
-    "h": 4.954,
+    "cx": 159.1,
+    "cy": 111.5,
+    "w": 12.8,
+    "h": 5,
     "round": true
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
+    }
+   }
   },
   {
-   "id": "filter_2",
-   "label": "Filter",
+   "id": "filter_b",
+   "label": "Filter B",
    "kind": "knob",
-   "provisional": true,
-   "confidence": 0.99,
-   "evidence": [
-    "5 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Filter' at 4.6"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 180.89,
-    "cy": 111.464,
-    "d": 17.042
+    "cx": 180.9,
+    "cy": 111.5,
+    "d": 17
    },
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 26,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 26,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    }
+   },
+   "section": "Deck B",
+   "detent": true
   },
   {
-   "id": "headphones_cue_buttons_2",
-   "label": "Headphones/Cue Buttons",
+   "id": "hp_cue_b",
+   "label": "HP Cue B",
    "kind": "knob",
-   "confidence": 0.99,
-   "evidence": [
-    "5 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Headphones/Cue Buttons' at 7.3"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 196.743,
-    "cy": 111.464,
-    "d": 8.783
+    "cx": 196.7,
+    "cy": 111.5,
+    "d": 8.8
    },
    "bindings": {
     "base": {
@@ -621,26 +964,37 @@
       "number": 27,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 27,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 14,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "vinyl",
-   "label": "Vinyl",
+   "id": "vinyl_a",
+   "label": "Vinyl A",
    "kind": "knob",
-   "confidence": 0.9,
-   "evidence": [
-    "2 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Vinyl' at 21.4"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 15.428,
-    "cy": 127.317,
-    "d": 7.396
+    "cx": 15.4,
+    "cy": 127.3,
+    "d": 7.4
    },
    "bindings": {
     "base": {
@@ -651,25 +1005,30 @@
       "on": 127,
       "off": 0
      }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 7,
+      "mode": "button",
+      "press_value": 127
+     }
     }
-   }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "key_lock",
-   "label": "Key Lock",
+   "id": "key_lock_a",
+   "label": "Key Lock A",
    "kind": "button",
-   "confidence": 0.7,
-   "evidence": [
-    "size recurs 6x on panel",
-    "label 'Key Lock' at 20.6"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 29.299,
-    "cy": 127.317,
-    "w": 7.892,
-    "h": 6.901,
+    "cx": 29.3,
+    "cy": 127.3,
+    "w": 7.9,
+    "h": 6.9,
     "round": false
    },
    "bindings": {
@@ -681,25 +1040,30 @@
       "on": 127,
       "off": 0
      }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 41,
+      "mode": "button",
+      "press_value": 127
+     }
     }
-   }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "parameter_button",
-   "label": "Parameter Button",
+   "id": "parameter_left_a",
+   "label": "Parameter Left A",
    "kind": "button",
-   "confidence": 0.7,
-   "evidence": [
-    "size recurs 6x on panel",
-    "label 'Parameter Button' at 20.1"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 94.196,
-    "cy": 127.317,
-    "w": 7.892,
-    "h": 6.901,
+    "cx": 94.2,
+    "cy": 127.3,
+    "w": 7.9,
+    "h": 6.9,
     "round": false
    },
    "bindings": {
@@ -711,24 +1075,30 @@
       "on": 127,
       "off": 0
      }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 42,
+      "mode": "button",
+      "press_value": 127
+     }
     }
-   }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "button_19",
-   "label": "BUTTON 19",
+   "id": "parameter_right_a",
+   "label": "Parameter Right A",
    "kind": "button",
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 6x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 108.067,
-    "cy": 127.317,
-    "w": 7.892,
-    "h": 6.901,
+    "cx": 108.1,
+    "cy": 127.3,
+    "w": 7.9,
+    "h": 6.9,
     "round": false
    },
    "bindings": {
@@ -740,25 +1110,29 @@
       "on": 127,
       "off": 0
      }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 43,
+      "mode": "button",
+      "press_value": 127
+     }
     }
-   }
+   },
+   "section": "Deck A"
   },
   {
-   "id": "vinyl_2",
-   "label": "Vinyl",
+   "id": "vinyl_b",
+   "label": "Vinyl B",
    "kind": "knob",
-   "confidence": 0.9,
-   "evidence": [
-    "2 concentric outlines",
-    "size recurs 2x on panel",
-    "label 'Vinyl' at 18.5"
-   ],
    "tier": "control",
    "shape": {
     "type": "circle",
-    "cx": 210.118,
-    "cy": 127.317,
-    "d": 7.396
+    "cx": 210.1,
+    "cy": 127.3,
+    "d": 7.4
    },
    "bindings": {
     "base": {
@@ -768,26 +1142,38 @@
       "number": 15,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 15,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 7,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "key_lock_2",
-   "label": "Key Lock",
+   "id": "key_lock_b",
+   "label": "Key Lock B",
    "kind": "button",
-   "confidence": 0.7,
-   "evidence": [
-    "size recurs 6x on panel",
-    "label 'Key Lock' at 20.7"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 223.989,
-    "cy": 127.317,
-    "w": 7.892,
-    "h": 6.901,
+    "cx": 224,
+    "cy": 127.3,
+    "w": 7.9,
+    "h": 6.9,
     "round": false
    },
    "bindings": {
@@ -798,26 +1184,38 @@
       "number": 13,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 13,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 41,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "parameter_button_2",
-   "label": "Parameter Button",
+   "id": "parameter_left_b",
+   "label": "Parameter Left B",
    "kind": "button",
-   "confidence": 0.7,
-   "evidence": [
-    "size recurs 6x on panel",
-    "label 'Parameter Button' at 20.0"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 288.885,
-    "cy": 127.317,
-    "w": 7.892,
-    "h": 6.901,
+    "cx": 288.9,
+    "cy": 127.3,
+    "w": 7.9,
+    "h": 6.9,
     "round": false
    },
    "bindings": {
@@ -828,25 +1226,38 @@
       "number": 40,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 40,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 42,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck B"
   },
   {
-   "id": "button_20",
-   "label": "BUTTON 20",
+   "id": "parameter_right_b",
+   "label": "Parameter Right B",
    "kind": "button",
-   "confidence": 0.6,
-   "evidence": [
-    "size recurs 6x on panel"
-   ],
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 302.757,
-    "cy": 127.317,
-    "w": 7.892,
-    "h": 6.901,
+    "cx": 302.8,
+    "cy": 127.3,
+    "w": 7.9,
+    "h": 6.9,
     "round": false
    },
    "bindings": {
@@ -857,9 +1268,26 @@
       "number": 41,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 41,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 43,
+      "mode": "button",
+      "press_value": 127
      }
     }
-   }
+   },
+   "section": "Deck B"
   },
   {
    "id": "mode_a",
@@ -878,6 +1306,22 @@
     "base": {
      "output": {
       "status": "local"
+     },
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 32,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 13,
+      "number": 17,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -904,6 +1348,22 @@
       "number": 2,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 2,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 3,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -930,6 +1390,22 @@
       "number": 1,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 1,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 5,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -956,6 +1432,22 @@
       "number": 0,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 16,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -978,6 +1470,22 @@
     "base": {
      "output": {
       "status": "local"
+     },
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 32,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 14,
+      "number": 17,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -1004,6 +1512,22 @@
       "number": 2,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 2,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 3,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -1030,6 +1554,22 @@
       "number": 1,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 1,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 5,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -1056,6 +1596,22 @@
       "number": 0,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 16,
+      "mode": "button",
+      "press_value": 127
      }
     }
    },
@@ -1082,6 +1638,22 @@
       "number": 20,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 20,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 28,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1107,6 +1679,22 @@
       "number": 21,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 21,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 29,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1132,6 +1720,22 @@
       "number": 22,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 22,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 30,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1157,6 +1761,22 @@
       "number": 23,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 23,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 31,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1182,6 +1802,22 @@
       "number": 24,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 24,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 32,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1207,6 +1843,22 @@
       "number": 25,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 25,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 33,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1232,6 +1884,22 @@
       "number": 26,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 26,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 34,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1257,6 +1925,22 @@
       "number": 27,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 27,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 35,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1282,6 +1966,22 @@
       "number": 20,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 20,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 28,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1307,6 +2007,22 @@
       "number": 21,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 21,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 29,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1332,6 +2048,22 @@
       "number": 22,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 22,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 30,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1357,6 +2089,22 @@
       "number": 23,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 23,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 31,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1382,6 +2130,22 @@
       "number": 24,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 24,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 32,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1407,6 +2171,22 @@
       "number": 25,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 25,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 33,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1432,6 +2212,22 @@
       "number": 26,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 26,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 34,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1457,6 +2253,22 @@
       "number": 27,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 27,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 35,
+      "mode": "button",
+      "press_value": 127
      }
     }
    }
@@ -1471,7 +2283,32 @@
     "d": 100.5
    },
    "id": "jog_rotation_a",
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 6,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       126,
+       127
+      ]
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 43,
+      "mode": "absolute",
+      "min": 1,
+      "max": 127,
+      "resting": 1
+     }
+    }
+   },
    "section": "Deck A Jog"
   },
   {
@@ -1484,7 +2321,31 @@
     "d": 100.5
    },
    "id": "jog_rotation_b",
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 6,
+      "mode": "absolute",
+      "min": 1,
+      "max": 127,
+      "resting": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 43,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    }
+   },
    "section": "Deck B Jog"
   },
   {
@@ -1497,7 +2358,26 @@
     "d": 82.0
    },
    "id": "jog_touch_a",
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 6,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 6,
+      "mode": "button",
+      "press_value": 127
+     }
+    }
+   },
    "section": "Deck A Jog"
   },
   {
@@ -1510,22 +2390,64 @@
     "d": 82.0
    },
    "id": "jog_touch_b",
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 6,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 2,
+      "number": 6,
+      "mode": "button",
+      "press_value": 127
+     }
+    }
+   },
    "section": "Deck B Jog"
   },
   {
    "label": "Browse",
    "kind": "encoder",
    "shape": {
-    "type": "rect",
-    "cx": 159.4,
-    "cy": 142.81,
-    "w": 14,
-    "h": 9,
-    "round": true
+    "type": "circle",
+    "cx": 158.36,
+    "cy": 88.53,
+    "d": 17.18
    },
    "id": "browse",
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 15,
+      "number": 0,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 15,
+      "number": 120,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    }
+   }
   },
   {
    "label": "PITCH FADER A",
@@ -1541,7 +2463,24 @@
    "section": "Deck A",
    "detent": true,
    "id": "pitch_fader_a",
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 9,
+      "mode": "absolute",
+      "min": 0,
+      "max": 7,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   }
   },
   {
    "label": "PITCH FADER B",
@@ -1557,7 +2496,24 @@
    "section": "Deck B",
    "detent": true,
    "id": "pitch_fader_b",
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 9,
+      "mode": "absolute",
+      "min": 0,
+      "max": 7,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   }
   },
   {
    "label": "LINE FADER A",
@@ -1572,7 +2528,30 @@
    },
    "section": "Mixer",
    "id": "line_fader_a",
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 28,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 28,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    }
+   }
   },
   {
    "label": "LINE FADER B",
@@ -1587,7 +2566,30 @@
    },
    "section": "Mixer",
    "id": "line_fader_b",
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 28,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 2,
+      "number": 28,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    }
+   }
   },
   {
    "label": "CROSSFADER",
@@ -1602,7 +2604,63 @@
    },
    "section": "Mixer",
    "id": "crossfader",
-   "bindings": {}
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 15,
+      "number": 8,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 15,
+      "number": 8,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    }
+   }
+  },
+  {
+   "label": "Enter",
+   "kind": "button",
+   "shape": {
+    "type": "rect",
+    "cx": 158.6,
+    "cy": 83.4,
+    "w": 19.7,
+    "h": 12.1,
+    "round": true
+   },
+   "id": "enter",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 6,
+      "mode": "button",
+      "press_value": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
+    }
+   }
   }
  ],
  "controller_id": "Reloop Ready",

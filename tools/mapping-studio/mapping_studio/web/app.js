@@ -741,6 +741,13 @@ async function poll() {
         : /offline/.test(st.backend_status) ? 'idle' : 'dead');
     $('#save').disabled = !st.dirty;
 
+    const os = $('#outstat');
+    if (os && st.output_status) {
+      os.textContent = st.output_status;
+      os.className = 'pill ' + (/^out:/.test(st.output_status) ? 'live'
+        : /offline/.test(st.output_status) ? 'idle' : 'dead');
+    }
+
     if (st.learn && st.learn.active) { S.learn = st.learn; renderLearn(); }
     else if (S.learn && S.learn.active) { S.learn = null; renderLearn(); }
 
@@ -850,6 +857,38 @@ function wire() {
   };
 
   $('#probestart').onclick = startProbe;
+
+  // Before committing to a pass, prove output reaches the device at all. An
+  // LED probe against a controller that has stopped accepting output looks
+  // identical to one where nothing happens to be wired up.
+  $('#p-test').onclick = async () => {
+    const lit = S.controls.filter(c => bindingOf(c, 'output')
+      && bindingOf(c, 'output').status !== 'local');
+    const box = $('#outcheck');
+    if (!lit.length) {
+      box.hidden = false;
+      box.textContent = 'No LED is mapped yet, so there is nothing known-good '
+        + 'to test with. Run a pass and come back.';
+      return;
+    }
+    for (const c of lit.slice(0, 6)) {
+      const o = bindingOf(c, 'output');
+      await api('/api/send', { status: 'note_on', channel: o.channel || 1,
+                               number: o.number, value: o.on || 127 });
+    }
+    box.hidden = false;
+    box.innerHTML = `Lit ${Math.min(lit.length, 6)} LEDs that a previous pass `
+      + `confirmed work. <b>If nothing came on</b>, the controller has stopped `
+      + `accepting output — unplug its USB and plug it back in. Nothing in `
+      + `software will fix that.`;
+    setTimeout(() => {
+      lit.slice(0, 6).forEach(c => {
+        const o = bindingOf(c, 'output');
+        api('/api/send', { status: 'note_off', channel: o.channel || 1,
+                           number: o.number, value: 0 });
+      });
+    }, 2500);
+  };
 
   $('#exportprev').onclick = async () => {
     const d = await api(`/api/export?layer=${encodeURIComponent(S.layer)}`);
