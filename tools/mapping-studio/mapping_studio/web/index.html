@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapping Studio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="bar">
+  <h1>Mapping&nbsp;Studio</h1>
+  <nav id="modes">
+    <button data-mode="layout" class="on">Layout</button>
+    <button data-mode="learn">Learn</button>
+    <button data-mode="probe">LEDs</button>
+    <button data-mode="assign">Assign</button>
+    <button data-mode="export">Export</button>
+  </nav>
+  <div id="barright">
+    <label id="layerwrap">Layer
+      <select id="layer"></select>
+    </label>
+    <span id="link" class="pill">…</span>
+    <button id="save" class="ghost">Save</button>
+  </div>
+</header>
+
+<main>
+  <section id="panelwrap">
+    <div id="panelhead">
+      <span id="pname">—</span>
+      <span class="spacer"></span>
+      <label class="chk"><input type="checkbox" id="showprov" checked> provisional</label>
+      <label class="chk"><input type="checkbox" id="showlabels" checked> labels</label>
+      <button id="zoomout" class="ghost sm">−</button>
+      <button id="zoomin" class="ghost sm">+</button>
+      <button id="zoomfit" class="ghost sm">fit</button>
+    </div>
+    <div id="stage"><svg id="panel" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <div id="hint"></div>
+  </section>
+
+  <aside id="side">
+
+    <!-- ---------------------------------------------------------- layout -->
+    <div class="pane" data-pane="layout">
+      <h2>Refine the first pass</h2>
+      <p class="lede">Regions were guessed from the artwork. Fix what is wrong,
+        delete what is not a control, add what was missed. Nothing else needs to
+        be right yet.</p>
+      <div class="keys">
+        <span><kbd>click</kbd> select</span>
+        <span><kbd>drag</kbd> move</span>
+        <span><kbd>N</kbd> new</span>
+        <span><kbd>Del</kbd> remove</span>
+        <span><kbd>Esc</kbd> deselect</span>
+      </div>
+      <div id="editor" class="empty">Select a region.</div>
+      <div class="bulk">
+        <button id="delprov" class="ghost danger">Delete all provisional</button>
+        <button id="keepprov" class="ghost">Accept all provisional</button>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------------- learn -->
+    <div class="pane" data-pane="learn" hidden>
+      <h2>Map the inputs</h2>
+      <p class="lede">Click a region, then move that control on the hardware.
+        Click <em>Done</em> when it has been through its full travel.</p>
+      <div id="learnbox" class="empty">Pick a region to start.</div>
+      <div id="learnlive"></div>
+      <h3>Everything arriving</h3>
+      <ul id="monitor" class="mono"></ul>
+    </div>
+
+    <!-- ----------------------------------------------------------- probe -->
+    <div class="pane" data-pane="probe" hidden>
+      <h2>Find the LEDs</h2>
+      <p class="lede">The studio lights one at a time. Click whichever region on
+        the panel just lit up, or say nothing happened. Notes already known as
+        button inputs are tried first, since a button's LED usually answers to
+        its own note.</p>
+      <div id="probesetup">
+        <div class="row">
+          <label>from <input type="number" id="plo" value="0" min="0" max="127"></label>
+          <label>to <input type="number" id="phi" value="127" min="0" max="127"></label>
+          <label>ch <input type="number" id="pch" value="1" min="1" max="16"></label>
+        </div>
+        <label class="chk"><input type="checkbox" id="psmart" checked>
+          try known button notes first</label>
+        <button id="probestart" class="primary big">Start probing</button>
+      </div>
+      <div id="probebox" hidden></div>
+    </div>
+
+    <!-- ---------------------------------------------------------- assign -->
+    <div class="pane" data-pane="assign" hidden>
+      <h2>Choose what it drives</h2>
+      <p class="lede">What each captured control should do in Mixxx. Separate
+        from the capture on purpose: changing your mind here never costs you the
+        measurements.</p>
+      <div id="assignbox" class="empty">Select a mapped region.</div>
+      <h3>Unassigned</h3>
+      <ul id="unassigned" class="list"></ul>
+    </div>
+
+    <!-- ---------------------------------------------------------- export -->
+    <div class="pane" data-pane="export" hidden>
+      <h2>Export</h2>
+      <div id="stats" class="stats"></div>
+      <div class="row">
+        <button id="exportprev" class="ghost">Preview</button>
+        <button id="exportwrite" class="primary">Write files</button>
+      </div>
+      <pre id="exportout" class="mono out"></pre>
+    </div>
+
+    <div id="log"></div>
+  </aside>
+</main>
+
+<div id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

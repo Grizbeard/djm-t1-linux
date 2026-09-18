@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# Launcher for mapping-studio, runnable from anywhere in the tree.
+#
+# The package uses relative imports, so `python3 tools/mapping-studio/mapping_studio`
+# does not work: that runs the directory with no package context. Put the tool's
+# directory on the import path and run it as a module instead.
+#
+# SPDX-License-Identifier: MIT
+set -eu
+DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PYTHON=${PYTHON:-python3}
+command -v "$PYTHON" >/dev/null 2>&1 || PYTHON=python
+PYTHONPATH="$DIR${PYTHONPATH:+:$PYTHONPATH}" exec "$PYTHON" -m mapping_studio "$@"

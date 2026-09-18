@@ -1,0 +1,2056 @@
+{
+ "schema": 1,
+ "id": "pioneer-djm-t1",
+ "name": "Pioneer DJM-T1",
+ "created": "2026-09-17",
+ "units": "mm",
+ "panel": {
+  "w": 265.0,
+  "h": 403.0
+ },
+ "backdrop": {
+  "kind": "schematic"
+ },
+ "layers": [
+  "base",
+  "shift"
+ ],
+ "midi": {
+  "channel": 1
+ },
+ "controls": [
+  {
+   "id": "knob",
+   "label": "KNOB",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.7,
+   "evidence": [
+    "4 concentric outlines"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 48.013,
+    "cy": 14.414,
+    "d": 11.183
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button",
+   "label": "BUTTON",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.65,
+   "evidence": [
+    "4 concentric outlines"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 132.507,
+    "cy": 15.354,
+    "w": 10.007,
+    "h": 9.902,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_2",
+   "label": "BUTTON 2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.65,
+   "evidence": [
+    "4 concentric outlines"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 166.495,
+    "cy": 17.519,
+    "w": 11.783,
+    "h": 5.573,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_3",
+   "label": "BUTTON 3",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 58.473,
+    "cy": 17.907,
+    "w": 8.29,
+    "h": 4.798,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_4",
+   "label": "BUTTON 4",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 2x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 72.46,
+    "cy": 17.907,
+    "w": 8.291,
+    "h": 4.798,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "load_a",
+   "label": "LOAD A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 92.495,
+    "cy": 42.318,
+    "w": 15.095,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 1,
+      "mode": "button",
+      "press_value": 127,
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "Deck A",
+   "target": {
+    "group": "[Channel1]",
+    "key": "LoadSelectedTrack"
+   }
+  },
+  {
+   "id": "load_b",
+   "label": "LOAD B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 172.504,
+    "cy": 42.318,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 2,
+      "mode": "button",
+      "press_value": 127,
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "Deck B",
+   "target": {
+    "group": "[Channel2]",
+    "key": "LoadSelectedTrack"
+   }
+  },
+  {
+   "id": "knob_2",
+   "label": "KNOB 2",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 228.993,
+    "cy": 44.12,
+    "d": 16.501
+   },
+   "bindings": {}
+  },
+  {
+   "id": "browse",
+   "label": "BROWSE",
+   "kind": "encoder",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 132.501,
+    "cy": 49.321,
+    "d": 24.999
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 0,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "Browse",
+   "target": {
+    "group": "[Library]",
+    "key": "MoveVertical"
+   }
+  },
+  {
+   "id": "ch1",
+   "label": "CH1",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'CH1' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 18.999,
+    "cy": 50.007,
+    "w": 11.112,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch2",
+   "label": "CH2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'CH2' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 36.002,
+    "cy": 50.007,
+    "w": 11.113,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "utility",
+   "label": "UTILITY",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'UTILITY' at 7.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 53.005,
+    "cy": 50.007,
+    "w": 11.112,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_5",
+   "label": "BUTTON 5",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 84.261,
+    "cy": 62.318,
+    "w": 11.109,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "cue",
+   "label": "CUE",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'CUE' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 100.735,
+    "cy": 62.318,
+    "w": 11.109,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "button_6",
+   "label": "BUTTON 6",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 164.266,
+    "cy": 62.318,
+    "w": 11.11,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "cue_2",
+   "label": "CUE",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'CUE' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 180.739,
+    "cy": 62.318,
+    "w": 11.109,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "knob_3",
+   "label": "KNOB 3",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 228.993,
+    "cy": 74.023,
+    "d": 16.501
+   },
+   "bindings": {}
+  },
+  {
+   "id": "snap",
+   "label": "SNAP",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "4 concentric outlines",
+    "size recurs 13x on panel",
+    "label 'SNAP' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 36.002,
+    "cy": 74.312,
+    "w": 15.132,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx1",
+   "label": "FX1",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'FX1' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 84.258,
+    "cy": 85.318,
+    "w": 11.109,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx2",
+   "label": "FX2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'FX2' at 3.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 100.735,
+    "cy": 85.318,
+    "w": 11.109,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "sync",
+   "label": "SYNC",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "7 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'SYNC' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 121.758,
+    "cy": 85.318,
+    "w": 13.087,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "sync_2",
+   "label": "SYNC",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "7 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'SYNC' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 143.24,
+    "cy": 85.318,
+    "w": 13.087,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx1_2",
+   "label": "FX1",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'FX1' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 164.264,
+    "cy": 85.318,
+    "w": 11.109,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "fx2_2",
+   "label": "FX2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 11x on panel",
+    "label 'FX2' at 3.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 180.739,
+    "cy": 85.318,
+    "w": 11.109,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "on",
+   "label": "ON",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label 'ON' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.511,
+    "cy": 107.823,
+    "w": 15.095,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "dry_wet",
+   "label": "DRY/ WET",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label 'DRY/ WET' at 13.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.503,
+    "cy": 107.816,
+    "d": 16.502
+   },
+   "bindings": {}
+  },
+  {
+   "id": "phono",
+   "label": "PHONO",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'PHONO' at 11.3"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 89.498,
+    "cy": 107.823,
+    "w": 9.595,
+    "h": 6.208,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "phono_2",
+   "label": "PHONO",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "3 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'PHONO' at 9.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 92.496,
+    "cy": 107.823,
+    "w": 17.002,
+    "h": 7.62,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "phono_3",
+   "label": "PHONO",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'PHONO' at 11.3"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 169.504,
+    "cy": 107.823,
+    "w": 9.595,
+    "h": 6.207,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "phono_4",
+   "label": "PHONO",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "3 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'PHONO' at 9.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 172.502,
+    "cy": 107.823,
+    "w": 17.003,
+    "h": 7.62,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "dry_wet_2",
+   "label": "DRY/ WET",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label 'DRY/ WET' at 13.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.495,
+    "cy": 107.816,
+    "d": 16.502
+   },
+   "bindings": {}
+  },
+  {
+   "id": "on_2",
+   "label": "ON",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label 'ON' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.489,
+    "cy": 107.823,
+    "w": 15.095,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "single",
+   "label": "/ SINGLE",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label '/ SINGLE' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.509,
+    "cy": 116.765,
+    "w": 15.0,
+    "h": 5.469,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "single_2",
+   "label": "/ SINGLE",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label '/ SINGLE' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.495,
+    "cy": 116.765,
+    "w": 15.0,
+    "h": 5.469,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ctl",
+   "label": "-",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.65,
+   "evidence": [
+    "2 concentric outlines",
+    "label '-' at 14.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 132.499,
+    "cy": 136.308,
+    "w": 42.472,
+    "h": 73.477,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "1",
+   "label": "1",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label '1' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.511,
+    "cy": 136.82,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "1_2",
+   "label": "1",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label '1' at 13.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.503,
+    "cy": 136.813,
+    "d": 16.501
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch1_trim",
+   "label": "CH1 TRIM",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 136.814,
+    "d": 14.0
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 13,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH1",
+   "target": {
+    "group": "[Channel1]",
+    "key": "pregain"
+   }
+  },
+  {
+   "id": "ch2_trim",
+   "label": "CH2 TRIM",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 136.814,
+    "d": 13.999
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 14,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH2",
+   "target": {
+    "group": "[Channel2]",
+    "key": "pregain"
+   }
+  },
+  {
+   "id": "1_3",
+   "label": "1",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label '1' at 13.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.495,
+    "cy": 136.813,
+    "d": 16.502
+   },
+   "bindings": {}
+  },
+  {
+   "id": "1_4",
+   "label": "1",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label '1' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.489,
+    "cy": 136.82,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "select",
+   "label": "SELECT",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'SELECT' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 26.337,
+    "cy": 151.3,
+    "w": 12.592,
+    "h": 5.468,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "select_2",
+   "label": "SELECT",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'SELECT' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 238.664,
+    "cy": 151.3,
+    "w": 12.593,
+    "h": 5.468,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "2",
+   "label": "2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label '2' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.511,
+    "cy": 165.815,
+    "w": 15.095,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "2_2",
+   "label": "2",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label '2' at 13.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.503,
+    "cy": 165.811,
+    "d": 16.502
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch1_hi",
+   "label": "CH1 HI",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 165.811,
+    "d": 16.501
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 15,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH1",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel1]_Effect1]",
+    "key": "parameter3"
+   }
+  },
+  {
+   "id": "ch2_hi",
+   "label": "CH2 HI",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 165.811,
+    "d": 16.502
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 16,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH2",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel2]_Effect1]",
+    "key": "parameter3"
+   }
+  },
+  {
+   "id": "2_3",
+   "label": "2",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label '2' at 13.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.495,
+    "cy": 165.811,
+    "d": 16.502
+   },
+   "bindings": {}
+  },
+  {
+   "id": "2_4",
+   "label": "2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label '2' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.489,
+    "cy": 165.815,
+    "w": 15.095,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "headphones",
+   "label": "HEADPHONES",
+   "kind": "fader",
+   "provisional": true,
+   "confidence": 0.75,
+   "evidence": [
+    "3 concentric outlines",
+    "label 'HEADPHONES' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 132.499,
+    "cy": 177.315,
+    "w": 42.472,
+    "h": 4.797,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "3",
+   "label": "3",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label '3' at 12.9"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.503,
+    "cy": 194.659,
+    "d": 16.502
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch1_mid",
+   "label": "CH1 MID",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 194.713,
+    "d": 16.501
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 17,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH1",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel1]_Effect1]",
+    "key": "parameter2"
+   }
+  },
+  {
+   "id": "ch2_mid",
+   "label": "CH2 MID",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 194.713,
+    "d": 16.502
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 18,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH2",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel2]_Effect1]",
+    "key": "parameter2"
+   }
+  },
+  {
+   "id": "3_2",
+   "label": "3",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 18x on panel",
+    "label '3' at 12.9"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.495,
+    "cy": 194.659,
+    "d": 16.502
+   },
+   "bindings": {}
+  },
+  {
+   "id": "3_3",
+   "label": "3",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label '3' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.511,
+    "cy": 194.811,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "knob_4",
+   "label": "KNOB 4",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "11 concentric outlines",
+    "size recurs 18x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 132.498,
+    "cy": 194.81,
+    "d": 16.5
+   },
+   "bindings": {}
+  },
+  {
+   "id": "3_4",
+   "label": "3",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 13x on panel",
+    "label '3' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.489,
+    "cy": 194.811,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "level",
+   "label": "LEVEL",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.65,
+   "evidence": [
+    "2 concentric outlines",
+    "label 'LEVEL' at 5.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 132.499,
+    "cy": 208.904,
+    "w": 42.472,
+    "h": 58.381,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch1_low",
+   "label": "CH1 LOW",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 223.71,
+    "d": 16.501
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 19,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH1",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel1]_Effect1]",
+    "key": "parameter1"
+   }
+  },
+  {
+   "id": "knob_5",
+   "label": "KNOB 5",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "11 concentric outlines",
+    "size recurs 18x on panel"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 132.498,
+    "cy": 223.72,
+    "d": 16.5
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch2_low",
+   "label": "CH2 LOW",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 223.71,
+    "d": 16.502
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 20,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH2",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel2]_Effect1]",
+    "key": "parameter1"
+   }
+  },
+  {
+   "id": "auto_loop",
+   "label": "AUTO LOOP",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "8 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'AUTO LOOP' at 11.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 36.007,
+    "cy": 223.805,
+    "d": 16.003
+   },
+   "bindings": {}
+  },
+  {
+   "id": "auto_loop_2",
+   "label": "AUTO LOOP",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "8 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'AUTO LOOP' at 11.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 228.997,
+    "cy": 223.805,
+    "d": 16.003
+   },
+   "bindings": {}
+  },
+  {
+   "id": "move",
+   "label": "MOVE",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'MOVE' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 16.511,
+    "cy": 233.572,
+    "w": 13.0,
+    "h": 5.468,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "level_2",
+   "label": "LEVEL",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'LEVEL' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 55.508,
+    "cy": 233.572,
+    "w": 12.999,
+    "h": 5.468,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "level_3",
+   "label": "LEVEL",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'LEVEL' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 209.497,
+    "cy": 233.572,
+    "w": 13.0,
+    "h": 5.468,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "move_2",
+   "label": "MOVE",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.85,
+   "evidence": [
+    "2 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'MOVE' at 4.2"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 248.498,
+    "cy": 233.572,
+    "w": 13.0,
+    "h": 5.468,
+    "round": false
+   },
+   "bindings": {}
+  },
+  {
+   "id": "select_3",
+   "label": "SELECT",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'SELECT' at 3.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 36.021,
+    "cy": 247.018,
+    "w": 13.121,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch1_cue",
+   "label": "CH1 CUE",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 92.495,
+    "cy": 247.018,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 47,
+      "mode": "button",
+      "press_value": 127,
+      "source": "docs/midi-map.md",
+      "verified": false
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 47,
+      "on": 127,
+      "off": 0,
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH1",
+   "target": {
+    "group": "[Channel1]",
+    "key": "pfl",
+    "toggle": true
+   }
+  },
+  {
+   "id": "shift",
+   "label": "SHIFT",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 132.505,
+    "cy": 247.015,
+    "w": 17.098,
+    "h": 11.083,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "Global"
+  },
+  {
+   "id": "ch2_cue",
+   "label": "CH2 CUE",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 172.501,
+    "cy": 247.018,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 48,
+      "mode": "button",
+      "press_value": 127,
+      "source": "docs/midi-map.md",
+      "verified": false
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 48,
+      "on": 127,
+      "off": 0,
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "section": "CH2",
+   "target": {
+    "group": "[Channel2]",
+    "key": "pfl",
+    "toggle": true
+   }
+  },
+  {
+   "id": "select_4",
+   "label": "SELECT",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.95,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 4x on panel",
+    "label 'SELECT' at 3.0"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 229.011,
+    "cy": 247.018,
+    "w": 13.12,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "1_5",
+   "label": "1",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '1' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 27.995,
+    "cy": 279.895,
+    "w": 17.109,
+    "h": 10.089,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "1_6",
+   "label": "1",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '1' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 236.969,
+    "cy": 279.895,
+    "w": 17.109,
+    "h": 10.089,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "2_5",
+   "label": "2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '2' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 27.994,
+    "cy": 302.895,
+    "w": 17.109,
+    "h": 10.089,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "2_6",
+   "label": "2",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '2' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 236.969,
+    "cy": 302.895,
+    "w": 17.109,
+    "h": 10.089,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "3_5",
+   "label": "3",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '3' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 27.994,
+    "cy": 325.894,
+    "w": 17.109,
+    "h": 10.09,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "3_6",
+   "label": "3",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '3' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 236.969,
+    "cy": 326.1,
+    "w": 17.109,
+    "h": 10.09,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "4",
+   "label": "4",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '4' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 27.994,
+    "cy": 348.893,
+    "w": 17.109,
+    "h": 10.088,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "4_2",
+   "label": "4",
+   "kind": "button",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "5 concentric outlines",
+    "size recurs 8x on panel",
+    "label '4' at 3.4"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 236.969,
+    "cy": 348.893,
+    "w": 17.109,
+    "h": 10.088,
+    "round": true
+   },
+   "bindings": {}
+  },
+  {
+   "id": "active",
+   "label": "ACTIVE",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "8 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'ACTIVE' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 28.012,
+    "cy": 371.91,
+    "d": 15.009
+   },
+   "bindings": {}
+  },
+  {
+   "id": "active_2",
+   "label": "ACTIVE",
+   "kind": "knob",
+   "provisional": true,
+   "confidence": 0.99,
+   "evidence": [
+    "8 concentric outlines",
+    "size recurs 2x on panel",
+    "label 'ACTIVE' at 3.1"
+   ],
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 236.986,
+    "cy": 371.91,
+    "d": 15.009
+   },
+   "bindings": {}
+  },
+  {
+   "id": "ch1_volume",
+   "label": "CH1 VOLUME",
+   "section": "CH1",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 92.5,
+    "cy": 299.0,
+    "w": 6.0,
+    "h": 54.0,
+    "round": true
+   },
+   "confidence": 0.5,
+   "evidence": [
+    "placed by hand: faders are drawn as scale ticks, not as a slot, so they do not auto-detect"
+   ],
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 21,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "target": {
+    "group": "[Channel1]",
+    "key": "volume"
+   }
+  },
+  {
+   "id": "ch2_volume",
+   "label": "CH2 VOLUME",
+   "section": "CH2",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 172.5,
+    "cy": 299.0,
+    "w": 6.0,
+    "h": 54.0,
+    "round": true
+   },
+   "confidence": 0.5,
+   "evidence": [
+    "placed by hand: faders are drawn as scale ticks, not as a slot, so they do not auto-detect"
+   ],
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 22,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "target": {
+    "group": "[Channel2]",
+    "key": "volume"
+   }
+  },
+  {
+   "id": "crossfader",
+   "label": "CROSSFADER",
+   "section": "Master",
+   "kind": "fader",
+   "detent": true,
+   "shape": {
+    "type": "rect",
+    "cx": 133.0,
+    "cy": 379.0,
+    "w": 56.0,
+    "h": 9.0,
+    "round": true
+   },
+   "confidence": 0.5,
+   "evidence": [
+    "placed by hand: faders are drawn as scale ticks, not as a slot, so they do not auto-detect"
+   ],
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 23,
+      "mode": "absolute",
+      "mirrors": [
+       "cc 0x18"
+      ],
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "target": {
+    "group": "[Master]",
+    "key": "crossfader"
+   }
+  },
+  {
+   "id": "browse_push",
+   "label": "BROWSE PUSH",
+   "section": "Browse",
+   "kind": "button",
+   "shape": {
+    "type": "circle",
+    "cx": 132.5,
+    "cy": 49.3,
+    "d": 10.0
+   },
+   "confidence": 0.5,
+   "evidence": [
+    "placed by hand: faders are drawn as scale ticks, not as a slot, so they do not auto-detect"
+   ],
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127,
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    }
+   },
+   "target": {
+    "group": "[Library]",
+    "key": "GoToItem"
+   }
+  }
+ ],
+ "controller_id": "PIONEER DJM-T1 MIDI 1",
+ "provenance": {
+  "geometry": "auto-detected from a 1:1 plan view of the top panel; positions are measurements in millimetres, no artwork is redistributed",
+  "bindings": "seeded from docs/midi-map.md where a control could be placed unambiguously; everything else is unmapped and awaits a learn pass",
+  "generated": "tools/mapping-studio, first pass then hand-placed faders"
+ }
+}
