@@ -832,3 +832,43 @@ class TestNoteRelease(unittest.TestCase):
         p.data["midi"] = {"note_release": "single"}
         xml, _js, _fn = export_mixxx.export(p)
         self.assertEqual(len(ET.fromstring(xml).findall(".//controls/control")), 1)
+
+
+class TestOutputValidity(unittest.TestCase):
+    """An <output> must name a real MixxxControl, never a script function."""
+
+    def make(self):
+        p = Profile.new("t", "T", {"w": 10, "h": 10})
+        p.add_control({"id": "vinyl", "label": "VINYL", "kind": "button",
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 9, "h": 9},
+                       "target": {"group": "[Channel1]", "key": "T.vinyl",
+                                  "script": "T.vinyl", "external": True}})
+        p.set_binding("vinyl", "base", "input",
+                      {"status": "note", "channel": 1, "number": 15,
+                       "mode": "button", "press_value": 127})
+        p.set_binding("vinyl", "base", "output",
+                      {"status": "note", "channel": 1, "number": 15,
+                       "on": 127, "off": 0})
+        return p
+
+    def test_a_script_keyed_control_gets_no_output_block(self):
+        # Mixxx rejects the whole outputs section over one bad control name:
+        # "MIDI output message 0x90 0x0F has invalid MixxxControl".
+        xml, _js, _fn = export_mixxx.export(self.make())
+        outs = ET.fromstring(xml).findall(".//outputs/output")
+        self.assertEqual(outs, [])
+        self.assertIn("driven by the mapping's own script", xml)
+
+    def test_the_input_side_still_binds_to_the_script(self):
+        xml, _js, _fn = export_mixxx.export(self.make())
+        keys = {c.findtext("key")
+                for c in ET.fromstring(xml).findall(".//controls/control")}
+        self.assertIn("T.vinyl", keys)
+
+    def test_an_explicit_output_key_is_honoured(self):
+        p = self.make()
+        t = p.target(p.get("vinyl"), "base")
+        t["output_key"] = "keylock"
+        xml, _js, _fn = export_mixxx.export(p)
+        outs = ET.fromstring(xml).findall(".//outputs/output")
+        self.assertEqual([o.findtext("key") for o in outs], ["keylock"])

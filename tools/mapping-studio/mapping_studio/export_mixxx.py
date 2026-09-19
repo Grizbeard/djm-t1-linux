@@ -242,6 +242,16 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
                     f"no Mixxx control chosen yet, so no <output> was written")
             if out and target.get("group"):
                 key = target.get("output_key") or target.get("key")
+                # An <output> must name a real MixxxControl. A key that is a
+                # script function is fine for input but meaningless here, and
+                # Mixxx rejects the whole outputs section over it. Controls
+                # whose LED the script drives itself -- VINYL arming a platter,
+                # say -- simply have no <output>.
+                if key and "." in key:
+                    comments.append(
+                        f"{label}{suffix}: LED is driven by the mapping's own "
+                        f"script, so no <output> is written for it")
+                    key = None
                 if not key:
                     comments.append(
                         f"{label}: LED found on note {out.get('number')} but the "

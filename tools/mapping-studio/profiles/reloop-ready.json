@@ -1337,6 +1337,15 @@
       "number": 40,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 40,
+      "mode": "button",
+      "press_value": 127,
+      "source": "by symmetry with deck B and this control's own LED note",
+      "verified": false
      }
     },
     "shift": {
@@ -1383,6 +1392,15 @@
       "number": 41,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 41,
+      "mode": "button",
+      "press_value": 127,
+      "source": "by symmetry with deck B and this control's own LED note",
+      "verified": false
      }
     },
     "shift": {
