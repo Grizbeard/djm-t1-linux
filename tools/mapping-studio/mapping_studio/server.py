@@ -48,12 +48,43 @@ class Studio:
         self.backdrop = backdrop
         self.lock = threading.RLock()
         self.dirty = False
+        self.mtime = self._mtime()
 
-    def save(self):
+    def _mtime(self):
+        try:
+            return os.path.getmtime(self.profile_path)
+        except OSError:
+            return None
+
+    def save(self, force=False):
+        """Write the profile, refusing to clobber an edit made underneath us.
+
+        A studio holds the whole profile in memory, so anything written to the
+        file while it runs is invisible to it and disappears at the next save.
+        That is not hypothetical: a block added to the file by hand was wiped by
+        the next click of Save, silently.
+        """
         with self.lock:
+            now = self._mtime()
+            if not force and self.mtime and now and now > self.mtime + 0.5:
+                raise ProfileError(
+                    f"{self.profile_path} changed on disk since this studio "
+                    f"read it, so saving would discard that edit. Reload to "
+                    f"take the file's version, or save with force to keep this "
+                    f"one.")
             self.profile.save(self.profile_path)
+            self.mtime = self._mtime()
             self.dirty = False
         return self.profile_path
+
+    def reload(self):
+        """Re-read the profile from disk, discarding unsaved changes."""
+        with self.lock:
+            self.profile = Profile.load(self.profile_path)
+            self.session.profile = self.profile
+            self.mtime = self._mtime()
+            self.dirty = False
+        return self.profile
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -299,7 +330,11 @@ class Handler(BaseHTTPRequestHandler):
 
             # -- persistence -------------------------------------------
             if path == "/api/save":
-                return self._json({"saved": s.save()})
+                return self._json({"saved": s.save(force=bool(body.get("force")))})
+            if path == "/api/reload":
+                s.reload()
+                return self._json({"reloaded": s.profile_path,
+                                   "controls": len(s.profile.controls)})
             if path == "/api/export/write":
                 layer = body.get("layer") or sess.layer
                 outdir = body.get("dir") or os.path.dirname(s.profile_path) or "."

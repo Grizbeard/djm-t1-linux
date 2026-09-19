@@ -8,6 +8,7 @@ SPDX-License-Identifier: MIT
 """
 
 import os
+import re
 import sys
 import unittest
 import xml.etree.ElementTree as ET
@@ -608,3 +609,87 @@ class TestFourteenBit(unittest.TestCase):
         self.assertIn("<fourteen-bit-lsb/>", xml)
         # both halves drive the same Mixxx control
         self.assertEqual({e.findtext("key") for e in entries}, {"rate"})
+
+
+class TestSaveGuard(unittest.TestCase):
+    """A studio must not silently discard an edit made to the file underneath it."""
+
+    def setUp(self):
+        import tempfile
+        from mapping_studio import server as srv
+        from mapping_studio.session import MappingSession
+        self.srv = srv
+        self.dir = tempfile.mkdtemp()
+        self.path = os.path.join(self.dir, "p.json")
+        p = Profile.new("t", "T", {"w": 10, "h": 10})
+        p.add_control({"id": "a", "kind": "knob",
+                       "shape": {"type": "circle", "cx": 5, "cy": 5, "d": 4}})
+        p.save(self.path)
+        self.studio = srv.Studio(Profile.load(self.path), self.path,
+                                 MappingSession(p, midi.OfflineBackend()))
+
+    def test_normal_save_works(self):
+        self.assertEqual(self.studio.save(), self.path)
+
+    def test_save_refuses_after_the_file_changed_underneath(self):
+        import json as _json, time as _time
+        _time.sleep(1.1)                       # move past the mtime tolerance
+        d = _json.load(open(self.path, encoding="utf-8"))
+        d["added_by_hand"] = True
+        with open(self.path, "w", encoding="utf-8") as fh:
+            _json.dump(d, fh)
+        with self.assertRaises(ProfileError):
+            self.studio.save()
+        # the hand edit is still there
+        self.assertIn("added_by_hand",
+                      _json.load(open(self.path, encoding="utf-8")))
+
+    def test_reload_takes_the_file_version(self):
+        import json as _json, time as _time
+        _time.sleep(1.1)
+        d = _json.load(open(self.path, encoding="utf-8"))
+        d["name"] = "Renamed On Disk"
+        with open(self.path, "w", encoding="utf-8") as fh:
+            _json.dump(d, fh)
+        self.studio.reload()
+        self.assertEqual(self.studio.profile.data["name"], "Renamed On Disk")
+        self.assertEqual(self.studio.save(), self.path)   # no longer stale
+
+
+class TestScriptIntegrity(unittest.TestCase):
+    """Every script-binding in the XML must resolve to a function in the JS.
+
+    This caught a real failure: pads were routed to a dispatcher that was not
+    being emitted, so Mixxx would have loaded the mapping and then done nothing
+    when a pad was pressed, with no error anywhere obvious.
+    """
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "profiles", "reloop-ready.json")
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_no_script_binding_dangles(self):
+        p = Profile.load(self.path)
+        xml, js, _fn = export_mixxx.export(p)
+        root = ET.fromstring(xml)
+        dangling = sorted({
+            c.findtext("key") for c in root.findall(".//controls/control")
+            if c.find("options/script-binding") is not None
+            and (c.findtext("key") + " = function") not in js})
+        self.assertEqual(dangling, [])
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_generated_script_is_balanced(self):
+        # Not a parser, but an unbalanced brace means the file will not load at
+        # all, and that is worth failing a build over.
+        _xml, js, _fn = export_mixxx.export(Profile.load(self.path))
+        code = re.sub(r"//.*", "", js)
+        for open_ch, close_ch in (("{", "}"), ("(", ")"), ("[", "]")):
+            self.assertEqual(code.count(open_ch), code.count(close_ch),
+                             f"unbalanced {open_ch}{close_ch}")
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_pad_modes_reach_the_script(self):
+        _xml, js, _fn = export_mixxx.export(Profile.load(self.path))
+        for needed in ("MODE_SELECT", "PAD_ACTION", "paintPads", "connectPads"):
+            self.assertIn(needed, js)

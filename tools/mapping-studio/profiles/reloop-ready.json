@@ -13,7 +13,8 @@
  },
  "layers": [
   "base",
-  "shift"
+  "shift",
+  "mode"
  ],
  "midi": {
   "channel": 1
@@ -876,6 +877,13 @@
       "number": 2,
       "on": 127,
       "off": 0
+     },
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 2,
+      "mode": "button",
+      "press_value": 127
      }
     },
     "shift": {
@@ -2006,6 +2014,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2019,12 +2036,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_1_activate",
+     "key": "Reloop_Ready.pad_a1",
+     "script": "Reloop_Ready.pad_a1",
+     "external": true,
      "output_key": "hotcue_1_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_1_clear",
+     "key": "Reloop_Ready.pad_a1_shift",
+     "script": "Reloop_Ready.pad_a1_shift",
+     "external": true,
+     "output_key": "hotcue_1_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a1_mode",
+     "script": "Reloop_Ready.pad_a1_mode",
+     "external": true,
      "output_key": "hotcue_1_enabled"
     }
    }
@@ -2067,6 +2095,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 5,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2080,12 +2117,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_2_activate",
+     "key": "Reloop_Ready.pad_a2",
+     "script": "Reloop_Ready.pad_a2",
+     "external": true,
      "output_key": "hotcue_2_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_2_clear",
+     "key": "Reloop_Ready.pad_a2_shift",
+     "script": "Reloop_Ready.pad_a2_shift",
+     "external": true,
+     "output_key": "hotcue_2_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a2_mode",
+     "script": "Reloop_Ready.pad_a2_mode",
+     "external": true,
      "output_key": "hotcue_2_enabled"
     }
    }
@@ -2128,6 +2176,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 14,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2141,12 +2198,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_3_activate",
+     "key": "Reloop_Ready.pad_a3",
+     "script": "Reloop_Ready.pad_a3",
+     "external": true,
      "output_key": "hotcue_3_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_3_clear",
+     "key": "Reloop_Ready.pad_a3_shift",
+     "script": "Reloop_Ready.pad_a3_shift",
+     "external": true,
+     "output_key": "hotcue_3_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a3_mode",
+     "script": "Reloop_Ready.pad_a3_mode",
+     "external": true,
      "output_key": "hotcue_3_enabled"
     }
    }
@@ -2189,6 +2257,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 11,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2202,12 +2279,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_4_activate",
+     "key": "Reloop_Ready.pad_a4",
+     "script": "Reloop_Ready.pad_a4",
+     "external": true,
      "output_key": "hotcue_4_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_4_clear",
+     "key": "Reloop_Ready.pad_a4_shift",
+     "script": "Reloop_Ready.pad_a4_shift",
+     "external": true,
+     "output_key": "hotcue_4_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a4_mode",
+     "script": "Reloop_Ready.pad_a4_mode",
+     "external": true,
      "output_key": "hotcue_4_enabled"
     }
    }
@@ -2250,6 +2338,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 15,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2263,12 +2360,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_5_activate",
+     "key": "Reloop_Ready.pad_a5",
+     "script": "Reloop_Ready.pad_a5",
+     "external": true,
      "output_key": "hotcue_5_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_5_clear",
+     "key": "Reloop_Ready.pad_a5_shift",
+     "script": "Reloop_Ready.pad_a5_shift",
+     "external": true,
+     "output_key": "hotcue_5_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a5_mode",
+     "script": "Reloop_Ready.pad_a5_mode",
+     "external": true,
      "output_key": "hotcue_5_enabled"
     }
    }
@@ -2311,6 +2419,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 9,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2324,12 +2441,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_6_activate",
+     "key": "Reloop_Ready.pad_a6",
+     "script": "Reloop_Ready.pad_a6",
+     "external": true,
      "output_key": "hotcue_6_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_6_clear",
+     "key": "Reloop_Ready.pad_a6_shift",
+     "script": "Reloop_Ready.pad_a6_shift",
+     "external": true,
+     "output_key": "hotcue_6_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a6_mode",
+     "script": "Reloop_Ready.pad_a6_mode",
+     "external": true,
      "output_key": "hotcue_6_enabled"
     }
    }
@@ -2372,6 +2500,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 8,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2385,12 +2522,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_7_activate",
+     "key": "Reloop_Ready.pad_a7",
+     "script": "Reloop_Ready.pad_a7",
+     "external": true,
      "output_key": "hotcue_7_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_7_clear",
+     "key": "Reloop_Ready.pad_a7_shift",
+     "script": "Reloop_Ready.pad_a7_shift",
+     "external": true,
+     "output_key": "hotcue_7_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a7_mode",
+     "script": "Reloop_Ready.pad_a7_mode",
+     "external": true,
      "output_key": "hotcue_7_enabled"
     }
    }
@@ -2433,6 +2581,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 5,
+      "number": 18,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2446,12 +2603,23 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "hotcue_8_activate",
+     "key": "Reloop_Ready.pad_a8",
+     "script": "Reloop_Ready.pad_a8",
+     "external": true,
      "output_key": "hotcue_8_enabled"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "hotcue_8_clear",
+     "key": "Reloop_Ready.pad_a8_shift",
+     "script": "Reloop_Ready.pad_a8_shift",
+     "external": true,
+     "output_key": "hotcue_8_enabled"
+    },
+    "mode": {
+     "group": "[Channel1]",
+     "key": "Reloop_Ready.pad_a8_mode",
+     "script": "Reloop_Ready.pad_a8_mode",
+     "external": true,
      "output_key": "hotcue_8_enabled"
     }
    }
@@ -2494,6 +2662,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2507,12 +2684,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_1_activate",
+     "key": "Reloop_Ready.pad_b1",
+     "script": "Reloop_Ready.pad_b1",
+     "external": true,
      "output_key": "hotcue_1_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_1_clear",
+     "key": "Reloop_Ready.pad_b1_shift",
+     "script": "Reloop_Ready.pad_b1_shift",
+     "external": true,
+     "output_key": "hotcue_1_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b1_mode",
+     "script": "Reloop_Ready.pad_b1_mode",
+     "external": true,
      "output_key": "hotcue_1_enabled"
     }
    }
@@ -2555,6 +2743,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 5,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2568,12 +2765,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_2_activate",
+     "key": "Reloop_Ready.pad_b2",
+     "script": "Reloop_Ready.pad_b2",
+     "external": true,
      "output_key": "hotcue_2_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_2_clear",
+     "key": "Reloop_Ready.pad_b2_shift",
+     "script": "Reloop_Ready.pad_b2_shift",
+     "external": true,
+     "output_key": "hotcue_2_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b2_mode",
+     "script": "Reloop_Ready.pad_b2_mode",
+     "external": true,
      "output_key": "hotcue_2_enabled"
     }
    }
@@ -2616,6 +2824,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 14,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2629,12 +2846,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_3_activate",
+     "key": "Reloop_Ready.pad_b3",
+     "script": "Reloop_Ready.pad_b3",
+     "external": true,
      "output_key": "hotcue_3_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_3_clear",
+     "key": "Reloop_Ready.pad_b3_shift",
+     "script": "Reloop_Ready.pad_b3_shift",
+     "external": true,
+     "output_key": "hotcue_3_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b3_mode",
+     "script": "Reloop_Ready.pad_b3_mode",
+     "external": true,
      "output_key": "hotcue_3_enabled"
     }
    }
@@ -2677,6 +2905,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 11,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2690,12 +2927,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_4_activate",
+     "key": "Reloop_Ready.pad_b4",
+     "script": "Reloop_Ready.pad_b4",
+     "external": true,
      "output_key": "hotcue_4_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_4_clear",
+     "key": "Reloop_Ready.pad_b4_shift",
+     "script": "Reloop_Ready.pad_b4_shift",
+     "external": true,
+     "output_key": "hotcue_4_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b4_mode",
+     "script": "Reloop_Ready.pad_b4_mode",
+     "external": true,
      "output_key": "hotcue_4_enabled"
     }
    }
@@ -2738,6 +2986,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 15,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2751,12 +3008,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_5_activate",
+     "key": "Reloop_Ready.pad_b5",
+     "script": "Reloop_Ready.pad_b5",
+     "external": true,
      "output_key": "hotcue_5_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_5_clear",
+     "key": "Reloop_Ready.pad_b5_shift",
+     "script": "Reloop_Ready.pad_b5_shift",
+     "external": true,
+     "output_key": "hotcue_5_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b5_mode",
+     "script": "Reloop_Ready.pad_b5_mode",
+     "external": true,
      "output_key": "hotcue_5_enabled"
     }
    }
@@ -2799,6 +3067,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 9,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2812,12 +3089,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_6_activate",
+     "key": "Reloop_Ready.pad_b6",
+     "script": "Reloop_Ready.pad_b6",
+     "external": true,
      "output_key": "hotcue_6_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_6_clear",
+     "key": "Reloop_Ready.pad_b6_shift",
+     "script": "Reloop_Ready.pad_b6_shift",
+     "external": true,
+     "output_key": "hotcue_6_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b6_mode",
+     "script": "Reloop_Ready.pad_b6_mode",
+     "external": true,
      "output_key": "hotcue_6_enabled"
     }
    }
@@ -2860,6 +3148,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 8,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2873,12 +3170,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_7_activate",
+     "key": "Reloop_Ready.pad_b7",
+     "script": "Reloop_Ready.pad_b7",
+     "external": true,
      "output_key": "hotcue_7_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_7_clear",
+     "key": "Reloop_Ready.pad_b7_shift",
+     "script": "Reloop_Ready.pad_b7_shift",
+     "external": true,
+     "output_key": "hotcue_7_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b7_mode",
+     "script": "Reloop_Ready.pad_b7_mode",
+     "external": true,
      "output_key": "hotcue_7_enabled"
     }
    }
@@ -2921,6 +3229,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "mode": {
+     "input": {
+      "status": "note",
+      "channel": 6,
+      "number": 18,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "rgb": true,
@@ -2934,12 +3251,23 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "hotcue_8_activate",
+     "key": "Reloop_Ready.pad_b8",
+     "script": "Reloop_Ready.pad_b8",
+     "external": true,
      "output_key": "hotcue_8_enabled"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "hotcue_8_clear",
+     "key": "Reloop_Ready.pad_b8_shift",
+     "script": "Reloop_Ready.pad_b8_shift",
+     "external": true,
+     "output_key": "hotcue_8_enabled"
+    },
+    "mode": {
+     "group": "[Channel2]",
+     "key": "Reloop_Ready.pad_b8_mode",
+     "script": "Reloop_Ready.pad_b8_mode",
+     "external": true,
      "output_key": "hotcue_8_enabled"
     }
    }
@@ -3154,7 +3482,6 @@
     "round": true
    },
    "section": "Deck A",
-   "detent": true,
    "id": "pitch_fader_a",
    "bindings": {
     "shift": {
@@ -3171,8 +3498,7 @@
       "mode": "14bit",
       "min": 0,
       "max": 1023,
-      "source": "measured 2026-09-18: CC9 high byte, CC63 low byte",
-      "verified": false
+      "resting": 1023
      }
     }
    },
@@ -3195,7 +3521,6 @@
     "round": true
    },
    "section": "Deck B",
-   "detent": true,
    "id": "pitch_fader_b",
    "bindings": {
     "shift": {
@@ -3212,8 +3537,7 @@
       "mode": "14bit",
       "min": 0,
       "max": 1023,
-      "source": "measured 2026-09-18: CC9 high byte, CC63 low byte",
-      "verified": false
+      "resting": 1023
      }
     }
    },
@@ -3414,5 +3738,99 @@
   },
   "bright_bit": 6,
   "note": "velocity = bright<<6 | R<<4 | G<<2 | B, each component 0..3. Verified on hardware: 64 colours, two brightness levels. Only the performance pads are RGB."
+ },
+ "pad_modes": {
+  "note": "Holding MODE and pressing a pad selects a performance mode. Mixxx has no pad modes, so the mapping keeps the mode itself.",
+  "select": {
+   "0": "hotcue",
+   "5": "autoloop",
+   "14": "manualloop",
+   "11": "sampler",
+   "15": "pitchplay",
+   "9": "scratchbank",
+   "8": "looproll",
+   "18": "beatgrid"
+  },
+  "modes": {
+   "hotcue": {
+    "label": "Hot Cue",
+    "colour": "hotcue",
+    "unset": [
+     1,
+     0,
+     0
+    ]
+   },
+   "autoloop": {
+    "label": "Auto Loop",
+    "colour": [
+     0,
+     3,
+     0
+    ]
+   },
+   "manualloop": {
+    "label": "Manual Loop",
+    "colour": [
+     3,
+     2,
+     0
+    ]
+   },
+   "sampler": {
+    "label": "Sampler",
+    "colour": [
+     3,
+     0,
+     3
+    ]
+   },
+   "pitchplay": {
+    "label": "Pitch Play",
+    "colour": [
+     0,
+     2,
+     3
+    ],
+    "pro": true
+   },
+   "scratchbank": {
+    "label": "Scratch Bank",
+    "colour": [
+     3,
+     3,
+     0
+    ],
+    "pro": true
+   },
+   "looproll": {
+    "label": "Loop Roll",
+    "colour": [
+     0,
+     3,
+     3
+    ],
+    "pro": true
+   },
+   "beatgrid": {
+    "label": "Beat Grid",
+    "colour": [
+     0,
+     0,
+     3
+    ],
+    "pro": true
+   }
+  },
+  "decks": {
+   "a": {
+    "group": "[Channel1]",
+    "channel": 5
+   },
+   "b": {
+    "group": "[Channel2]",
+    "channel": 6
+   }
+  }
  }
 }

@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
 
 import re
 import time
-from . import colour
+from . import colour, padmodes
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -187,7 +187,13 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
                                              options=["fourteen-bit-lsb"]))
                         seen_in.add(("cc", inp.get("channel", 1), inp["lsb"]))
                         continue
-                    if _needs_script(c, inp, target):
+                    if target.get("script") and target.get("external"):
+                        # Bind to a handler written elsewhere in the script --
+                        # the pad-mode dispatcher, say -- and do not generate a
+                        # stub that would collide with it.
+                        entry["key"] = target["script"]
+                        entry["options"] = ["script-binding"]
+                    elif _needs_script(c, inp, target):
                         fn = target.get("script") or f"{prefix}.{_ident(fn_id)}"
                         entry["key"] = fn
                         entry["options"] = ["script-binding"]
@@ -327,13 +333,32 @@ def build_script(profile, scripted, prefix, layer="base"):
         f"var {prefix} = {{}};",
         "",
         f"{prefix}.init = function (id, debugging) {{",
+    ]
+    has_pad_modes = bool((profile.data.get("pad_modes") or {}).get("modes"))
+    if has_pad_modes:
+        # Pads have to be painted once Mixxx is up, and kept in step after.
+        out += [f"    {prefix}.connectPads();",
+                f"    {prefix}.paintAll();"]
+    out += [
         "};",
         "",
         f"{prefix}.shutdown = function () {{",
+    ]
+    if has_pad_modes:
+        out.append(f"    {prefix}.allPadsOff();")
+    out += [
         "};",
         "",
     ]
     out.extend(_colour_helper(profile, prefix, layer))
+
+    pads = padmodes.generate(profile, prefix)
+    if pads:
+        base = _pad_note_base(profile)
+        out.append(f"{prefix}.PAD_NOTE_BASE = {base};   "
+                   f"// pads are {base}..{base + 7} on their channel")
+        out.append("")
+        out.extend(pads)
 
     if not scripted:
         out.append("// No scripted bindings beyond the colour helper above.")
@@ -472,3 +497,15 @@ def export(profile, layer="base", **kw):
                                                          "controller_id")})
     js = build_script(profile, scripted, prefix, layer=layer)
     return xml, js, script_file
+
+
+def _pad_note_base(profile):
+    """The note the first pad sends, so the script can address pads by index."""
+    notes = []
+    for c in profile.controls:
+        if c.get("kind") != "pad":
+            continue
+        inp = (c.get("bindings", {}).get("base", {}) or {}).get("input")
+        if inp and inp.get("status") == "note":
+            notes.append(inp["number"])
+    return min(notes) if notes else 0
