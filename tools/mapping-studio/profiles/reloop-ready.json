@@ -1362,12 +1362,11 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "loop_halve",
-     "output_key": "loop_enabled"
+     "key": "beatjump_backward"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "beatjump_backward"
+     "key": "beatjump_size_halve"
     }
    }
   },
@@ -1417,12 +1416,11 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "loop_double",
-     "output_key": "loop_enabled"
+     "key": "beatjump_forward"
     },
     "shift": {
      "group": "[Channel1]",
-     "key": "beatjump_forward"
+     "key": "beatjump_size_double"
     }
    }
   },
@@ -1578,12 +1576,11 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "loop_halve",
-     "output_key": "loop_enabled"
+     "key": "beatjump_backward"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "beatjump_backward"
+     "key": "beatjump_size_halve"
     }
    }
   },
@@ -1631,12 +1628,11 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "loop_double",
-     "output_key": "loop_enabled"
+     "key": "beatjump_forward"
     },
     "shift": {
      "group": "[Channel2]",
-     "key": "beatjump_forward"
+     "key": "beatjump_size_double"
     }
    }
   },
@@ -3882,63 +3878,451 @@
    },
    "autoloop": {
     "label": "Auto Loop",
-    "colour": [
-     0,
-     3,
-     0
+    "pads": [
+     {
+      "rgb": [
+       0,
+       1,
+       0
+      ],
+      "state": "beatloop_1_enabled"
+     },
+     {
+      "rgb": [
+       0,
+       2,
+       0
+      ],
+      "state": "beatloop_2_enabled"
+     },
+     {
+      "rgb": [
+       0,
+       3,
+       0
+      ],
+      "state": "beatloop_4_enabled"
+     },
+     {
+      "rgb": [
+       1,
+       3,
+       0
+      ],
+      "state": "beatloop_8_enabled"
+     },
+     {
+      "rgb": [
+       0,
+       3,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       3,
+       2
+      ]
+     }
     ]
    },
    "manualloop": {
     "label": "Manual Loop",
-    "colour": [
-     3,
-     2,
-     0
+    "pads": [
+     {
+      "rgb": [
+       3,
+       1,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       3,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       3,
+       3,
+       0
+      ],
+      "state": "loop_enabled"
+     },
+     {
+      "rgb": [
+       2,
+       1,
+       0
+      ],
+      "state": "loop_enabled"
+     },
+     {
+      "rgb": [
+       3,
+       2,
+       1
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       1,
+       1
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       1,
+       1
+      ]
+     },
+     {
+      "rgb": [
+       3,
+       2,
+       1
+      ]
+     }
     ]
    },
    "sampler": {
     "label": "Sampler",
-    "colour": [
-     3,
-     0,
-     3
+    "samplers": true,
+    "pads": [
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     },
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     },
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     },
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     },
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     },
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     },
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     },
+     {
+      "rgb": [
+       3,
+       0,
+       3
+      ],
+      "state": "play"
+     }
+    ]
+   },
+   "looproll": {
+    "label": "Loop Roll",
+    "pro": true,
+    "pads": [
+     {
+      "rgb": [
+       0,
+       1,
+       1
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       2,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       3,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       1,
+       3,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       2,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       2,
+       3
+      ]
+     }
+    ]
+   },
+   "beatgrid": {
+    "label": "Beat Grid",
+    "pro": true,
+    "pads": [
+     {
+      "rgb": [
+       0,
+       0,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       1,
+       1,
+       3
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       0,
+       0
+      ]
+     }
     ]
    },
    "pitchplay": {
     "label": "Pitch Play",
-    "colour": [
-     0,
-     2,
-     3
-    ],
-    "pro": true
+    "pro": true,
+    "inert": true,
+    "pads": [
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     },
+     {
+      "rgb": [
+       0,
+       1,
+       2
+      ]
+     }
+    ]
    },
    "scratchbank": {
     "label": "Scratch Bank",
-    "colour": [
-     3,
-     3,
-     0
-    ],
-    "pro": true
-   },
-   "looproll": {
-    "label": "Loop Roll",
-    "colour": [
-     0,
-     3,
-     3
-    ],
-    "pro": true
-   },
-   "beatgrid": {
-    "label": "Beat Grid",
-    "colour": [
-     0,
-     0,
-     3
-    ],
-    "pro": true
+    "pro": true,
+    "inert": true,
+    "pads": [
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     },
+     {
+      "rgb": [
+       2,
+       2,
+       0
+      ]
+     }
+    ]
    }
   },
   "decks": {

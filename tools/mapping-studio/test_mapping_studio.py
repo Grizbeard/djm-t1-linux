@@ -872,3 +872,56 @@ class TestOutputValidity(unittest.TestCase):
         xml, _js, _fn = export_mixxx.export(p)
         outs = ET.fromstring(xml).findall(".//outputs/output")
         self.assertEqual([o.findtext("key") for o in outs], ["keylock"])
+
+
+class TestPadColourScheme(unittest.TestCase):
+    """Colour carries two things: what a pad does, and whether it is engaged."""
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "profiles", "reloop-ready.json")
+
+    def script(self):
+        return export_mixxx.export(Profile.load(self.path))[1]
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_pads_within_a_mode_are_not_all_one_colour(self):
+        js = self.script()
+        m = re.search(r"autoloop: \{(.*?)\n    \},", js, re.S)
+        rgbs = re.findall(r"rgb: \[(\d), (\d), (\d)\]", m.group(1))
+        self.assertEqual(len(rgbs), 8)
+        self.assertGreater(len(set(rgbs)), 3,
+                           "a mode should differentiate its pads by colour")
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_outer_and_inner_pads_of_a_row_differ(self):
+        # Row 2 of Auto Loop: the outer pair moves the loop, the inner pair
+        # resizes it. Different job, different hue.
+        js = self.script()
+        m = re.search(r"autoloop: \{(.*?)\n    \},", js, re.S)
+        rgbs = re.findall(r"rgb: \[(\d), (\d), (\d)\]", m.group(1))
+        outer, inner = rgbs[4], rgbs[5]
+        self.assertEqual(outer, rgbs[7])      # pads 5 and 8 match
+        self.assertEqual(inner, rgbs[6])      # pads 6 and 7 match
+        self.assertNotEqual(outer, inner)
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_toggling_pads_carry_a_state_control(self):
+        js = self.script()
+        m = re.search(r"autoloop: \{(.*?)\n    \},", js, re.S)
+        self.assertIn('state: "beatloop_1_enabled"', m.group(1))
+        m = re.search(r"manualloop: \{(.*?)\n    \},", js, re.S)
+        self.assertIn('state: "loop_enabled"', m.group(1))
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_state_dims_the_pad_until_engaged(self):
+        js = self.script()
+        m = re.search(r"paintPads = function.*?\n\};", js, re.S)
+        self.assertIn("lit = engine.getValue(g, pad.state) > 0", m.group(0))
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_state_controls_are_connected_so_the_panel_follows_mixxx(self):
+        js = self.script()
+        m = re.search(r"connectPads = function.*?\n\};", js, re.S)
+        for key in ("beatloop_1_enabled", "loop_enabled"):
+            self.assertIn(key, m.group(0))
+        self.assertIn("[Sampler", m.group(0))
