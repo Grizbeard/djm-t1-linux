@@ -101,9 +101,17 @@ class Backend:
     # -- helpers ---------------------------------------------------------
 
     @staticmethod
-    def event(status, channel, number, value, raw=""):
+    def event(status, channel, number, value, raw="", status_byte=None):
+        """status_byte is the byte as it arrived.
+
+        Worth keeping separately from the normalised status: a release sent as
+        note-off (0x8n) and one sent as note-on with velocity zero (0x9n) mean
+        the same thing to a human and completely different things to a mapping,
+        which binds on the byte.
+        """
         return {"t": time.time(), "status": status, "channel": channel,
-                "number": number, "value": value, "raw": raw}
+                "number": number, "value": value, "raw": raw,
+                "status_byte": status_byte}
 
 
 # ---------------------------------------------------------------- offline
@@ -457,11 +465,14 @@ class RtMidiBackend(Backend):
         kind, ch = sb & 0xF0, (sb & 0x0F) + 1
         if kind == 0x90:
             vel = data[2] if len(data) > 2 else 0
-            self.emit(self.event("note_on" if vel else "note_off", ch, data[1], vel))
+            self.emit(self.event("note_on" if vel else "note_off", ch, data[1],
+                                 vel, status_byte=sb))
         elif kind == 0x80:
-            self.emit(self.event("note_off", ch, data[1], data[2] if len(data) > 2 else 0))
+            self.emit(self.event("note_off", ch, data[1],
+                                 data[2] if len(data) > 2 else 0, status_byte=sb))
         elif kind == 0xB0:
-            self.emit(self.event("cc", ch, data[1], data[2] if len(data) > 2 else 0))
+            self.emit(self.event("cc", ch, data[1],
+                                 data[2] if len(data) > 2 else 0, status_byte=sb))
         elif kind == 0xE0:
             val = (data[2] << 7 | data[1]) if len(data) > 2 else 0
             self.emit(self.event("pitch", ch, 0, val))

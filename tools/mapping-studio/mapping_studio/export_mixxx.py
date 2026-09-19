@@ -218,6 +218,7 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
                         entry["options"] = ["script-binding"]
                         scripted.append((c, inp, fn, target))
                     controls.append(entry)
+                    controls.extend(_note_off_twin(entry, inp, p))
                     for m in (inp.get("mirrors") or []):
                         comments.append(
                             f"{label}{suffix}: also emits {m} -- mirror, "
@@ -605,3 +606,33 @@ def _hires_helper(hires, prefix):
             "",
         ]
     return out
+
+
+def _note_off_twin(entry, binding, profile):
+    """A second binding on note-off, for controls that must see the release.
+
+    A release can arrive two ways: note-on with velocity 0 (status 0x9n) or a
+    real note-off (0x8n). They mean the same thing to a person and entirely
+    different things to a mapping, which matches on the status byte. A mapping
+    bound only to 0x9n silently never sees a 0x8n release -- and everything that
+    depends on the release breaks while everything else keeps working, which is
+    a genuinely confusing way to fail: a held hot cue never returns, a jog
+    platter never lets go of playback.
+
+    Emitting both costs a duplicate line and is harmless either way: if the
+    device sends velocity-zero note-ons, the 0x8n binding simply never fires.
+
+    Set "note_release": "single" in a profile's midi block to suppress it.
+    """
+    if binding.get("status") != "note":
+        return []
+    if (profile.data.get("midi") or {}).get("note_release") == "single":
+        return []
+    # Only worth it where the release actually does something: a script handler
+    # that reads the value, or a plain binding that follows it.
+    status = entry.get("status")
+    if status is None or (status & 0xF0) != 0x90:
+        return []
+    twin = dict(entry, status=(status & 0x0F) | 0x80,
+                description=f"{entry['description']} (release)")
+    return [twin]

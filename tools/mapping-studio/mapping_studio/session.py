@@ -164,6 +164,25 @@ def analyse(events, kind=None):
         binding["press_value"] = max(
             (e["value"] for e in events
              if e["status"] == "note_on" and e["value"] > 0), default=127)
+        # How the release arrives decides whether the mapping needs a second
+        # binding: 0x8n is a different status byte from 0x9n, and a mapping
+        # bound only to note-on never sees a real note-off.
+        offs = [e for e in events if e["status"] == "note_off"
+                and e["channel"] == channel and e["number"] == number]
+        if offs:
+            bytes_seen = {e.get("status_byte") for e in offs
+                          if e.get("status_byte") is not None}
+            if any(b is not None and (b & 0xF0) == 0x80 for b in bytes_seen):
+                binding["release"] = "note_off"
+                notes.append(
+                    "releases arrive as note-off (0x8n), not note-on with "
+                    "velocity 0; anything that must follow the release needs "
+                    "both status bytes bound")
+            else:
+                binding["release"] = "note_on_zero"
+        else:
+            binding["release"] = "none_seen"
+            notes.append("no release was seen; a gated control needs one")
         if top["count"] >= 2 and top.get("presses", 0) >= 1:
             notes.append(
                 "button sends a press and an immediate release; drive it on the "

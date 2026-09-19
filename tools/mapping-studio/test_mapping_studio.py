@@ -793,3 +793,42 @@ class TestJogs(unittest.TestCase):
     def test_relative_rim_is_decoded_as_signed(self):
         js = self.script()
         self.assertIn("(value < 64) ? value : value - 128", js)
+
+
+class TestNoteRelease(unittest.TestCase):
+    """A release can arrive as 0x8n or as 0x9n velocity 0; bind both."""
+
+    def make(self):
+        p = Profile.new("t", "T", {"w": 10, "h": 10})
+        p.add_control({"id": "pad", "label": "PAD", "kind": "pad",
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 9, "h": 9},
+                       "target": {"group": "[Channel1]", "key": "hotcue_1_activate"}})
+        p.set_binding("pad", "base", "input",
+                      {"status": "note", "channel": 1, "number": 20,
+                       "mode": "button", "press_value": 127})
+        return p
+
+    def test_note_off_is_bound_alongside_note_on(self):
+        # The bug: a mapping bound only to 0x9n never sees a real note-off, so
+        # a held hot cue never returns and a touched platter never lets go.
+        xml, _js, _fn = export_mixxx.export(self.make())
+        entries = ET.fromstring(xml).findall(".//controls/control")
+        statuses = {e.findtext("status") for e in entries}
+        self.assertEqual(statuses, {"0x90", "0x80"})
+        self.assertEqual({e.findtext("key") for e in entries},
+                         {"hotcue_1_activate"})
+
+    def test_cc_bindings_are_untouched(self):
+        p = self.make()
+        p.set_binding("pad", "base", "input",
+                      {"status": "cc", "channel": 1, "number": 20,
+                       "mode": "absolute", "min": 0, "max": 127, "resting": 0})
+        xml, _js, _fn = export_mixxx.export(p)
+        entries = ET.fromstring(xml).findall(".//controls/control")
+        self.assertEqual(len(entries), 1)
+
+    def test_a_profile_can_opt_out(self):
+        p = self.make()
+        p.data["midi"] = {"note_release": "single"}
+        xml, _js, _fn = export_mixxx.export(p)
+        self.assertEqual(len(ET.fromstring(xml).findall(".//controls/control")), 1)
