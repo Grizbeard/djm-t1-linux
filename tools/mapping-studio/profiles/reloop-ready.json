@@ -3793,6 +3793,15 @@
       "mode": "button",
       "press_value": 127
      }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 15,
+      "number": 123,
+      "mode": "button",
+      "press_value": 127
+     }
     }
    },
    "targets": {
