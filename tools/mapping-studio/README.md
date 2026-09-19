@@ -287,27 +287,39 @@ only).
 | LED probe loop | ✅ run against a Reloop Ready: 40 LEDs in one pass |
 | Mixxx XML + script export | ✅ validated against the hand-written mapping |
 | SHIFT layer capture | ✅ supported; nobody has done the pass yet |
-| Reloop Ready profile | 🟡 72 regions, 40 LEDs mapped, inputs barely started |
+| Reloop Ready profile | ✅ complete and playing: 3 layers, pad modes, RGB |
 
-`profiles/reloop-ready.json` is geometry derived from the plan view in the
-Reloop Ready instruction manual (article 243598), named through the manual's own
-callout legend. Scaling it by the published 325 mm width reproduces the
-published 220 mm depth to 0.9%, which is the check that says the drawing is a
-true projection rather than a stylised one. Jog wheels and faders still need
-placing by hand; the 16 pads were placed by hand because the plan view does not
-draw them as findable shapes.
+`profiles/reloop-ready.json` is a finished mapping, built and played entirely
+through this tool. Geometry came from the plan view in the instruction manual
+(article 243598), named through the manual's own callout legend; scaling by the
+published 325 mm width reproduces the published 220 mm depth to 0.9%.
 
-Its LED map came out of one probe pass and is regular enough to trust: pads A1-A8
-answer to notes 20-27 on channel 5, pads B1-B8 to the same notes on channel 6,
-and PLAY/CUE/SYNC to notes 0/1/2 on channels 1 and 2. Inputs are almost entirely
-unmapped -- only the left GAIN knob (CC 0x16) has been learned.
+It exercises nearly everything the studio can do:
 
-The hardware that taught this tool about channels: the Reloop Ready spreads its
-surface over channels 1, 2, 5, 6, 9, 10 and 15.
+- **three layers** -- base, SHIFT, and MODE -- folded into one mapping, because
+  each modifier changes the note the hardware sends rather than being state the
+  host tracks;
+- **RGB pads**, encoding recovered on the hardware (`velocity = bright<<6 |
+  R<<4 | G<<2 | B`), with per-pad colour per mode and the brightness bit
+  carrying engaged state;
+- **pad modes**, which Mixxx has no concept of, held by the mapping itself;
+- **14-bit pitch faders**, scaled in script because they travel ~1024 steps
+  rather than the full range Mixxx's fourteen-bit options assume;
+- **jog wheels** with VINYL arming the touch sensor for scratch.
 
-Both hardware-facing halves have now been run against a real controller: a
-Reloop Ready over the rtmidi backend on Windows, where the learn loop captured
-a full knob sweep and one LED pass identified 40 outputs. The DJM-T1 side is
-still offline-only -- the ALSA reader is the mechanism `tools/calibrate.py`
-already proves on that mixer, and the sender is `tools/probe-leds.sh`'s, but
-neither has been driven from this tool against a DJM-T1 yet.
+The hardware taught the tool most of what it knows: that a surface can spread
+across channels 1, 2, 5, 6, 9, 10 and 15; that a release can arrive as note-off
+rather than note-on-zero; that an `<output>` naming a script function makes
+Mixxx reject every other LED with it.
+
+Both hardware-facing halves have been run against a real controller, and the
+Reloop Ready mapping was built end to end with this tool and is in use. The
+DJM-T1 side is still offline-only: the ALSA reader is the mechanism
+`tools/calibrate.py` already proves on that mixer and the sender is
+`tools/probe-leds.sh`'s, but neither has been driven from this tool against a
+DJM-T1 yet.
+
+Every Mixxx control name the exporter emits for that profile was checked
+against the Mixxx source, including the ones built at runtime from format
+strings. That check is worth repeating for a new profile: Mixxx rejects an
+entire outputs section over a single bad name.
