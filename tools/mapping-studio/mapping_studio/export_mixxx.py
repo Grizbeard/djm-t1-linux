@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
 
 import re
 import time
-from . import colour, padmodes
+from . import colour, jogs, padmodes
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -369,6 +369,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=()):
         "};",
         "",
     ]
+    out.extend(jogs.generate(profile, prefix))
     out.extend(_hires_helper(hires, prefix))
     out.extend(_colour_helper(profile, prefix, layer))
 

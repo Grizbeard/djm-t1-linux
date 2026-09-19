@@ -753,3 +753,43 @@ class TestPadRelease(unittest.TestCase):
             self.assertIsNotNone(m, mode)
             self.assertNotIn(".gate(", m.group(1),
                              f"{mode} latches; gating it would undo it instantly")
+
+
+class TestJogs(unittest.TestCase):
+    """A jog wheel is rim + platter + VINYL, and only works as a unit."""
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "profiles", "reloop-ready.json")
+
+    def script(self):
+        return export_mixxx.export(Profile.load(self.path))[1]
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_rim_scratches_when_armed_and_nudges_otherwise(self):
+        js = self.script()
+        m = re.search(r"jogTurn_a = function.*?\n\};", js, re.S)
+        self.assertIsNotNone(m)
+        body = m.group(0)
+        self.assertIn("engine.scratchTick(1,", body)
+        self.assertIn('"jog"', body)
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_platter_does_nothing_until_vinyl_arms_it(self):
+        js = self.script()
+        m = re.search(r"jogTouch_a = function.*?\n\};", js, re.S)
+        self.assertIn("vinylMode", m.group(0))
+        self.assertIn("engine.scratchEnable(1,", m.group(0))
+        self.assertIn("engine.scratchDisable(1,", m.group(0))
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_vinyl_drives_its_own_led(self):
+        # Mixxx has no value for "the platter is armed", so the LED has to be
+        # driven from the mapping's own state.
+        js = self.script()
+        m = re.search(r"setVinyl_a = function.*?\n\};", js, re.S)
+        self.assertIn("midi.sendShortMsg", m.group(0))
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_relative_rim_is_decoded_as_signed(self):
+        js = self.script()
+        self.assertIn("(value < 64) ? value : value - 128", js)
