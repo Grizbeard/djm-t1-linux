@@ -352,7 +352,20 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "beatloop_size",
+     "relative_action": "scale",
+     "min": 0.03125,
+     "max": 32
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "super1"
+    }
+   }
   },
   {
    "id": "gain_a",
@@ -678,7 +691,20 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "beatloop_size",
+     "relative_action": "scale",
+     "min": 0.03125,
+     "max": 32
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "super1"
+    }
+   }
   },
   {
    "id": "high_a",
@@ -3505,7 +3531,8 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "rate"
+     "key": "rate",
+     "invert": true
     }
    }
   },
@@ -3544,7 +3571,8 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "rate"
+     "key": "rate",
+     "invert": true
     }
    }
   },

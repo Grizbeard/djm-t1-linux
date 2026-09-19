@@ -592,23 +592,44 @@ class TestFourteenBit(unittest.TestCase):
         binding, _g, _m, _n = analyse(self.sweep())
         self.assertNotEqual(binding["lsb"], binding["number"] + 32)
 
-    def test_export_emits_both_halves_on_one_target(self):
+    @staticmethod
+    def profile_with(span, invert=False):
         p = Profile.new("t", "T", {"w": 10, "h": 10})
+        target = {"group": "[Channel1]", "key": "rate"}
+        if invert:
+            target["invert"] = True
         p.add_control({"id": "pitch", "label": "PITCH", "kind": "fader",
                        "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 4, "h": 8},
-                       "target": {"group": "[Channel1]", "key": "rate"}})
+                       "target": target})
         p.set_binding("pitch", "base", "input",
                       {"status": "cc", "channel": 1, "number": 9, "lsb": 63,
-                       "mode": "14bit", "min": 0, "max": 1023, "resting": 512})
-        xml, _js, _fn = export_mixxx.export(p)
-        root = ET.fromstring(xml)
-        entries = root.findall(".//controls/control")
+                       "mode": "14bit", "min": 0, "max": span,
+                       "resting": span // 2})
+        return p
+
+    def test_full_range_pair_uses_mixxx_native_pairing(self):
+        xml, _js, _fn = export_mixxx.export(self.profile_with(16383))
+        entries = ET.fromstring(xml).findall(".//controls/control")
         self.assertEqual(len(entries), 2)
         self.assertEqual({e.findtext("midino") for e in entries}, {"0x09", "0x3F"})
         self.assertIn("<fourteen-bit-msb/>", xml)
         self.assertIn("<fourteen-bit-lsb/>", xml)
-        # both halves drive the same Mixxx control
         self.assertEqual({e.findtext("key") for e in entries}, {"rate"})
+
+    def test_partial_range_pair_is_scaled_in_script(self):
+        # Mixxx's pairing assumes the whole 0..16383 range. A fader that only
+        # travels 1024 steps would otherwise land in a sliver at one end --
+        # which is exactly how a pitch fader ended up covering +8.75 to +10.
+        xml, js, _fn = export_mixxx.export(self.profile_with(1023))
+        self.assertNotIn("fourteen-bit", xml)
+        self.assertIn("T.pitch_msb", xml)
+        self.assertIn("T.pitch_lsb", xml)
+        self.assertIn("(s.msb << 7) | s.lsb", js)
+        self.assertIn("raw / 1023", js)
+
+    def test_inverted_fader_is_flipped_in_script(self):
+        _xml, js, _fn = export_mixxx.export(self.profile_with(1023, invert=True))
+        self.assertIn("pos = 1 - pos", js)
 
 
 class TestSaveGuard(unittest.TestCase):
@@ -693,3 +714,42 @@ class TestScriptIntegrity(unittest.TestCase):
         _xml, js, _fn = export_mixxx.export(Profile.load(self.path))
         for needed in ("MODE_SELECT", "PAD_ACTION", "paintPads", "connectPads"):
             self.assertIn(needed, js)
+
+
+class TestPadRelease(unittest.TestCase):
+    """Which pad actions must follow the release, and which must not."""
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "profiles", "reloop-ready.json")
+
+    def script(self):
+        return export_mixxx.export(Profile.load(self.path))[1]
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_the_release_edge_reaches_the_dispatcher(self):
+        # The bug this guards: the dispatcher returned early on value 0, so a
+        # hot cue became a one-shot jump and a loop roll never ended.
+        js = self.script()
+        i = js.index("padPress = function")
+        body = js[i:i + 500]
+        self.assertNotIn("if (value === 0)", body)
+        self.assertIn("value > 0", body)
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_hot_cue_and_loop_roll_are_gated(self):
+        js = self.script()
+        for mode in ("hotcue", "looproll"):
+            m = re.search(mode + r": function \(group, pad, down, shifted\) \{"
+                          r"(.*?)\n    \},", js, re.S)
+            self.assertIsNotNone(m, mode)
+            self.assertIn(".gate(", m.group(1), f"{mode} must follow the release")
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_latching_and_one_shot_modes_ignore_the_release(self):
+        js = self.script()
+        for mode in ("autoloop", "manualloop", "beatgrid"):
+            m = re.search(mode + r": function \(group, pad, down, shifted\) \{"
+                          r"(.*?)\n    \},", js, re.S)
+            self.assertIsNotNone(m, mode)
+            self.assertNotIn(".gate(", m.group(1),
+                             f"{mode} latches; gating it would undo it instantly")
