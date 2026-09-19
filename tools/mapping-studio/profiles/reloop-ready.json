@@ -3828,6 +3828,109 @@
      "key": "MoveFocusBackward"
     }
    }
+  },
+  {
+   "label": "Master Vol",
+   "kind": "knob",
+   "shape": {
+    "type": "rect",
+    "cx": 319.1,
+    "cy": 58.9,
+    "w": 14,
+    "h": 9,
+    "round": true
+   },
+   "id": "master_vol",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 15,
+      "number": 10,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "gain",
+     "options": [
+      "soft-takeover"
+     ]
+    }
+   }
+  },
+  {
+   "label": "Cue Mix",
+   "kind": "knob",
+   "shape": {
+    "type": "rect",
+    "cx": 318.9,
+    "cy": 77.1,
+    "w": 14,
+    "h": 9,
+    "round": true
+   },
+   "id": "cue_mix",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 15,
+      "number": 13,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    }
+   },
+   "detent": true,
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "headMix"
+    }
+   }
+  },
+  {
+   "label": "Cue Vol",
+   "kind": "knob",
+   "shape": {
+    "type": "rect",
+    "cx": 318.4,
+    "cy": 94.4,
+    "w": 14,
+    "h": 9,
+    "round": true
+   },
+   "id": "cue_vol",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 15,
+      "number": 12,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "headGain",
+     "options": [
+      "soft-takeover"
+     ]
+    }
+   }
   }
  ],
  "controller_id": "Reloop Ready",

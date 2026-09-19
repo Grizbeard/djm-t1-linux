@@ -925,3 +925,49 @@ class TestPadColourScheme(unittest.TestCase):
         for key in ("beatloop_1_enabled", "loop_enabled"):
             self.assertIn(key, m.group(0))
         self.assertIn("[Sampler", m.group(0))
+
+
+class TestStartupState(unittest.TestCase):
+    """The panel must agree with Mixxx at startup, not with the last session."""
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "profiles", "reloop-ready.json")
+
+    def script(self):
+        return export_mixxx.export(Profile.load(self.path))[1]
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_init_clears_then_restates(self):
+        # An <output> only fires on a change, so at startup nothing fires and
+        # the controller keeps whatever it showed when Mixxx last quit.
+        js = self.script()
+        m = re.search(r"init = function.*?\n\};", js, re.S)
+        body = m.group(0)
+        self.assertIn("allLedsOff();", body)
+        self.assertIn("refreshOutputs();", body)
+        self.assertLess(body.index("allLedsOff"), body.index("refreshOutputs"),
+                        "clear before restating, or the clear wipes the state")
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_every_bound_output_control_is_triggered(self):
+        p = Profile.load(self.path)
+        xml, js, _fn = export_mixxx.export(p)
+        pairs = {(o.findtext("group"), o.findtext("key"))
+                 for o in ET.fromstring(xml).findall(".//outputs/output")}
+        listed = set(re.findall(r'\["(\[[^"]+\])", "([^"]+)"\]', js))
+        self.assertTrue(pairs <= listed,
+                        f"not triggered at startup: {sorted(pairs - listed)}")
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_init_also_sets_up_jogs_and_pads(self):
+        js = self.script()
+        body = re.search(r"init = function.*?\n\};", js, re.S).group(0)
+        for call in ("initJogs();", "connectPads();", "paintAll();"):
+            self.assertIn(call, body)
+
+    @unittest.skipUnless(os.path.exists(path), "profile not present")
+    def test_shutdown_leaves_the_panel_dark(self):
+        js = self.script()
+        body = re.search(r"shutdown = function.*?\n\};", js, re.S).group(0)
+        self.assertIn("allPadsOff();", body)
+        self.assertIn("allLedsOff();", body)
