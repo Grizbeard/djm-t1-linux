@@ -920,7 +920,21 @@ function wire() {
   // ran, and devices disagree about which message means "off".
   $('#p-clear').onclick = async () => {
     const r = await api('/api/leds/off', {});
-    toast(`Cleared ${r.cleared} LEDs`);
+    toast(`Darkened ${r.cleared} LEDs`);
+  };
+
+  // Forgetting the map is a different thing from darkening the panel, and a
+  // bad pass needs the first: unpicking one control at a time is not viable
+  // after seventy notes.
+  $('#p-forget').onclick = async () => {
+    const n = S.controls.filter(c =>
+      Object.values(c.bindings || {}).some(b => b.output)).length;
+    if (!n) { toast('No LED bindings to clear'); return; }
+    if (!confirm(`Forget all ${n} LED binding(s)? The regions and their `
+               + `inputs are untouched.`)) { return; }
+    const r = await api('/api/leds/clear', {});
+    await refreshProfile();
+    toast(`Cleared ${r.cleared} LED binding(s)`);
   };
 
   // Before committing to a pass, prove output reaches the device at all. An

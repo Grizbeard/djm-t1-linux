@@ -1044,3 +1044,39 @@ class TestLedOff(unittest.TestCase):
         n = s.all_leds_off(lo=0, hi=9, channels=[1, 2])
         self.assertEqual(n, 20)
         self.assertEqual(len(b.sent), 20)
+
+
+class TestClearLedMap(unittest.TestCase):
+    """Undoing an LED pass has to be possible in bulk, not control by control."""
+
+    def profile(self):
+        p = Profile.new("t", "T", {"w": 10, "h": 10})
+        for i in range(3):
+            p.add_control({"id": f"b{i}", "kind": "button",
+                           "shape": {"type": "rect", "cx": i, "cy": 1,
+                                     "w": 9, "h": 9}})
+            p.set_binding(f"b{i}", "base", "input",
+                          {"status": "note", "channel": 1, "number": i})
+            p.set_binding(f"b{i}", "base", "output",
+                          {"status": "note", "channel": 1, "number": i})
+        p.set_binding("b0", "shift", "output",
+                      {"status": "note", "channel": 1, "number": 99})
+        return p
+
+    def test_clearing_removes_every_output_on_every_layer(self):
+        p = self.profile()
+        self.assertEqual(p.stats()["mapped_outputs"], 4)
+        for c in list(p.controls):
+            for ly in list((c.get("bindings") or {}).keys()):
+                if (c["bindings"][ly] or {}).get("output"):
+                    p.set_binding(c["id"], ly, "output", None)
+        self.assertEqual(p.stats()["mapped_outputs"], 0)
+
+    def test_inputs_and_regions_survive(self):
+        p = self.profile()
+        for c in list(p.controls):
+            for ly in list((c.get("bindings") or {}).keys()):
+                if (c["bindings"][ly] or {}).get("output"):
+                    p.set_binding(c["id"], ly, "output", None)
+        self.assertEqual(len(p.controls), 3)
+        self.assertEqual(p.stats()["mapped_inputs"]["base"], 3)

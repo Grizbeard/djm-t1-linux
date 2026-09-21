@@ -309,6 +309,23 @@ class Handler(BaseHTTPRequestHandler):
                 if body.get("remember"):
                     s.dirty = True
                 return self._json({"ok": ok})
+            if path == "/api/leds/clear":
+                # Remove the LED *map*, as opposed to /api/leds/off which
+                # darkens the panel. Wanted after a pass that went wrong: one
+                # bad run otherwise has to be unpicked control by control.
+                layer = body.get("layer")
+                removed = []
+                for c in list(s.profile.controls):
+                    for ly in list((c.get("bindings") or {}).keys()):
+                        if layer and ly != layer:
+                            continue
+                        if (c["bindings"][ly] or {}).get("output"):
+                            s.profile.set_binding(c["id"], ly, "output", None)
+                            removed.append(f"{c['id']}/{ly}")
+                if removed:
+                    s.dirty = True
+                    sess.note(f"cleared {len(removed)} LED binding(s)")
+                return self._json({"cleared": len(removed), "controls": removed})
             if path == "/api/leds/off":
                 n = sess.all_leds_off(lo=int(body.get("lo", 0)),
                                       hi=int(body.get("hi", 127)),
