@@ -442,11 +442,42 @@ class MappingSession:
         self.backend.send("note_on", cur["channel"], cur["note"], 127)
         return self.probe_status()
 
+    def led_off(self, channel, note):
+        """Turn an LED off, both ways, because devices disagree about which.
+
+        A real note-off (0x8n) and a note-on with velocity 0 (0x9n) mean the
+        same thing to a person and are different bytes on the wire. The DJM-T1
+        answers only to the second -- `tools/probe-leds.sh` has always used
+        `90 nn 00` -- so a probe that sent note-offs lit every LED it touched
+        and turned none of them back off.
+
+        Sending both costs one extra message at human pace and works whichever
+        the device honours.
+        """
+        style = ((self.profile.data.get("midi") or {}).get("led_off")
+                 or "both")
+        if style in ("both", "note_on_zero"):
+            self.backend.send("note_on", channel, note, 0)
+        if style in ("both", "note_off"):
+            self.backend.send("note_off", channel, note, 0)
+
+    def all_leds_off(self, lo=0, hi=127, channels=None):
+        """Darken a range, for clearing up after a pass."""
+        chans = channels or sorted(self.seen) or [1]
+        n = 0
+        for ch in chans:
+            for note in range(lo, hi + 1):
+                self.led_off(ch, note)
+                n += 1
+        self.note(f"cleared {n} LEDs on channel(s) "
+                  f"{','.join(str(c) for c in chans)}")
+        return n
+
     def _probe_off(self):
         p = self._probe
         if p and p.get("current"):
             cur = p["current"]
-            self.backend.send("note_off", cur["channel"], cur["note"], 0)
+            self.led_off(cur["channel"], cur["note"])
             p["current"] = None
 
     def probe_answer(self, control_id=None):
@@ -526,11 +557,19 @@ class MappingSession:
             "last": last,
         }
 
-    def stop_probe(self):
+    def stop_probe(self, clear=True):
         if self._probe is None:
             return
         self._probe_off()
         found = sum(1 for r in self._probe["results"] if r["control_id"])
+        if clear:
+            # Every note the pass touched, darkened. A probe that lights 71
+            # LEDs and leaves them lit is worse than one that never ran.
+            chans = sorted({q["channel"] for q in self._probe["queue"]})
+            notes = [q["note"] for q in self._probe["queue"]]
+            for ch in chans:
+                for n in sorted(set(notes)):
+                    self.led_off(ch, n)
         self.note(f"LED probe stopped: {found} outputs identified")
         self._probe = None
         self.mode = "idle"
@@ -579,8 +618,7 @@ class MappingSession:
             self.backend.send("note_on", out.get("channel", 1), out["number"],
                               out.get("on", 127))
             time.sleep(ms / 1000.0)
-            self.backend.send("note_off", out.get("channel", 1), out["number"],
-                              out.get("off", 0))
+            self.led_off(out.get("channel", 1), out["number"])
             time.sleep(ms / 1000.0)
         return True
 

@@ -309,6 +309,11 @@ class Handler(BaseHTTPRequestHandler):
                 if body.get("remember"):
                     s.dirty = True
                 return self._json({"ok": ok})
+            if path == "/api/leds/off":
+                n = sess.all_leds_off(lo=int(body.get("lo", 0)),
+                                      hi=int(body.get("hi", 127)),
+                                      channels=body.get("channels"))
+                return self._json({"cleared": n})
             if path == "/api/blink":
                 return self._json({"ok": sess.blink(body["control_id"])})
             if path == "/api/send":

@@ -971,3 +971,76 @@ class TestStartupState(unittest.TestCase):
         body = re.search(r"shutdown = function.*?\n\};", js, re.S).group(0)
         self.assertIn("allPadsOff();", body)
         self.assertIn("allLedsOff();", body)
+
+
+class TestRtMidiReconnect(unittest.TestCase):
+    """A replug must not leave the backend claiming a connection it has lost."""
+
+    def backend(self):
+        b = midi.RtMidiBackend("Nothing Plugged In")
+        return b
+
+    def test_new_backend_reports_no_output(self):
+        b = self.backend()
+        self.assertIn("no output port", b.out_status)
+
+    def test_opening_a_missing_port_is_reported_not_claimed(self):
+        # The failure this guards: the studio said "connected" on a handle whose
+        # device had been unplugged, so it looked like the controller had gone
+        # quiet rather than like a stale handle.
+        b = self.backend()
+        self.assertFalse(b._open_input())
+        self.assertIn("waiting for", b.status)
+
+    def test_stop_releases_both_ports(self):
+        # Windows MM refuses to re-open a port something still holds, even a
+        # handle whose device is gone.
+        b = self.backend()
+        b.stop()
+        self.assertIsNone(b._in)
+        self.assertIsNone(b._out)
+
+    @unittest.skipUnless(midi.RtMidiBackend.available(), "python-rtmidi absent")
+    def test_a_real_port_opens_and_closes_cleanly_twice(self):
+        ports = midi.RtMidiBackend.ports()
+        if not ports:
+            self.skipTest("no MIDI ports on this host")
+        name = ports[0]["name"]
+        for _ in range(2):
+            b = midi.RtMidiBackend(name)
+            self.assertTrue(b._open_input(), f"could not open {name}")
+            b.stop()
+
+
+class TestLedOff(unittest.TestCase):
+    """Devices disagree about which message turns an LED off."""
+
+    def session(self, style=None):
+        from mapping_studio.session import MappingSession
+        p = Profile.new("t", "T", {"w": 10, "h": 10})
+        if style:
+            p.data["midi"] = {"led_off": style}
+        p.add_control({"id": "b", "kind": "button",
+                       "shape": {"type": "rect", "cx": 5, "cy": 5, "w": 9, "h": 9}})
+        b = midi.OfflineBackend()
+        b.start()
+        return MappingSession(p, b), b
+
+    def test_default_sends_both_forms(self):
+        # The DJM-T1 answers only to note-on velocity 0 and ignores 0x8n, so a
+        # probe that sent note-offs lit 71 LEDs and turned none of them off.
+        s, b = self.session()
+        s.led_off(1, 47)
+        self.assertEqual([(e["status"], e["value"]) for e in b.sent],
+                         [("note_on", 0), ("note_off", 0)])
+
+    def test_a_profile_can_pick_one(self):
+        s, b = self.session("note_on_zero")
+        s.led_off(1, 47)
+        self.assertEqual([e["status"] for e in b.sent], ["note_on"])
+
+    def test_clearing_a_range_covers_every_note(self):
+        s, b = self.session("note_on_zero")
+        n = s.all_leds_off(lo=0, hi=9, channels=[1, 2])
+        self.assertEqual(n, 20)
+        self.assertEqual(len(b.sent), 20)

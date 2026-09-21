@@ -916,6 +916,13 @@ function wire() {
 
   $('#probestart').onclick = startProbe;
 
+  // A pass that lights LEDs and leaves them lit is worse than one that never
+  // ran, and devices disagree about which message means "off".
+  $('#p-clear').onclick = async () => {
+    const r = await api('/api/leds/off', {});
+    toast(`Cleared ${r.cleared} LEDs`);
+  };
+
   // Before committing to a pass, prove output reaches the device at all. An
   // LED probe against a controller that has stopped accepting output looks
   // identical to one where nothing happens to be wired up.

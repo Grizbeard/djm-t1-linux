@@ -363,9 +363,11 @@ class RtMidiBackend(Backend):
         self.port = port
         self._in = None
         self._out = None
+        self._watchdog = None
         self.in_name = None
         self.out_name = None
         self.out_error = None
+        self.reconnects = 0
 
     @staticmethod
     def _mod():
@@ -394,21 +396,83 @@ class RtMidiBackend(Backend):
         rtmidi = self._mod()
         if rtmidi is None:
             raise MidiError("python-rtmidi is not installed")
-        self._in = rtmidi.MidiIn()
-        names = self._in.get_ports()
-        idx = self._match(names, self.port)
-        if idx is None:
-            raise MidiError(f"no input port matching {self.port!r}; have {names}")
-        self._in.open_port(idx)
-        self._in.set_callback(self._on_message)
-        self.in_name = names[idx]
-
+        if not self._open_input():
+            raise MidiError(
+                f"no input port matching {self.port!r}; "
+                f"have {rtmidi.MidiIn().get_ports()}")
         # The output is resolved from the input port's NAME, never its index:
         # the two lists are numbered independently, so on Windows "Reloop Ready
         # In" is input 5 while output 5 is an unrelated virtual port.
         self._open_output()
         self._running = True
-        self.status = f"connected to {names[idx]}"
+        self._watchdog = threading.Thread(target=self._watch, daemon=True,
+                                          name="rtmidi-watchdog")
+        self._watchdog.start()
+
+    def _close_input(self):
+        try:
+            if self._in is not None:
+                self._in.cancel_callback()
+                self._in.close_port()
+        except Exception:                             # noqa: BLE001
+            pass
+        self._in = None
+
+    def _open_input(self):
+        rtmidi = self._mod()
+        if rtmidi is None:
+            return False
+        self._close_input()
+        try:
+            mi = rtmidi.MidiIn()
+            names = mi.get_ports()
+            idx = self._match(names, self.port)
+            if idx is None:
+                self.status = f"waiting for {self.port}"
+                return False
+            mi.open_port(idx)
+            mi.set_callback(self._on_message)
+            self._in = mi
+            self.in_name = names[idx]
+            self.status = f"connected to {names[idx]}"
+            return True
+        except Exception as exc:                      # noqa: BLE001
+            self.status = f"cannot open input: {exc}"
+            self._in = None
+            return False
+
+    def _watch(self):
+        """Re-open both directions when the set of MIDI ports changes.
+
+        Unplugging a USB device leaves rtmidi holding a handle that still
+        reports itself open, so a studio goes on saying "connected" while
+        receiving nothing -- which looks like the controller has gone quiet
+        rather than like a stale handle. Windows MM gives no disconnect
+        notification, so the port list is the only signal available, and a
+        replug changes it twice: once away, once back.
+        """
+        rtmidi = self._mod()
+        if rtmidi is None:
+            return
+        try:
+            last = tuple(rtmidi.MidiIn().get_ports())
+        except Exception:                             # noqa: BLE001
+            last = ()
+        while self._running:
+            time.sleep(2.0)
+            if not self._running:
+                break
+            try:
+                now = tuple(rtmidi.MidiIn().get_ports())
+            except Exception:                         # noqa: BLE001
+                continue
+            if now == last:
+                continue
+            last = now
+            self.reconnects += 1
+            self._open_input()
+            self._close_output()
+            self._open_output()
 
     @staticmethod
     def _match(names, hint):
@@ -447,14 +511,9 @@ class RtMidiBackend(Backend):
         return None
 
     def stop(self):
-        for p in (self._in, self._out):
-            try:
-                if p:
-                    p.close_port()
-            except Exception:
-                pass
-        self._in = self._out = None
         self._running = False
+        self._close_input()
+        self._close_output()
         self.status = "stopped"
 
     def _on_message(self, msg, _data=None):
@@ -500,13 +559,29 @@ class RtMidiBackend(Backend):
         self.out_error = None
         return True
 
+    def _close_output(self):
+        """Let go of the output port, so a re-open is not refused.
+
+        Windows MM will not hand out a port that something still holds, even a
+        handle whose device has been unplugged -- the second open fails with
+        "error creating Windows MM MIDI output port" and the LED half of a
+        session dies with no obvious cause.
+        """
+        try:
+            if self._out is not None:
+                self._out.close_port()
+        except Exception:                             # noqa: BLE001
+            pass
+        self._out = None
+
     def _open_output(self):
         """Ensure an output port is open, re-opening if the device came back."""
         try:
             if self._out is not None and self._out.is_port_open():
                 return True
         except Exception:                             # noqa: BLE001
-            self._out = None
+            pass
+        self._close_output()
         rtmidi = self._mod()
         if rtmidi is None:
             self.out_error = "python-rtmidi is not installed"
