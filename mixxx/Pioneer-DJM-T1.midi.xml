@@ -59,36 +59,36 @@
                 <options><selectknob/></options>
             </control>
             <control>
-                <group>[Master]</group>
-                <key>DJMT1.browse_push</key>
+                <group>[Library]</group>
+                <key>GoToItem</key>
                 <description>BROWSE PUSH</description>
                 <status>0x90</status>
                 <midino>0x00</midino>
+                <options><normal/></options>
+            </control>
+            <control>
+                <group>[Library]</group>
+                <key>GoToItem</key>
+                <description>BROWSE PUSH (release)</description>
+                <status>0x80</status>
+                <midino>0x00</midino>
+                <options><normal/></options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>DJMT1.libraryFocus</key>
+                <description>BROWSE PUSH (shift)</description>
+                <status>0x90</status>
+                <midino>0x40</midino>
                 <options><script-binding/></options>
             </control>
             <control>
                 <group>[Master]</group>
-                <key>DJMT1.browse_push</key>
-                <description>BROWSE PUSH (release)</description>
-                <status>0x80</status>
-                <midino>0x00</midino>
-                <options><script-binding/></options>
-            </control>
-            <control>
-                <group>[Library]</group>
-                <key>GoToItem</key>
-                <description>BROWSE PUSH (shift)</description>
-                <status>0x90</status>
-                <midino>0x40</midino>
-                <options><normal/></options>
-            </control>
-            <control>
-                <group>[Library]</group>
-                <key>GoToItem</key>
+                <key>DJMT1.libraryFocus</key>
                 <description>BROWSE PUSH (shift) (release)</description>
                 <status>0x80</status>
                 <midino>0x40</midino>
-                <options><normal/></options>
+                <options><script-binding/></options>
             </control>
             <control>
                 <group>[Channel1]</group>
@@ -307,20 +307,20 @@
                 <options><script-binding/></options>
             </control>
             <control>
-                <group>[Channel1]</group>
-                <key>reloop_toggle</key>
+                <group>[Master]</group>
+                <key>DJMT1.loopA</key>
                 <description>AUTO LOOP A Push</description>
                 <status>0x90</status>
                 <midino>0x15</midino>
-                <options><normal/></options>
+                <options><script-binding/></options>
             </control>
             <control>
-                <group>[Channel1]</group>
-                <key>reloop_toggle</key>
+                <group>[Master]</group>
+                <key>DJMT1.loopA</key>
                 <description>AUTO LOOP A Push (release)</description>
                 <status>0x80</status>
                 <midino>0x15</midino>
-                <options><normal/></options>
+                <options><script-binding/></options>
             </control>
             <control>
                 <group>[Master]</group>
@@ -859,20 +859,20 @@
                 <options><script-binding/></options>
             </control>
             <control>
-                <group>[Channel2]</group>
-                <key>reloop_toggle</key>
+                <group>[Master]</group>
+                <key>DJMT1.loopB</key>
                 <description>AUTO LOOP B Push</description>
                 <status>0x90</status>
                 <midino>0x17</midino>
-                <options><normal/></options>
+                <options><script-binding/></options>
             </control>
             <control>
-                <group>[Channel2]</group>
-                <key>reloop_toggle</key>
+                <group>[Master]</group>
+                <key>DJMT1.loopB</key>
                 <description>AUTO LOOP B Push (release)</description>
                 <status>0x80</status>
                 <midino>0x17</midino>
-                <options><normal/></options>
+                <options><script-binding/></options>
             </control>
             <control>
                 <group>[Master]</group>
@@ -1468,7 +1468,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit1]</group>
-                <key>next_chain_preset</key>
+                <key>enabled</key>
                 <description>FX1 ON</description>
                 <status>0x90</status>
                 <midino>0x0D</midino>
@@ -1476,7 +1476,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit1]</group>
-                <key>next_chain_preset</key>
+                <key>enabled</key>
                 <description>FX1 ON (release)</description>
                 <status>0x80</status>
                 <midino>0x0D</midino>
@@ -1484,19 +1484,19 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit1]</group>
-                <key>DJMT1.fx1_on_shift</key>
+                <key>next_chain_preset</key>
                 <description>FX1 ON (shift)</description>
                 <status>0x90</status>
                 <midino>0x4D</midino>
-                <options><script-binding/></options>
+                <options><normal/></options>
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit1]</group>
-                <key>DJMT1.fx1_on_shift</key>
+                <key>next_chain_preset</key>
                 <description>FX1 ON (shift) (release)</description>
                 <status>0x80</status>
                 <midino>0x4D</midino>
-                <options><script-binding/></options>
+                <options><normal/></options>
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit2_Effect1]</group>
@@ -1628,7 +1628,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit2]</group>
-                <key>next_chain_preset</key>
+                <key>enabled</key>
                 <description>FX2 On</description>
                 <status>0x90</status>
                 <midino>0x0E</midino>
@@ -1636,7 +1636,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit2]</group>
-                <key>next_chain_preset</key>
+                <key>enabled</key>
                 <description>FX2 On (release)</description>
                 <status>0x80</status>
                 <midino>0x0E</midino>
@@ -1644,19 +1644,19 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit2]</group>
-                <key>DJMT1.fx2_on_shift</key>
+                <key>next_chain_preset</key>
                 <description>FX2 On (shift)</description>
                 <status>0x90</status>
                 <midino>0x4E</midino>
-                <options><script-binding/></options>
+                <options><normal/></options>
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit2]</group>
-                <key>DJMT1.fx2_on_shift</key>
+                <key>next_chain_preset</key>
                 <description>FX2 On (shift) (release)</description>
                 <status>0x80</status>
                 <midino>0x4E</midino>
-                <options><script-binding/></options>
+                <options><normal/></options>
             </control>
             <control>
                 <group>[Master]</group>

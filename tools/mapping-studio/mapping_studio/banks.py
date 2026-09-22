@@ -318,6 +318,7 @@ def generate_gangs(profile, prefix):
     if not gangs:
         return []
     out = ["// One button, same control on several decks.", ""]
+    lit = [g for g in gangs if g.get("led") is not None]
     for g in gangs:
         groups = ", ".join(f'"{x}"' for x in g["groups"])
         out += [
@@ -329,6 +330,71 @@ def generate_gangs(profile, prefix):
             f'    var on = engine.getValue(groups[0], "{g["key"]}") ? 0 : 1;',
             "    for (var i = 0; i < groups.length; i++) {",
             f'        engine.setValue(groups[i], "{g["key"]}", on);',
+            "    }",
+            "};",
+            "",
+        ]
+    if not lit:
+        return out
+
+    # A ganged button needs its lamp driven from here rather than by an
+    # <output>: the button stands for several controls, and an <output> can
+    # only follow one. Following the first deck is the honest reading, since
+    # the button always sets them together.
+    out += ["// Their lamps, which no <output> can drive: the button stands for",
+            "// several controls at once.", ""]
+    out.append(f"{prefix}.paintGangs = function () {{")
+    for g in lit:
+        ch = g.get("channel", 1) - 1
+        out += [
+            f'    midi.sendShortMsg(0x90 | {ch}, {g["led"]},',
+            f'        engine.getValue("{g["groups"][0]}", "{g["key"]}")'
+            " ? 0x7F : 0x00);",
+        ]
+    out += ["};", ""]
+    out.append(f"{prefix}.connectGangs = function () {{")
+    for g in lit:
+        out += [
+            f'    engine.makeConnection("{g["groups"][0]}", "{g["key"]}",',
+            f"        function () {{ {prefix}.paintGangs(); }});",
+        ]
+    out += ["};", ""]
+    out.append(f"{prefix}.gangLedsOff = function () {{")
+    for g in lit:
+        ch = g.get("channel", 1) - 1
+        out.append(f'    midi.sendShortMsg(0x90 | {ch}, {g["led"]}, 0);')
+    out += ["};", ""]
+    return out
+
+
+def generate_loops(profile, prefix):
+    """A loop button that starts a new loop rather than recalling the old one.
+
+    `reloop_toggle` alone re-enters the loop that was last set, which is wrong
+    for a button the user presses wherever they happen to be: leave a loop,
+    press again, and the deck jumps backwards to where the last one started.
+    `beatloop_activate` alone cannot switch a loop off. Together they give the
+    behaviour the panel implies -- press to loop here, press again to leave.
+    """
+    loops = profile.data.get("loop_buttons") or []
+    if not loops:
+        return []
+    out = ["// Loop on/off, where 'on' means here and not where it was last time.",
+           ""]
+    for lp in loops:
+        g = lp["group"]
+        out += [
+            f"{prefix}.{lp['id']} = function (ch, ctrl, value) {{",
+            "    if (value === 0) {",
+            "        return;",
+            "    }",
+            f'    if (engine.getValue("{g}", "loop_enabled") > 0) {{',
+            f'        engine.setValue("{g}", "reloop_toggle", 1);',
+            "    } else {",
+            "        // Takes its length from beatloop_size, which the encoder",
+            "        // sets, and its start from the play position.",
+            f'        engine.setValue("{g}", "beatloop_activate", 1);',
+            f'        engine.setValue("{g}", "beatloop_activate", 0);',
             "    }",
             "};",
             "",
@@ -359,3 +425,30 @@ def generate_actions(profile, prefix):
             "",
         ]
     return out
+
+
+def generate_focus(profile, prefix):
+    """Move library focus straight to the track list, and back.
+
+    `GoToItem` only enters the track list from a leaf node in the tree; on a
+    parent folder it expands instead, which leaves no way to reach the tracks
+    without walking to the bottom. `[Library],focused_widget` is writable and
+    goes there from anywhere.
+    """
+    spec = profile.data.get("library_focus")
+    if not spec:
+        return []
+    a, b = spec.get("between", [2, 3])
+    return [
+        "// Library focus: straight to the track list from wherever the tree is.",
+        "",
+        f"{prefix}.{spec['id']} = function (ch, ctrl, value) {{",
+        "    if (value === 0) {",
+        "        return;",
+        "    }",
+        '    var now = engine.getValue("[Library]", "focused_widget");',
+        f'    engine.setValue("[Library]", "focused_widget",',
+        f"        now === {b} ? {a} : {b});",
+        "};",
+        "",
+    ]

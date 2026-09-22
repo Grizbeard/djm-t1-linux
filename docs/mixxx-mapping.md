@@ -10,8 +10,8 @@
 |---|---|---|
 | BROWSE | `CC 0` | `[Library]` `MoveVertical` |
 | SHIFT + BROWSE | `CC 64` | `[Playlist]` `SelectPlaylist` |
-| BROWSE PUSH | `NOTE 0` | `[Master]` `maximize_library` |
-| SHIFT + BROWSE PUSH | `NOTE 64` | `[Library]` `GoToItem` |
+| BROWSE PUSH | `NOTE 0` | `[Library]` `GoToItem` |
+| SHIFT + BROWSE PUSH | `NOTE 64` | `libraryFocus` (script) |
 
 ### CH1
 
@@ -47,7 +47,7 @@
 | AUTO LOOP A | `CC 9` | `[Channel1]` `beatloop_size` |
 | SHIFT + AUTO LOOP A | `CC 73` | `[Channel1]` `loop_move` |
 | SAMPLER mode, SHIFT + AUTO LOOP A | `CC 74` | `samplerGainA` (script) |
-| AUTO LOOP A Push | `NOTE 21` | `[Channel1]` `reloop_toggle` |
+| AUTO LOOP A Push | `NOTE 21` | `loopA` (script) |
 | SAMPLER mode, SHIFT + AUTO LOOP A Push | `NOTE 86` | `samplerGainResetA` (script) |
 | Cue A | `NOTE 11` | `[Channel1]` `cue_default` |
 | SHIFT + Cue A | `NOTE 75` | `absoluteA` (script) |
@@ -88,7 +88,7 @@
 | AUTO LOOP B | `CC 11` | `[Channel2]` `beatloop_size` |
 | SHIFT + AUTO LOOP B | `CC 75` | `[Channel2]` `loop_move` |
 | SAMPLER mode, SHIFT + AUTO LOOP B | `CC 76` | `samplerGainB` (script) |
-| AUTO LOOP B Push | `NOTE 23` | `[Channel2]` `reloop_toggle` |
+| AUTO LOOP B Push | `NOTE 23` | `loopB` (script) |
 | SAMPLER mode, SHIFT + AUTO LOOP B Push | `NOTE 88` | `samplerGainResetB` (script) |
 | CUE B | `NOTE 12` | `[Channel2]` `cue_default` |
 | SHIFT + CUE B | `NOTE 76` | `absoluteB` (script) |
@@ -133,8 +133,8 @@
 | FX1_3 On | `NOTE 19` | `[EffectRack1_EffectUnit1_Effect3]` `enabled` |
 | SHIFT + FX1_3 On | `NOTE 83` | `[EffectRack1_EffectUnit1_Effect3]` `next_effect` |
 | FX1 DRY/ WET | `CC 1` | `[EffectRack1_EffectUnit1]` `mix` |
-| FX1 ON | `NOTE 13` | `[EffectRack1_EffectUnit1]` `next_chain_preset` |
-| SHIFT + FX1 ON | `NOTE 77` | `[EffectRack1_EffectUnit1]` `enabled` |
+| FX1 ON | `NOTE 13` | `[EffectRack1_EffectUnit1]` `enabled` |
+| SHIFT + FX1 ON | `NOTE 77` | `[EffectRack1_EffectUnit1]` `next_chain_preset` |
 
 ### FX2
 
@@ -150,8 +150,8 @@
 | FX2_3 On | `NOTE 20` | `[EffectRack1_EffectUnit2_Effect3]` `enabled` |
 | SHIFT + FX2_3 On | `NOTE 84` | `[EffectRack1_EffectUnit2_Effect3]` `next_effect` |
 | FX2 DRY/ WET | `CC 2` | `[EffectRack1_EffectUnit2]` `mix` |
-| FX2 On | `NOTE 14` | `[EffectRack1_EffectUnit2]` `next_chain_preset` |
-| SHIFT + FX2 On | `NOTE 78` | `[EffectRack1_EffectUnit2]` `enabled` |
+| FX2 On | `NOTE 14` | `[EffectRack1_EffectUnit2]` `enabled` |
+| SHIFT + FX2 On | `NOTE 78` | `[EffectRack1_EffectUnit2]` `next_chain_preset` |
 
 ### Master
 

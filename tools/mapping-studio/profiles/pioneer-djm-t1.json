@@ -1034,13 +1034,12 @@
    "targets": {
     "base": {
      "group": "[EffectRack1_EffectUnit1]",
-     "key": "next_chain_preset",
-     "output_key": "enabled"
+     "key": "enabled"
     },
     "shift": {
      "group": "[EffectRack1_EffectUnit1]",
-     "key": "enabled",
-     "toggle": true
+     "key": "next_chain_preset",
+     "output_key": "enabled"
     }
    }
   },
@@ -1287,13 +1286,12 @@
    "targets": {
     "base": {
      "group": "[EffectRack1_EffectUnit2]",
-     "key": "next_chain_preset",
-     "output_key": "enabled"
+     "key": "enabled"
     },
     "shift": {
      "group": "[EffectRack1_EffectUnit2]",
-     "key": "enabled",
-     "toggle": true
+     "key": "next_chain_preset",
+     "output_key": "enabled"
     }
    }
   },
@@ -4109,13 +4107,14 @@
    },
    "targets": {
     "base": {
-     "group": "[Master]",
-     "key": "maximize_library",
-     "toggle": true
-    },
-    "shift": {
      "group": "[Library]",
      "key": "GoToItem"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.libraryFocus",
+     "script": "DJMT1.libraryFocus",
+     "external": true
     }
    }
   },
@@ -4379,8 +4378,10 @@
    "section": "Deck A",
    "targets": {
     "base": {
-     "group": "[Channel1]",
-     "key": "reloop_toggle"
+     "group": "[Master]",
+     "key": "DJMT1.loopA",
+     "script": "DJMT1.loopA",
+     "external": true
     },
     "sampler_shift": {
      "group": "[Master]",
@@ -4450,8 +4451,10 @@
    "section": "Deck B",
    "targets": {
     "base": {
-     "group": "[Channel2]",
-     "key": "reloop_toggle"
+     "group": "[Master]",
+     "key": "DJMT1.loopB",
+     "script": "DJMT1.loopB",
+     "external": true
     },
     "sampler_shift": {
      "group": "[Master]",
@@ -4531,6 +4534,8 @@
   {
    "id": "quantizeAll",
    "key": "quantize",
+   "led": 49,
+   "channel": 1,
    "groups": [
     "[Channel1]",
     "[Channel2]"
@@ -4539,6 +4544,8 @@
   {
    "id": "slipAll",
    "key": "slip_enabled",
+   "led": 113,
+   "channel": 1,
    "groups": [
     "[Channel1]",
     "[Channel2]"
@@ -4589,5 +4596,22 @@
    "value": 0
   }
  ],
- "script_prefix": "DJMT1"
+ "script_prefix": "DJMT1",
+ "loop_buttons": [
+  {
+   "id": "loopA",
+   "group": "[Channel1]"
+  },
+  {
+   "id": "loopB",
+   "group": "[Channel2]"
+  }
+ ],
+ "library_focus": {
+  "id": "libraryFocus",
+  "between": [
+   2,
+   3
+  ]
+ }
 }

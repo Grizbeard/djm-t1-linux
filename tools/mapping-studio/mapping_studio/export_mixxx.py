@@ -407,6 +407,8 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     ]
     has_pad_modes = bool((profile.data.get("pad_modes") or {}).get("modes"))
     has_banks = bool((profile.data.get("banks") or {}).get("decks"))
+    has_gang_leds = any(g.get("led") is not None
+                        for g in (profile.data.get("gangs") or []))
     if outputs:
         # Clear first, then make Mixxx restate everything, so the panel agrees
         # with the session rather than with whenever Mixxx last quit.
@@ -420,6 +422,9 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
                 f"    {prefix}.paintAll();"]
     if has_banks:
         out.append(f"    {prefix}.initBanks();")
+    if has_gang_leds:
+        out += [f"    {prefix}.connectGangs();",
+                f"    {prefix}.paintGangs();"]
     out += [
         "};",
         "",
@@ -429,6 +434,8 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
         out.append(f"    {prefix}.allPadsOff();")
     if has_banks:
         out.append(f"    {prefix}.shutdownBanks();")
+    if has_gang_leds:
+        out.append(f"    {prefix}.gangLedsOff();")
     if outputs:
         out.append(f"    {prefix}.allLedsOff();")
     out += [
@@ -442,6 +449,8 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     out.extend(banks.generate(profile, prefix))
     out.extend(banks.generate_gangs(profile, prefix))
     out.extend(banks.generate_actions(profile, prefix))
+    out.extend(banks.generate_loops(profile, prefix))
+    out.extend(banks.generate_focus(profile, prefix))
 
     pads = padmodes.generate(profile, prefix)
     if pads:

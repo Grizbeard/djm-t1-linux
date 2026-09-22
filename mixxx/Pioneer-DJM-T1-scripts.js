@@ -11,10 +11,13 @@ DJMT1.init = function (id, debugging) {
     DJMT1.allLedsOff();
     DJMT1.refreshOutputs();
     DJMT1.initBanks();
+    DJMT1.connectGangs();
+    DJMT1.paintGangs();
 };
 
 DJMT1.shutdown = function () {
     DJMT1.shutdownBanks();
+    DJMT1.gangLedsOff();
     DJMT1.allLedsOff();
 };
 
@@ -462,6 +465,28 @@ DJMT1.slipAll = function (ch, ctrl, value) {
     }
 };
 
+// Their lamps, which no <output> can drive: the button stands for
+// several controls at once.
+
+DJMT1.paintGangs = function () {
+    midi.sendShortMsg(0x90 | 0, 49,
+        engine.getValue("[Channel1]", "quantize") ? 0x7F : 0x00);
+    midi.sendShortMsg(0x90 | 0, 113,
+        engine.getValue("[Channel1]", "slip_enabled") ? 0x7F : 0x00);
+};
+
+DJMT1.connectGangs = function () {
+    engine.makeConnection("[Channel1]", "quantize",
+        function () { DJMT1.paintGangs(); });
+    engine.makeConnection("[Channel1]", "slip_enabled",
+        function () { DJMT1.paintGangs(); });
+};
+
+DJMT1.gangLedsOff = function () {
+    midi.sendShortMsg(0x90 | 0, 49, 0);
+    midi.sendShortMsg(0x90 | 0, 113, 0);
+};
+
 // Buttons whose value means something other than 'pressed'.
 
 DJMT1.cloneFromB = function (ch, ctrl, value) {
@@ -506,13 +531,45 @@ DJMT1.absoluteB = function (ch, ctrl, value) {
     engine.setValue("[Channel2]", "vinylcontrol_mode", 0);
 };
 
-// BROWSE PUSH
-DJMT1.browse_push = function (channel, control, value, status, group) {
-    if (value !== 127) {
-        return;   // release edge; act on the press only
+// Loop on/off, where 'on' means here and not where it was last time.
+
+DJMT1.loopA = function (ch, ctrl, value) {
+    if (value === 0) {
+        return;
     }
-    engine.setValue("[Master]", "maximize_library",
-        engine.getValue("[Master]", "maximize_library") ? 0 : 1);
+    if (engine.getValue("[Channel1]", "loop_enabled") > 0) {
+        engine.setValue("[Channel1]", "reloop_toggle", 1);
+    } else {
+        // Takes its length from beatloop_size, which the encoder
+        // sets, and its start from the play position.
+        engine.setValue("[Channel1]", "beatloop_activate", 1);
+        engine.setValue("[Channel1]", "beatloop_activate", 0);
+    }
+};
+
+DJMT1.loopB = function (ch, ctrl, value) {
+    if (value === 0) {
+        return;
+    }
+    if (engine.getValue("[Channel2]", "loop_enabled") > 0) {
+        engine.setValue("[Channel2]", "reloop_toggle", 1);
+    } else {
+        // Takes its length from beatloop_size, which the encoder
+        // sets, and its start from the play position.
+        engine.setValue("[Channel2]", "beatloop_activate", 1);
+        engine.setValue("[Channel2]", "beatloop_activate", 0);
+    }
+};
+
+// Library focus: straight to the track list from wherever the tree is.
+
+DJMT1.libraryFocus = function (ch, ctrl, value) {
+    if (value === 0) {
+        return;
+    }
+    var now = engine.getValue("[Library]", "focused_widget");
+    engine.setValue("[Library]", "focused_widget",
+        now === 3 ? 2 : 3);
 };
 
 // AUTO LOOP A
@@ -535,22 +592,4 @@ DJMT1.auto_loop_b = function (channel, control, value, status, group) {
     v = up ? v * 2 : v / 2;
     v = Math.max(0.03125, Math.min(64, v));
     engine.setValue("[Channel2]", "beatloop_size", v);
-};
-
-// FX1 ON
-DJMT1.fx1_on_shift = function (channel, control, value, status, group) {
-    if (value !== 127) {
-        return;   // release edge; act on the press only
-    }
-    engine.setValue("[EffectRack1_EffectUnit1]", "enabled",
-        engine.getValue("[EffectRack1_EffectUnit1]", "enabled") ? 0 : 1);
-};
-
-// FX2 On
-DJMT1.fx2_on_shift = function (channel, control, value, status, group) {
-    if (value !== 127) {
-        return;   // release edge; act on the press only
-    }
-    engine.setValue("[EffectRack1_EffectUnit2]", "enabled",
-        engine.getValue("[EffectRack1_EffectUnit2]", "enabled") ? 0 : 1);
 };
