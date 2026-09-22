@@ -250,6 +250,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 3,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -260,6 +267,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 67,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -287,6 +301,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 11,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -297,6 +318,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 75,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -324,6 +352,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 4,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -334,6 +369,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 68,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -361,6 +403,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 12,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -371,6 +420,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 76,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -417,6 +473,30 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 113,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 49,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 49,
+      "on": 127,
+      "off": 0
      }
     }
    }
@@ -443,6 +523,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 7,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -453,6 +540,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 71,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -480,6 +574,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 9,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -490,6 +591,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 73,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -517,6 +625,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 5,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -527,6 +642,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 69,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -554,6 +676,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 6,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -564,6 +693,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 70,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -591,6 +727,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 8,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -601,6 +744,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 72,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -628,6 +778,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 10,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -638,6 +795,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 74,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -665,6 +829,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 13,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -675,6 +846,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 77,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -734,25 +912,37 @@
    "bindings": {
     "base": {
      "input": {
-      "status": "cc",
+      "status": "switch",
       "channel": 1,
-      "number": 107,
-      "mode": "absolute",
-      "min": 0,
-      "max": 127,
-      "resting": 0
-     }
-    },
-    "shift": {
-     "input": {
-      "status": "cc",
-      "channel": 1,
-      "number": 108,
-      "mode": "relative",
-      "sentinels": [
-       0,
-       127
-      ]
+      "exclusive": true,
+      "reports_only": true,
+      "positions": [
+       {
+        "name": "CD",
+        "status": "cc",
+        "channel": 1,
+        "number": 101,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "PHONO",
+        "status": "cc",
+        "channel": 1,
+        "number": 107,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "USB",
+        "status": "cc",
+        "channel": 1,
+        "number": 113,
+        "on": 127,
+        "off": 0
+       }
+      ],
+      "note": "Routing happens inside the mixer's own audio path; the MIDI only reports which source is live. A change sends two messages about a millisecond apart -- the position being left goes to 0, then the position entered goes to 127."
      }
     }
    },
@@ -774,26 +964,37 @@
    "bindings": {
     "base": {
      "input": {
-      "status": "cc",
+      "status": "switch",
       "channel": 1,
-      "number": 110,
-      "mode": "relative",
-      "sentinels": [
-       0,
-       127
-      ]
-     }
-    },
-    "shift": {
-     "input": {
-      "status": "cc",
-      "channel": 1,
-      "number": 111,
-      "mode": "relative",
-      "sentinels": [
-       0,
-       127
-      ]
+      "exclusive": true,
+      "reports_only": true,
+      "positions": [
+       {
+        "name": "CD",
+        "status": "cc",
+        "channel": 1,
+        "number": 104,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "PHONO",
+        "status": "cc",
+        "channel": 1,
+        "number": 110,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "USB",
+        "status": "cc",
+        "channel": 1,
+        "number": 116,
+        "on": 127,
+        "off": 0
+       }
+      ],
+      "note": "Routing happens inside the mixer's own audio path; the MIDI only reports which source is live. A change sends two messages about a millisecond apart -- the position being left goes to 0, then the position entered goes to 127."
      }
     }
    },
@@ -859,6 +1060,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 14,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -869,6 +1077,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 78,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -877,17 +1092,28 @@
   {
    "id": "meter_1",
    "label": "Meter 1",
-   "kind": "button",
+   "kind": "led",
    "tier": "control",
    "shape": {
     "type": "rect",
-    "cx": 116.34,
-    "cy": 134.52,
+    "cx": 116.3,
+    "cy": 134.5,
     "w": 5,
     "h": 69.5,
     "round": true
    },
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
    "section": "Meters"
   },
   {
@@ -912,6 +1138,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 15,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -922,6 +1155,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 79,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1105,6 +1345,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 16,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -1115,6 +1362,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 80,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1142,6 +1396,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 17,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -1152,6 +1413,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 81,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1337,6 +1605,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 18,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -1347,6 +1622,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 82,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1532,6 +1814,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 19,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -1542,6 +1831,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 83,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1589,6 +1885,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 20,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -1599,6 +1902,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 84,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1844,6 +2154,9 @@
       "press_value": 127,
       "source": "docs/midi-map.md",
       "verified": false
+     },
+     "output": {
+      "status": "local"
      }
     },
     "shift": {
@@ -1854,6 +2167,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 111,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1881,6 +2201,14 @@
     "base": {
      "input": {
       "status": "silent"
+     },
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
      }
     }
    },
@@ -1908,6 +2236,9 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "local"
      }
     },
     "shift": {
@@ -1918,6 +2249,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 112,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -1987,6 +2325,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 27,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -1997,6 +2342,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 91,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2024,6 +2376,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 29,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2034,6 +2393,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 93,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2061,6 +2427,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 31,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2071,6 +2444,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 95,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2098,6 +2478,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 33,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2108,6 +2495,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 97,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2135,6 +2529,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 35,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2145,6 +2546,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 99,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2172,6 +2580,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 37,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2182,6 +2597,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 101,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2209,6 +2631,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 39,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2219,6 +2648,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 103,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2246,6 +2682,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 41,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2256,6 +2699,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 105,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2283,6 +2733,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 43,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2293,6 +2750,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 107,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2320,6 +2784,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 45,
+      "on": 127,
+      "off": 0
      }
     },
     "shift": {
@@ -2330,6 +2801,13 @@
       "mode": "button",
       "press_value": 127,
       "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 109,
+      "on": 127,
+      "off": 0
      }
     }
    },
@@ -2514,37 +2992,59 @@
   },
   {
    "label": "Meter L",
-   "kind": "button",
+   "kind": "led",
    "shape": {
     "type": "rect",
-    "cx": 128.71,
-    "cy": 134.56,
+    "cx": 128.7,
+    "cy": 134.6,
     "w": 4.3,
     "h": 70.4,
     "round": true
    },
    "id": "meter_l",
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
    "section": "Meters"
   },
   {
    "label": "Meter R",
-   "kind": "button",
+   "kind": "led",
    "shape": {
     "type": "rect",
-    "cx": 137.27,
-    "cy": 134.31,
+    "cx": 137.3,
+    "cy": 134.3,
     "w": 4.5,
     "h": 70.2,
     "round": true
    },
    "id": "meter_r",
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
    "section": "Meters"
   },
   {
    "label": "Meter 2",
-   "kind": "button",
+   "kind": "led",
    "shape": {
     "type": "rect",
     "cx": 149.7,
@@ -2554,7 +3054,18 @@
     "round": true
    },
    "id": "meter_2",
-   "bindings": {},
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
    "section": "Meters"
   },
   {

@@ -184,7 +184,9 @@ function drawPanel() {
       const n = document.createElementNS(SVGNS, 'text');
       n.setAttribute('class', 'num');
       n.setAttribute('x', sh.cx); n.setAttribute('y', sh.cy + 0.8 + stack);
-      n.textContent = (inp.status === 'cc' ? 'CC' : 'N') + inp.number;
+      n.textContent = inp.status === 'switch'
+        ? 'CC' + (inp.positions || []).map(q => q.number).join('/')
+        : (inp.status === 'cc' ? 'CC' : 'N') + inp.number;
       g.appendChild(n);
     }
 
@@ -378,7 +380,14 @@ function describeBindings(c) {
        data-dir="${dir}" title="clear this binding">clear</button>`;
   for (const [layer, b] of Object.entries(c.bindings || {})) {
     const i = b.input, o = b.output;
-    if (i) {
+    if (i && i.status === 'switch') {
+      const pos = (i.positions || [])
+        .map(q => `${q.name || q.number} = CC${q.number}`).join(', ');
+      out.push(`<div class="bindline mono" style="color:var(--ok)">${
+        layer} in: ${(i.positions || []).length}-position switch ch${
+        i.channel} · ${esc(pos)}${
+        i.reports_only ? ' · reports only' : ''}${clear(layer, 'input')}</div>`);
+    } else if (i) {
       out.push(`<div class="bindline mono" style="color:${
         i.status === 'silent' ? 'var(--text-faint)' : 'var(--ok)'}">${
         i.status === 'silent'
@@ -677,6 +686,13 @@ function renderAssign() {
   const box = $('#assignbox');
   const c = S.sel && S.byId.get(S.sel);
   const inp = c && bindingOf(c, 'input');
+  if (c && inp && inp.status === 'switch' && inp.reports_only) {
+    box.className = 'empty';
+    box.textContent =
+      `${c.label} reports the hardware's own state; there is nothing for `
+      + 'Mixxx to drive. It is exported as a comment.';
+    return;
+  }
   if (!c || !inp || inp.status === 'silent') {
     box.className = 'empty';
     box.textContent = c ? 'This control has no captured input yet.'
@@ -728,13 +744,17 @@ function renderUnassigned() {
     const i = bindingOf(c, 'input');
     const t = (c.targets || {})[S.layer]
       || (S.layer === 'base' ? c.target : null);
-    return i && i.status !== 'silent' && !(t && t.group);
+    if (!i || i.status === 'silent') return false;
+    if (i.status === 'switch' && i.reports_only) return false;
+    return !(t && t.group);
   });
   ul.innerHTML = items.length
     ? items.map(c => {
         const i = bindingOf(c, 'input');
         return `<li data-id="${esc(c.id)}">${esc(c.label)}
-          <span class="tag">${i.status} ${i.number}</span></li>`;
+          <span class="tag">${i.status} ${i.status === 'switch'
+            ? (i.positions || []).map(q => q.number).join('/')
+            : i.number}</span></li>`;
       }).join('')
     : '<li style="color:var(--text-faint)">Everything captured has a target.</li>';
   $$('#unassigned li[data-id]').forEach(li => {

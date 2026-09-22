@@ -1080,3 +1080,68 @@ class TestClearLedMap(unittest.TestCase):
                     p.set_binding(c["id"], ly, "output", None)
         self.assertEqual(len(p.controls), 3)
         self.assertEqual(p.stats()["mapped_inputs"]["base"], 3)
+
+
+class SwitchTest(unittest.TestCase):
+    """A multi-position selector: several addresses, one live at a time."""
+
+    def _sweep(self, numbers, channel=1):
+        """Walk the switch through its positions, off-then-on for each change."""
+        events, t = [], 0.0
+        for a, b in zip(numbers, numbers[1:]):
+            events.append({"status": "cc", "channel": channel, "number": a,
+                           "value": 0, "t": t})
+            events.append({"status": "cc", "channel": channel, "number": b,
+                           "value": 127, "t": t + 0.001})
+            t += 0.4
+        return events
+
+    def test_detects_three_positions(self):
+        events = self._sweep([101, 107, 113, 107, 101])
+        binding, _, _, notes = analyse(events)
+        self.assertEqual(binding["status"], "switch")
+        self.assertEqual([p["number"] for p in binding["positions"]],
+                         [101, 107, 113])
+        self.assertTrue(binding["exclusive"])
+        self.assertTrue(any("multi-position" in n for n in notes))
+
+    def test_not_mistaken_for_a_relative_encoder(self):
+        """A switch only ever sends 0 and 127, which is also what a relative
+        encoder's sentinels look like. The pairing tells them apart."""
+        binding, _, _, _ = analyse(self._sweep([104, 110, 116]))
+        self.assertNotEqual(binding.get("mode"), "relative")
+
+    def test_every_position_counts_for_collisions(self):
+        p = Profile.new("t", "T", {"w": 100, "h": 100})
+        sw = {"status": "switch", "channel": 1, "exclusive": True,
+              "positions": [{"status": "cc", "channel": 1, "number": n,
+                             "on": 127, "off": 0} for n in (101, 107, 113)]}
+        a = p.add_control({"id": "sel", "kind": "switch",
+                           "shape": {"type": "rect", "cx": 1, "cy": 1,
+                                     "w": 4, "h": 4}})
+        p.set_binding(a["id"], "base", "input", sw)
+        b = p.add_control({"id": "other", "kind": "knob",
+                           "shape": {"type": "circle", "cx": 9, "cy": 9,
+                                     "d": 4}})
+        p.set_binding(b["id"], "base", "input",
+                      {"status": "cc", "channel": 1, "number": 107})
+        self.assertEqual(len(p.collisions()), 1)
+
+    def test_exported_as_a_comment_not_a_binding(self):
+        p = Profile.new("t", "T", {"w": 100, "h": 100})
+        c = p.add_control({"id": "src", "label": "Source Select 1",
+                           "kind": "switch",
+                           "shape": {"type": "rect", "cx": 1, "cy": 1,
+                                     "w": 4, "h": 4}})
+        p.set_binding(c["id"], "base", "input", {
+            "status": "switch", "channel": 1, "exclusive": True,
+            "reports_only": True,
+            "positions": [{"name": n, "status": "cc", "channel": 1,
+                           "number": num, "on": 127, "off": 0}
+                          for n, num in (("CD", 101), ("PHONO", 107),
+                                         ("USB", 113))]})
+        xml = export_mixxx.build_xml(p)[0]
+        self.assertNotIn("0x6B", xml)
+        self.assertIn("3-position switch", xml)
+        self.assertIn("CD (CC 101)", xml)
+        self.assertIn("internal audio route", xml)

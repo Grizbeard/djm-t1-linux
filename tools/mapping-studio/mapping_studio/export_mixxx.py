@@ -137,6 +137,21 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
             target = p.target(c, ly) or {}
             suffix = "" if ly == layers[0] else f" ({ly})"
 
+            if inp and inp.get("status") == "switch":
+                if ly == layers[0]:
+                    pos = inp.get("positions") or []
+                    nums = ", ".join(str(q.get("name") or q.get("number"))
+                                     + f" (CC {q.get('number')})" for q in pos)
+                    why = (" It reports the state of an internal audio route "
+                           "rather than asking for one, so there is nothing "
+                           "for Mixxx to drive."
+                           if inp.get("reports_only") else "")
+                    comments.append(
+                        f"{label}: {len(pos)}-position switch on channel "
+                        f"{inp.get('channel')} -- {nums}. A change sends the "
+                        f"position being left to 0 and the one entered to full."
+                        f"{why}")
+                continue
             if inp and inp.get("status") == "silent":
                 if ly == layers[0]:
                     comments.append(f"{label}: sends no MIDI (verified silent)")

@@ -87,6 +87,54 @@ def _detect_14bit(groups):
     return None
 
 
+def _detect_switch(groups, events):
+    """Spot a multi-position switch: several addresses, one live at a time.
+
+    A rotary or slide selector does not send a position on one control number.
+    It gives each position its own address and reports a change as a *pair* --
+    the position being left goes to 0, the one being entered goes to full --
+    a millisecond or two apart.
+
+    Without this, the studio sees whichever address moved most and calls the
+    rest mirrors, so a three-way source selector is captured as one CC. Worse,
+    a switch that only ever sends 0 and 127 looks exactly like a relative
+    encoder's sentinels, which is how the DJM-T1's Source Select 2 was recorded
+    as "relative".
+
+    Told apart by the pairing: two different numbers changing in opposite
+    directions within a few milliseconds is a switch, not two controls.
+    """
+    ccs = [g for g in groups if g["status"] == "cc"]
+    if len(ccs) < 2:
+        return None
+    # Every candidate position must be a clean on/off, never a sweep.
+    by_channel = defaultdict(list)
+    for g in ccs:
+        if g["distinct"] > 2 or g["min"] != 0 or g["max"] < 100:
+            continue
+        by_channel[g["channel"]].append(g)
+
+    for channel, members in by_channel.items():
+        if len(members) < 2:
+            continue
+        numbers = {g["number"] for g in members}
+        # Look for the giveaway: one number going off as another comes on.
+        pairs = 0
+        seq = [e for e in events
+               if e["status"] == "cc" and e["channel"] == channel
+               and e["number"] in numbers]
+        for a, b in zip(seq, seq[1:]):
+            if a["number"] == b["number"]:
+                continue
+            if abs(b["t"] - a["t"]) > 0.05:
+                continue
+            if (a["value"] == 0) != (b["value"] == 0):
+                pairs += 1
+        if pairs >= 1:
+            return channel, sorted(members, key=lambda g: g["number"]), pairs
+    return None
+
+
 def analyse(events, kind=None):
     """Reduce a burst of MIDI into a proposed binding plus what else was seen.
 
@@ -132,6 +180,31 @@ def analyse(events, kind=None):
             g["presses"] = ons
         groups.append(g)
     groups.sort(key=lambda g: -g["count"])
+
+    sw = _detect_switch(groups, events)
+    if sw:
+        channel, members, pairs = sw
+        binding = {
+            "status": "switch",
+            "channel": channel,
+            "exclusive": True,
+            "positions": [
+                {"name": f"position {i + 1}", "status": "cc",
+                 "channel": channel, "number": g["number"],
+                 "on": g["max"], "off": g["min"]}
+                for i, g in enumerate(members)
+            ],
+        }
+        nums = ", ".join(str(g["number"]) for g in members)
+        notes.append(
+            f"multi-position switch: {len(members)} positions on CC {nums}, "
+            f"one live at a time. {pairs} change(s) seen, each sending the "
+            f"position being left to 0 and the one being entered to full.")
+        notes.append(
+            "name the positions in the editor; the studio cannot know which "
+            "is which from the wire")
+        others = [g for g in groups if g not in members]
+        return binding, groups, others, notes
 
     pair = _detect_14bit(groups)
     if pair:

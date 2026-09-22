@@ -277,6 +277,13 @@ class Profile:
                 inp = b.get("input")
                 if not inp or inp.get("status") in NON_ADDRESSABLE:
                     continue
+                if inp.get("status") == "switch":
+                    # Each position is its own address, so each can clash.
+                    for pos in inp.get("positions") or []:
+                        key = (lname, pos.get("status", "cc"),
+                               pos.get("channel", 1), pos.get("number"))
+                        claims.setdefault(key, []).append(c["id"])
+                    continue
                 key = (lname, inp.get("status"), inp.get("channel", 1), inp.get("number"))
                 claims.setdefault(key, []).append(c["id"])
         return {k: v for k, v in claims.items() if len(v) > 1}
