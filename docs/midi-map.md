@@ -129,6 +129,11 @@ which a single capture pass cannot see, since the firmware only sends one mode
 at a time -- were taken from it rather than re-measured. They are marked
 `source: manual` in the profile.
 
+The panel's REL. and ABS. legends are TRAKTOR's timecode tracking modes, and
+Mixxx has them: `vinylcontrol_mode`, 0 absolute / 1 relative / 2 constant.
+That matters here because this mixer digitises its own phono inputs to USB,
+so it is the deck those settings are about -- see `docs/dvs-timecode.md`.
+
 See `docs/mixxx-mapping.md` for what each control drives in Mixxx.
 
 ## Corrections from calibration

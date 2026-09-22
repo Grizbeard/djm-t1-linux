@@ -478,6 +478,34 @@ DJMT1.cloneFromA = function (ch, ctrl, value) {
     engine.setValue("[Channel2]", "CloneFromDeck", 1);
 };
 
+DJMT1.relativeA = function (ch, ctrl, value) {
+    if (value === 0) {
+        return;
+    }
+    engine.setValue("[Channel1]", "vinylcontrol_mode", 1);
+};
+
+DJMT1.absoluteA = function (ch, ctrl, value) {
+    if (value === 0) {
+        return;
+    }
+    engine.setValue("[Channel1]", "vinylcontrol_mode", 0);
+};
+
+DJMT1.relativeB = function (ch, ctrl, value) {
+    if (value === 0) {
+        return;
+    }
+    engine.setValue("[Channel2]", "vinylcontrol_mode", 1);
+};
+
+DJMT1.absoluteB = function (ch, ctrl, value) {
+    if (value === 0) {
+        return;
+    }
+    engine.setValue("[Channel2]", "vinylcontrol_mode", 0);
+};
+
 // BROWSE PUSH
 DJMT1.browse_push = function (channel, control, value, status, group) {
     if (value !== 127) {

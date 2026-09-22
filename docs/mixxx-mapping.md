@@ -50,7 +50,7 @@
 | AUTO LOOP A Push | `NOTE 21` | `[Channel1]` `reloop_toggle` |
 | SAMPLER mode, SHIFT + AUTO LOOP A Push | `NOTE 86` | `samplerGainResetA` (script) |
 | Cue A | `NOTE 11` | `[Channel1]` `cue_default` |
-| SHIFT + Cue A | `NOTE 75` | `[Channel1]` `start_stop` |
+| SHIFT + Cue A | `NOTE 75` | `absoluteA` (script) |
 | FX1 Assign A | `NOTE 7` | `[EffectRack1_EffectUnit1]` `group_[Channel1]_enable` |
 | SHIFT + FX1 Assign A | `NOTE 71` | `[Channel1]` `rate_temp_down` |
 | FX2 Assign A | `NOTE 9` | `[EffectRack1_EffectUnit2]` `group_[Channel1]_enable` |
@@ -74,7 +74,7 @@
 | LOAD A | `NOTE 1` | `[Channel1]` `LoadSelectedTrack` |
 | SHIFT + LOAD A | `NOTE 65` | `cloneFromB` (script) |
 | Play A | `NOTE 3` | `[Channel1]` `play` |
-| SHIFT + Play A | `NOTE 67` | `[Channel1]` `reverseroll` |
+| SHIFT + Play A | `NOTE 67` | `relativeA` (script) |
 | SYNC A | `NOTE 5` | `[Channel1]` `beatsync` |
 | SHIFT + SYNC A | `NOTE 69` | `[Channel1]` `sync_leader` |
 
@@ -91,7 +91,7 @@
 | AUTO LOOP B Push | `NOTE 23` | `[Channel2]` `reloop_toggle` |
 | SAMPLER mode, SHIFT + AUTO LOOP B Push | `NOTE 88` | `samplerGainResetB` (script) |
 | CUE B | `NOTE 12` | `[Channel2]` `cue_default` |
-| SHIFT + CUE B | `NOTE 76` | `[Channel2]` `start_stop` |
+| SHIFT + CUE B | `NOTE 76` | `absoluteB` (script) |
 | FX1 Assign B | `NOTE 8` | `[EffectRack1_EffectUnit1]` `group_[Channel2]_enable` |
 | SHIFT + FX1 Assign B | `NOTE 72` | `[Channel2]` `rate_temp_down` |
 | FX2 Assign B | `NOTE 10` | `[EffectRack1_EffectUnit2]` `group_[Channel2]_enable` |
@@ -115,7 +115,7 @@
 | LOAD B | `NOTE 2` | `[Channel2]` `LoadSelectedTrack` |
 | SHIFT + LOAD B | `NOTE 66` | `cloneFromA` (script) |
 | Play B | `NOTE 4` | `[Channel2]` `play` |
-| SHIFT + Play B | `NOTE 68` | `[Channel2]` `reverseroll` |
+| SHIFT + Play B | `NOTE 68` | `relativeB` (script) |
 | SYNC B | `NOTE 6` | `[Channel2]` `beatsync` |
 | SHIFT + SYNC B | `NOTE 70` | `[Channel2]` `sync_leader` |
 
@@ -172,7 +172,6 @@ The panel was designed around TRAKTOR, and a few of its
 functions have no Mixxx counterpart. Each one below is a
 deliberate substitution, not an oversight.
 
-- SHIFT+PLAY is TRAKTOR's Relative timecode mode and SHIFT+CUE its Absolute mode. Mixxx has no such concept, so they are censor (reverseroll) and return-to-start instead.
 - FX ON steps the effect unit's chain preset, which nothing else on this panel reaches. Its light shows the unit's own master enable, which SHIFT+FX ON toggles -- so the lamp reports something the button actually controls.
 - SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.
 - SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.

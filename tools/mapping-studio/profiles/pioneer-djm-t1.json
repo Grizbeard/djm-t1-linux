@@ -327,8 +327,10 @@
      "output_key": "play_indicator"
     },
     "shift": {
-     "group": "[Channel1]",
-     "key": "reverseroll"
+     "group": "[Master]",
+     "key": "DJMT1.relativeA",
+     "script": "DJMT1.relativeA",
+     "external": true
     }
    }
   },
@@ -389,8 +391,10 @@
      "output_key": "cue_indicator"
     },
     "shift": {
-     "group": "[Channel1]",
-     "key": "start_stop"
+     "group": "[Master]",
+     "key": "DJMT1.absoluteA",
+     "script": "DJMT1.absoluteA",
+     "external": true
     }
    }
   },
@@ -451,8 +455,10 @@
      "output_key": "play_indicator"
     },
     "shift": {
-     "group": "[Channel2]",
-     "key": "reverseroll"
+     "group": "[Master]",
+     "key": "DJMT1.relativeB",
+     "script": "DJMT1.relativeB",
+     "external": true
     }
    }
   },
@@ -513,8 +519,10 @@
      "output_key": "cue_indicator"
     },
     "shift": {
-     "group": "[Channel2]",
-     "key": "start_stop"
+     "group": "[Master]",
+     "key": "DJMT1.absoluteB",
+     "script": "DJMT1.absoluteB",
+     "external": true
     }
    }
   },
@@ -4538,7 +4546,6 @@
   }
  ],
  "deviations": [
-  "SHIFT+PLAY is TRAKTOR's Relative timecode mode and SHIFT+CUE its Absolute mode. Mixxx has no such concept, so they are censor (reverseroll) and return-to-start instead.",
   "FX ON steps the effect unit's chain preset, which nothing else on this panel reaches. Its light shows the unit's own master enable, which SHIFT+FX ON toggles -- so the lamp reports something the button actually controls.",
   "SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.",
   "SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.",
@@ -4556,6 +4563,30 @@
    "group": "[Channel2]",
    "key": "CloneFromDeck",
    "value": 1
+  },
+  {
+   "id": "relativeA",
+   "group": "[Channel1]",
+   "key": "vinylcontrol_mode",
+   "value": 1
+  },
+  {
+   "id": "absoluteA",
+   "group": "[Channel1]",
+   "key": "vinylcontrol_mode",
+   "value": 0
+  },
+  {
+   "id": "relativeB",
+   "group": "[Channel2]",
+   "key": "vinylcontrol_mode",
+   "value": 1
+  },
+  {
+   "id": "absoluteB",
+   "group": "[Channel2]",
+   "key": "vinylcontrol_mode",
+   "value": 0
   }
  ]
 }
