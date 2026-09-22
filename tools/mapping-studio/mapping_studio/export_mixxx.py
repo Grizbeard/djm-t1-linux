@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
 
 import re
 import time
-from . import colour, jogs, padmodes
+from . import banks, colour, jogs, padmodes
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -127,6 +127,7 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
     # same CC whether or not SHIFT is held, and binding it twice is a conflict.
     layers = list(layers or p.layers or [layer])
     seen_in, seen_out = set(), set()
+    lit = {}            # control id -> the layer whose LED we drive
 
     for c in sorted(p.controls, key=lambda c: (c.get("section", ""), c["id"])):
         label = c.get("label", c["id"])
@@ -245,6 +246,16 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
                         f"{label}: LED is driven by the device firmware and cannot "
                         f"be addressed from the host, so no output is possible")
                 out = None
+            if out and c["id"] in lit:
+                if ly == layers[0]:
+                    pass        # cannot happen: the first layer sets `lit`
+                else:
+                    comments.append(
+                        f"{label}{suffix}: the LED answers on note "
+                        f"{out.get('number')} too, but it is the same lamp as "
+                        f"on {lit[c['id']]}; driving both would have two Mixxx "
+                        f"controls fighting over one light")
+                out = None
             if out:
                 oaddr = (out.get("channel", 1), out.get("number"))
                 if oaddr in seen_out:
@@ -267,11 +278,12 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
                         f"{label}{suffix}: LED is driven by the mapping's own "
                         f"script, so no <output> is written for it")
                     key = None
-                if not key:
+                elif not key:
                     comments.append(
                         f"{label}: LED found on note {out.get('number')} but the "
                         f"target has no key to drive it")
                 if key:
+                    lit[c["id"]] = ly
                     outputs.append({
                         "group": target["group"],
                         "key": key,
@@ -381,6 +393,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
         f"{prefix}.init = function (id, debugging) {{",
     ]
     has_pad_modes = bool((profile.data.get("pad_modes") or {}).get("modes"))
+    has_banks = bool((profile.data.get("banks") or {}).get("decks"))
     if outputs:
         # Clear first, then make Mixxx restate everything, so the panel agrees
         # with the session rather than with whenever Mixxx last quit.
@@ -392,6 +405,8 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
         # Pads have to be painted once Mixxx is up, and kept in step after.
         out += [f"    {prefix}.connectPads();",
                 f"    {prefix}.paintAll();"]
+    if has_banks:
+        out.append(f"    {prefix}.initBanks();")
     out += [
         "};",
         "",
@@ -399,6 +414,8 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     ]
     if has_pad_modes:
         out.append(f"    {prefix}.allPadsOff();")
+    if has_banks:
+        out.append(f"    {prefix}.shutdownBanks();")
     if outputs:
         out.append(f"    {prefix}.allLedsOff();")
     out += [
@@ -409,6 +426,9 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     out.extend(jogs.generate(profile, prefix))
     out.extend(_hires_helper(hires, prefix))
     out.extend(_colour_helper(profile, prefix, layer))
+    out.extend(banks.generate(profile, prefix))
+    out.extend(banks.generate_gangs(profile, prefix))
+    out.extend(banks.generate_actions(profile, prefix))
 
     pads = padmodes.generate(profile, prefix)
     if pads:

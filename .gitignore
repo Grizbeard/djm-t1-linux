@@ -28,3 +28,7 @@ tools/*.s24
 tools/calibration.json
 tools/cal-quick.txt
 tools/__pycache__/
+
+# python bytecode
+__pycache__/
+*.pyc

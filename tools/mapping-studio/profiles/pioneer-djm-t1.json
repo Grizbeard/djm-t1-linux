@@ -13,7 +13,9 @@
  },
  "layers": [
   "base",
-  "shift"
+  "shift",
+  "sampler",
+  "sampler_shift"
  ],
  "midi": {
   "channel": 1,
@@ -60,6 +62,18 @@
    "target": {
     "group": "[Channel1]",
     "key": "LoadSelectedTrack"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "LoadSelectedTrack"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.cloneFromB",
+     "script": "DJMT1.cloneFromB",
+     "external": true
+    }
    }
   },
   {
@@ -101,6 +115,18 @@
    "target": {
     "group": "[Channel2]",
     "key": "LoadSelectedTrack"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "LoadSelectedTrack"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.cloneFromA",
+     "script": "DJMT1.cloneFromA",
+     "external": true
+    }
    }
   },
   {
@@ -163,6 +189,22 @@
    "target": {
     "group": "[Library]",
     "key": "MoveVertical"
+   },
+   "targets": {
+    "base": {
+     "group": "[Library]",
+     "key": "MoveVertical",
+     "options": [
+      "selectknob"
+     ]
+    },
+    "shift": {
+     "group": "[Playlist]",
+     "key": "SelectPlaylist",
+     "options": [
+      "selectknob"
+     ]
+    }
    }
   },
   {
@@ -277,7 +319,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "play",
+     "output_key": "play_indicator"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "reverseroll"
+    }
+   }
   },
   {
    "id": "cue_a",
@@ -328,7 +381,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "cue_default",
+     "output_key": "cue_indicator"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "start_stop"
+    }
+   }
   },
   {
    "id": "play_b",
@@ -379,7 +443,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "play",
+     "output_key": "play_indicator"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "reverseroll"
+    }
+   }
   },
   {
    "id": "cue_b",
@@ -430,7 +505,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "cue_default",
+     "output_key": "cue_indicator"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "start_stop"
+    }
+   }
   },
   {
    "id": "booth",
@@ -499,6 +585,20 @@
       "off": 0
      }
     }
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.quantizeAll",
+     "script": "DJMT1.quantizeAll",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.slipAll",
+     "script": "DJMT1.slipAll",
+     "external": true
+    }
    }
   },
   {
@@ -550,7 +650,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "group_[Channel1]_enable",
+     "output_key": "group_[Channel1]_enable"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "rate_temp_down"
+    }
+   }
   },
   {
    "id": "fx2_assign_a",
@@ -601,7 +712,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "group_[Channel1]_enable",
+     "output_key": "group_[Channel1]_enable"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "rate_temp_up"
+    }
+   }
   },
   {
    "id": "sync_a",
@@ -652,7 +774,18 @@
      }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "beatsync",
+     "output_key": "sync_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "sync_leader"
+    }
+   }
   },
   {
    "id": "sync_b",
@@ -703,7 +836,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "beatsync",
+     "output_key": "sync_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "sync_leader"
+    }
+   }
   },
   {
    "id": "fx1_assign_b",
@@ -754,7 +898,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "group_[Channel2]_enable",
+     "output_key": "group_[Channel2]_enable"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "rate_temp_down"
+    }
+   }
   },
   {
    "id": "fx2_assign_b",
@@ -805,7 +960,18 @@
      }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "group_[Channel2]_enable",
+     "output_key": "group_[Channel2]_enable"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "rate_temp_up"
+    }
+   }
   },
   {
    "id": "fx1_on",
@@ -856,7 +1022,19 @@
      }
     }
    },
-   "section": "FX1"
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "next_chain_preset",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "enabled",
+     "toggle": true
+    }
+   }
   },
   {
    "id": "fx1_dry_wet",
@@ -894,7 +1072,12 @@
     }
    },
    "section": "FX1",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "mix"
+    }
+   }
   },
   {
    "id": "source_select_1",
@@ -1036,7 +1219,12 @@
     }
    },
    "section": "FX2",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "mix"
+    }
+   }
   },
   {
    "id": "fx2_on",
@@ -1087,7 +1275,19 @@
      }
     }
    },
-   "section": "FX2"
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "next_chain_preset",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "enabled",
+     "toggle": true
+    }
+   }
   },
   {
    "id": "meter_1",
@@ -1165,7 +1365,18 @@
      }
     }
    },
-   "section": "FX1"
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "next_effect"
+    }
+   }
   },
   {
    "id": "fx1_1_level",
@@ -1203,7 +1414,12 @@
     }
    },
    "section": "FX1",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "meta"
+    }
+   }
   },
   {
    "id": "ch1_trim",
@@ -1243,6 +1459,12 @@
    "target": {
     "group": "[Channel1]",
     "key": "pregain"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "pregain"
+    }
    }
   },
   {
@@ -1283,6 +1505,12 @@
    "target": {
     "group": "[Channel2]",
     "key": "pregain"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "pregain"
+    }
    }
   },
   {
@@ -1321,7 +1549,12 @@
     }
    },
    "section": "FX2",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "meta"
+    }
+   }
   },
   {
    "id": "fx2_1_on",
@@ -1372,7 +1605,18 @@
      }
     }
    },
-   "section": "FX2"
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "next_effect"
+    }
+   }
   },
   {
    "id": "fx1_2_on",
@@ -1423,7 +1667,18 @@
      }
     }
    },
-   "section": "FX1"
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "next_effect"
+    }
+   }
   },
   {
    "id": "fx1_2_level",
@@ -1461,7 +1716,12 @@
     }
    },
    "section": "FX1",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "meta"
+    }
+   }
   },
   {
    "id": "ch1_hi",
@@ -1502,6 +1762,12 @@
    "target": {
     "group": "[EqualizerRack1_[Channel1]_Effect1]",
     "key": "parameter3"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter3"
+    }
    }
   },
   {
@@ -1543,6 +1809,12 @@
    "target": {
     "group": "[EqualizerRack1_[Channel2]_Effect1]",
     "key": "parameter3"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter3"
+    }
    }
   },
   {
@@ -1581,7 +1853,12 @@
     }
    },
    "section": "FX2",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "meta"
+    }
+   }
   },
   {
    "id": "fx2_2_on",
@@ -1632,7 +1909,18 @@
      }
     }
    },
-   "section": "FX2"
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "next_effect"
+    }
+   }
   },
   {
    "id": "fx1_3_level",
@@ -1670,7 +1958,12 @@
     }
    },
    "section": "FX1",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "meta"
+    }
+   }
   },
   {
    "id": "ch1_mid",
@@ -1711,6 +2004,12 @@
    "target": {
     "group": "[EqualizerRack1_[Channel1]_Effect1]",
     "key": "parameter2"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter2"
+    }
    }
   },
   {
@@ -1752,6 +2051,12 @@
    "target": {
     "group": "[EqualizerRack1_[Channel2]_Effect1]",
     "key": "parameter2"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter2"
+    }
    }
   },
   {
@@ -1790,7 +2095,12 @@
     }
    },
    "section": "FX2",
-   "detent": true
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "meta"
+    }
+   }
   },
   {
    "id": "fx1_3_on",
@@ -1841,7 +2151,18 @@
      }
     }
    },
-   "section": "FX1"
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "next_effect"
+    }
+   }
   },
   {
    "id": "hp_mix",
@@ -1912,7 +2233,18 @@
      }
     }
    },
-   "section": "FX2"
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "next_effect"
+    }
+   }
   },
   {
    "id": "ch1_low",
@@ -1953,6 +2285,12 @@
    "target": {
     "group": "[EqualizerRack1_[Channel1]_Effect1]",
     "key": "parameter1"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter1"
+    }
    }
   },
   {
@@ -2014,6 +2352,12 @@
    "target": {
     "group": "[EqualizerRack1_[Channel2]_Effect1]",
     "key": "parameter1"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter1"
+    }
    }
   },
   {
@@ -2051,9 +2395,57 @@
        127
       ]
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 10,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 74,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "beatloop_size",
+     "relative_action": "scale",
+     "min": 0.03125,
+     "max": 64
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "loop_move",
+     "options": [
+      "selectknob"
+     ]
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainA",
+     "script": "DJMT1.samplerGainA",
+     "external": true
+    }
+   }
   },
   {
    "id": "auto_loop_b",
@@ -2071,12 +2463,13 @@
      "input": {
       "status": "cc",
       "channel": 1,
-      "number": 12,
       "mode": "relative",
       "sentinels": [
        1,
        127
-      ]
+      ],
+      "number": 11,
+      "source": "manual"
      }
     },
     "shift": {
@@ -2090,9 +2483,57 @@
        127
       ]
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 12,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 76,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "beatloop_size",
+     "relative_action": "scale",
+     "min": 0.03125,
+     "max": 64
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "loop_move",
+     "options": [
+      "selectknob"
+     ]
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainB",
+     "script": "DJMT1.samplerGainB",
+     "external": true
+    }
+   }
   },
   {
    "id": "mode_select_a",
@@ -2122,10 +2563,11 @@
      "input": {
       "status": "note",
       "channel": 1,
-      "number": 44,
       "mode": "button",
       "press_value": 127,
-      "release": "note_on_zero"
+      "release": "note_on_zero",
+      "number": 89,
+      "source": "manual"
      }
     }
    },
@@ -2182,6 +2624,17 @@
     "group": "[Channel1]",
     "key": "pfl",
     "toggle": true
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "pfl"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "bpm_tap",
+     "output_key": "pfl"
+    }
    }
   },
   {
@@ -2264,6 +2717,17 @@
     "group": "[Channel2]",
     "key": "pfl",
     "toggle": true
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "pfl"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "bpm_tap",
+     "output_key": "pfl"
+    }
    }
   },
   {
@@ -2294,10 +2758,11 @@
      "input": {
       "status": "note",
       "channel": 1,
-      "number": 46,
       "mode": "button",
       "press_value": 127,
-      "release": "note_on_zero"
+      "release": "note_on_zero",
+      "number": 90,
+      "source": "manual"
      }
     }
    },
@@ -2350,9 +2815,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 28,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 28,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 92,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 92,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA1",
+     "script": "DJMT1.hotcueA1",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA1Clear",
+     "script": "DJMT1.hotcueA1Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA1",
+     "script": "DJMT1.samplerA1",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA1Eject",
+     "script": "DJMT1.samplerA1Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "hot_cue_1_b",
@@ -2401,9 +2930,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 30,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 30,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 94,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 94,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB1",
+     "script": "DJMT1.hotcueB1",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB1Clear",
+     "script": "DJMT1.hotcueB1Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB1",
+     "script": "DJMT1.samplerB1",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB1Eject",
+     "script": "DJMT1.samplerB1Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "hot_cue_2_a",
@@ -2452,9 +3045,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 32,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 32,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 96,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 96,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA2",
+     "script": "DJMT1.hotcueA2",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA2Clear",
+     "script": "DJMT1.hotcueA2Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA2",
+     "script": "DJMT1.samplerA2",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA2Eject",
+     "script": "DJMT1.samplerA2Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "hot_cue_2_b",
@@ -2503,9 +3160,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 34,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 34,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 98,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 98,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB2",
+     "script": "DJMT1.hotcueB2",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB2Clear",
+     "script": "DJMT1.hotcueB2Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB2",
+     "script": "DJMT1.samplerB2",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB2Eject",
+     "script": "DJMT1.samplerB2Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "hot_cue_3_a",
@@ -2554,9 +3275,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 36,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 36,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 100,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 100,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA3",
+     "script": "DJMT1.hotcueA3",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA3Clear",
+     "script": "DJMT1.hotcueA3Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA3",
+     "script": "DJMT1.samplerA3",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA3Eject",
+     "script": "DJMT1.samplerA3Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "hot_cue_3_b",
@@ -2605,9 +3390,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 38,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 38,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 102,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 102,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB3",
+     "script": "DJMT1.hotcueB3",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB3Clear",
+     "script": "DJMT1.hotcueB3Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB3",
+     "script": "DJMT1.samplerB3",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB3Eject",
+     "script": "DJMT1.samplerB3Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "hot_cue_4_a",
@@ -2656,9 +3505,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 40,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 40,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 104,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 104,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA4",
+     "script": "DJMT1.hotcueA4",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA4Clear",
+     "script": "DJMT1.hotcueA4Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA4",
+     "script": "DJMT1.samplerA4",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA4Eject",
+     "script": "DJMT1.samplerA4Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "hot_cue_4_b",
@@ -2707,9 +3620,73 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 42,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 42,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 106,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 106,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB4",
+     "script": "DJMT1.hotcueB4",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB4Clear",
+     "script": "DJMT1.hotcueB4Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB4",
+     "script": "DJMT1.samplerB4",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB4Eject",
+     "script": "DJMT1.samplerB4Eject",
+     "external": true
+    }
+   }
   },
   {
    "id": "active_a",
@@ -2758,9 +3735,67 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 44,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 44,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 108,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 108,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck A"
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.bankA",
+     "script": "DJMT1.bankA",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerHoldA",
+     "script": "DJMT1.samplerHoldA",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerRepeatA",
+     "script": "DJMT1.samplerRepeatA",
+     "external": true
+    }
+   }
   },
   {
    "id": "active_b",
@@ -2809,9 +3844,67 @@
       "on": 127,
       "off": 0
      }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 46,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 46,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 110,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 110,
+      "source": "manual"
+     }
     }
    },
-   "section": "Deck B"
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.bankB",
+     "script": "DJMT1.bankB",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerHoldB",
+     "script": "DJMT1.samplerHoldB",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerRepeatB",
+     "script": "DJMT1.samplerRepeatB",
+     "external": true
+    }
+   }
   },
   {
    "id": "ch1_volume",
@@ -2857,6 +3950,12 @@
    "target": {
     "group": "[Channel1]",
     "key": "volume"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "volume"
+    }
    }
   },
   {
@@ -2903,6 +4002,12 @@
    "target": {
     "group": "[Channel2]",
     "key": "volume"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "volume"
+    }
    }
   },
   {
@@ -2910,7 +4015,6 @@
    "label": "CROSSFADER",
    "section": "Master",
    "kind": "fader",
-   "detent": true,
    "shape": {
     "type": "rect",
     "cx": 133,
@@ -2946,6 +4050,12 @@
    "target": {
     "group": "[Master]",
     "key": "crossfader"
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "crossfader"
+    }
    }
   },
   {
@@ -2988,6 +4098,17 @@
    "target": {
     "group": "[Library]",
     "key": "GoToItem"
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "maximize_library",
+     "toggle": true
+    },
+    "shift": {
+     "group": "[Library]",
+     "key": "GoToItem"
+    }
    }
   },
   {
@@ -3189,12 +4310,252 @@
     }
    },
    "section": "Front"
+  },
+  {
+   "id": "auto_loop_a_push",
+   "label": "AUTO LOOP A Push",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 36,
+    "cy": 223.8,
+    "d": 16
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 21,
+      "source": "manual"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 85,
+      "source": "manual"
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 22,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 86,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "reloop_toggle"
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainResetA",
+     "script": "DJMT1.samplerGainResetA",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "auto_loop_b_push",
+   "label": "AUTO LOOP B Push",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 229,
+    "cy": 223.8,
+    "d": 16
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 23,
+      "source": "manual"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 87,
+      "source": "manual"
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 24,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 88,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "reloop_toggle"
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainResetB",
+     "script": "DJMT1.samplerGainResetB",
+     "external": true
+    }
+   }
   }
  ],
  "controller_id": "PIONEER DJM-T1 MIDI 1",
  "provenance": {
   "geometry": "auto-detected from a 1:1 plan view of the top panel; positions are measurements in millimetres, no artwork is redistributed",
   "bindings": "seeded from docs/midi-map.md where a control could be placed unambiguously; everything else is unmapped and awaits a learn pass",
-  "generated": "tools/mapping-studio, first pass then hand-placed faders"
- }
+  "generated": "tools/mapping-studio, first pass then hand-placed faders",
+  "midi_map": "Pioneer DJM-T1 Operating Instructions (DRB1610), MIDI assignment map, pages 28-29. Note names read with C-1 = 0, which reproduced 114 of the 116 captured bindings exactly. Bindings marked source: manual come from that table and have not been confirmed on the wire."
+ },
+ "banks": {
+  "decks": [
+   {
+    "deck": "A",
+    "group": "[Channel1]",
+    "channel": 1,
+    "hotcues": [
+     27,
+     31,
+     35,
+     39
+    ],
+    "per_bank": 4,
+    "banks": 2,
+    "bank_led": 43,
+    "samplers": [
+     "[Sampler1]",
+     "[Sampler2]",
+     "[Sampler3]",
+     "[Sampler4]"
+    ],
+    "sampler_buttons": [
+     28,
+     32,
+     36,
+     40
+    ],
+    "sampler_mode_led": 44
+   },
+   {
+    "deck": "B",
+    "group": "[Channel2]",
+    "channel": 1,
+    "hotcues": [
+     29,
+     33,
+     37,
+     41
+    ],
+    "per_bank": 4,
+    "banks": 2,
+    "bank_led": 45,
+    "samplers": [
+     "[Sampler5]",
+     "[Sampler6]",
+     "[Sampler7]",
+     "[Sampler8]"
+    ],
+    "sampler_buttons": [
+     30,
+     34,
+     38,
+     42
+    ],
+    "sampler_mode_led": 46
+   }
+  ]
+ },
+ "gangs": [
+  {
+   "id": "quantizeAll",
+   "key": "quantize",
+   "groups": [
+    "[Channel1]",
+    "[Channel2]"
+   ]
+  },
+  {
+   "id": "slipAll",
+   "key": "slip_enabled",
+   "groups": [
+    "[Channel1]",
+    "[Channel2]"
+   ]
+  }
+ ],
+ "deviations": [
+  "SHIFT+PLAY is TRAKTOR's Relative timecode mode and SHIFT+CUE its Absolute mode. Mixxx has no such concept, so they are censor (reverseroll) and return-to-start instead.",
+  "FX ON steps the effect unit's chain preset, which nothing else on this panel reaches. Its light shows the unit's own master enable, which SHIFT+FX ON toggles -- so the lamp reports something the button actually controls.",
+  "SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.",
+  "SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.",
+  "SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing."
+ ],
+ "actions": [
+  {
+   "id": "cloneFromB",
+   "group": "[Channel1]",
+   "key": "CloneFromDeck",
+   "value": 2
+  },
+  {
+   "id": "cloneFromA",
+   "group": "[Channel2]",
+   "key": "CloneFromDeck",
+   "value": 1
+  }
+ ]
 }

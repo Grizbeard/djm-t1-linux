@@ -108,6 +108,29 @@ other buttons locally and emits nothing on its own).
 The CD/PHONO/USB source switches are audio-routing selectors (Ch1 on CC `0x6B`
 with `0x65`/`0x71`; Ch2 on CC `0x68` with `0x6E`/`0x74`) and are not Mixxx controls.
 
+## The authoritative source
+
+The mixer's own *Operating Instructions* (DRB1610) carry a complete MIDI
+assignment map on pages 28-29, covering both SHIFT states, the hot cue and
+sampler modes, and which addresses accept LED data from the host. Note names
+there read with C-1 = 0.
+
+That table was checked against this calibration: **114 of the 116 captured
+bindings matched it exactly.** The two that did not were capture mistakes, not
+manual mistakes, and have been corrected:
+
+- The SELECT button's SHIFT note was recorded as 44 / 46, which are in fact the
+  ACTIVE button's sampler-mode notes. It is 89 / 90.
+- The deck B loop encoder was captured while the section was in sampler mode,
+  so its base layer held CC 12. Hot cue mode is CC 11.
+
+Because the table is trustworthy at that rate, the sampler-mode addresses --
+which a single capture pass cannot see, since the firmware only sends one mode
+at a time -- were taken from it rather than re-measured. They are marked
+`source: manual` in the profile.
+
+See `docs/mixxx-mapping.md` for what each control drives in Mixxx.
+
 ## Corrections from calibration
 
 Two bindings in the pre-calibration map were wrong and have been removed:
