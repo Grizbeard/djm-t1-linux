@@ -7,7 +7,7 @@
     </info>
     <controller id="PIONEER DJM-T1 MIDI 1">
         <scriptfiles>
-            <file functionprefix="Pioneer_DJM_T1" filename="Pioneer-DJM-T1-scripts.js"/>
+            <file functionprefix="DJMT1" filename="Pioneer-DJM-T1-scripts.js"/>
         </scriptfiles>
         <controls>
             <control>
@@ -60,7 +60,7 @@
             </control>
             <control>
                 <group>[Master]</group>
-                <key>Pioneer_DJM_T1.browse_push</key>
+                <key>DJMT1.browse_push</key>
                 <description>BROWSE PUSH</description>
                 <status>0x90</status>
                 <midino>0x00</midino>
@@ -68,7 +68,7 @@
             </control>
             <control>
                 <group>[Master]</group>
-                <key>Pioneer_DJM_T1.browse_push</key>
+                <key>DJMT1.browse_push</key>
                 <description>BROWSE PUSH (release)</description>
                 <status>0x80</status>
                 <midino>0x00</midino>
@@ -284,7 +284,7 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>Pioneer_DJM_T1.auto_loop_a</key>
+                <key>DJMT1.auto_loop_a</key>
                 <description>AUTO LOOP A</description>
                 <status>0xB0</status>
                 <midino>0x09</midino>
@@ -756,7 +756,7 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatsync</key>
+                <key>sync_enabled</key>
                 <description>SYNC A</description>
                 <status>0x90</status>
                 <midino>0x05</midino>
@@ -764,7 +764,7 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatsync</key>
+                <key>sync_enabled</key>
                 <description>SYNC A (release)</description>
                 <status>0x80</status>
                 <midino>0x05</midino>
@@ -836,7 +836,7 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>Pioneer_DJM_T1.auto_loop_b</key>
+                <key>DJMT1.auto_loop_b</key>
                 <description>AUTO LOOP B</description>
                 <status>0xB0</status>
                 <midino>0x0B</midino>
@@ -1308,7 +1308,7 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatsync</key>
+                <key>sync_enabled</key>
                 <description>SYNC B</description>
                 <status>0x90</status>
                 <midino>0x06</midino>
@@ -1316,7 +1316,7 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatsync</key>
+                <key>sync_enabled</key>
                 <description>SYNC B (release)</description>
                 <status>0x80</status>
                 <midino>0x06</midino>
@@ -1484,7 +1484,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit1]</group>
-                <key>Pioneer_DJM_T1.fx1_on_shift</key>
+                <key>DJMT1.fx1_on_shift</key>
                 <description>FX1 ON (shift)</description>
                 <status>0x90</status>
                 <midino>0x4D</midino>
@@ -1492,7 +1492,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit1]</group>
-                <key>Pioneer_DJM_T1.fx1_on_shift</key>
+                <key>DJMT1.fx1_on_shift</key>
                 <description>FX1 ON (shift) (release)</description>
                 <status>0x80</status>
                 <midino>0x4D</midino>
@@ -1644,7 +1644,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit2]</group>
-                <key>Pioneer_DJM_T1.fx2_on_shift</key>
+                <key>DJMT1.fx2_on_shift</key>
                 <description>FX2 On (shift)</description>
                 <status>0x90</status>
                 <midino>0x4E</midino>
@@ -1652,7 +1652,7 @@
             </control>
             <control>
                 <group>[EffectRack1_EffectUnit2]</group>
-                <key>Pioneer_DJM_T1.fx2_on_shift</key>
+                <key>DJMT1.fx2_on_shift</key>
                 <description>FX2 On (shift) (release)</description>
                 <status>0x80</status>
                 <midino>0x4E</midino>

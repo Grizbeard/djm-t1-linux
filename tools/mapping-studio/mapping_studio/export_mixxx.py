@@ -307,10 +307,14 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
              f"        <description>{escape(description)}</description>",
              "    </info>",
              f'    <controller id="{escape(controller_id)}">']
-    # The script file is also needed when nothing is script-bound but the
-    # controller has colour pads: the helper lives there and Mixxx will not load
-    # it unless the mapping declares it.
-    if scripted or _colour_helper(p, prefix, layer):
+    # The script file is also needed when nothing was generated as a stub: a
+    # mapping whose behaviour is all hand-written functions, or one that only
+    # has colour pads, still has to declare the file or Mixxx never loads it --
+    # and never calls init() either.
+    needs_script = (scripted
+                    or any("." in e["key"] for e in controls)
+                    or _colour_helper(p, prefix, layer))
+    if needs_script:
         lines += ["        <scriptfiles>",
                   f'            <file functionprefix="{escape(prefix)}" '
                   f'filename="{escape(script_file)}"/>',
@@ -351,6 +355,15 @@ def build_xml(profile, layer="base", name=None, author="", description=None,
 
     lines += ["    </controller>", "</MixxxControllerPreset>", ""]
     xml = "\n".join(lines)
+
+    stray = sorted({e["key"] for e in controls
+                    if "." in e["key"] and not e["key"].startswith(prefix + ".")})
+    if stray:
+        raise ValueError(
+            f"script keys do not match the mapping's functionprefix "
+            f"{prefix!r}: {', '.join(stray)}. Mixxx would call nothing for "
+            f"these, including init(), so anything set up there would be "
+            f"missing while the rest of the mapping still worked.")
 
     # A mapping Mixxx cannot parse is worse than no mapping: it fails at load
     # time, in the GUI, away from here. Catch it while the cause is still known.
@@ -576,7 +589,8 @@ def colour_spec(profile):
 def export(profile, layer="base", **kw):
     """Return (xml_text, script_text, script_filename)."""
     name = kw.get("name") or profile.data.get("name") or profile.data.get("id")
-    prefix = kw.get("prefix") or _ident(name)
+    prefix = (kw.get("prefix") or profile.data.get("script_prefix")
+              or _ident(name))
     script_file = kw.get("script_file") or f"{name.replace(' ', '-')}-scripts.js"
     xml, scripted, hires, outputs = build_xml(profile, layer=layer, script_file=script_file,
                               prefix=prefix, **{k: v for k, v in kw.items()

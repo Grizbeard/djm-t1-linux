@@ -1145,3 +1145,41 @@ class SwitchTest(unittest.TestCase):
         self.assertIn("3-position switch", xml)
         self.assertIn("CD (CC 101)", xml)
         self.assertIn("internal audio route", xml)
+
+
+class ScriptPrefixTest(unittest.TestCase):
+    """The XML's functionprefix and the script's namespace must agree.
+
+    When they did not, Mixxx called nothing -- including init() -- so every
+    handler that depended on state set up there did nothing, while handlers
+    that did not, and every declarative binding, kept working. The mapping
+    looked half-broken rather than misconfigured.
+    """
+
+    def _profile(self):
+        p = Profile.new("t", "Pioneer DJM-T1", {"w": 100, "h": 100})
+        c = p.add_control({"id": "pad", "label": "Pad", "kind": "button",
+                           "shape": {"type": "rect", "cx": 1, "cy": 1,
+                                     "w": 4, "h": 4}})
+        p.set_binding(c["id"], "base", "input",
+                      {"status": "note", "channel": 1, "number": 20,
+                       "mode": "button", "press_value": 127})
+        p.set_target(c["id"], "base", {"group": "[Master]", "key": "MYNS.pad",
+                                       "script": "MYNS.pad", "external": True})
+        return p
+
+    def test_export_honours_the_profile_prefix(self):
+        p = self._profile()
+        p.data["script_prefix"] = "MYNS"
+        xml, js, _ = export_mixxx.export(p)
+        self.assertIn('functionprefix="MYNS"', xml)
+        self.assertIn("var MYNS = {}", js)
+
+    def test_mismatched_prefix_is_refused(self):
+        # Without the declaration the prefix falls out of the device name, and
+        # the hand-written script names no longer match it.
+        p = self._profile()
+        with self.assertRaises(ValueError) as caught:
+            export_mixxx.export(p)
+        self.assertIn("functionprefix", str(caught.exception))
+        self.assertIn("MYNS.pad", str(caught.exception))

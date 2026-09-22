@@ -786,7 +786,7 @@
    "targets": {
     "base": {
      "group": "[Channel1]",
-     "key": "beatsync",
+     "key": "sync_enabled",
      "output_key": "sync_enabled"
     },
     "shift": {
@@ -848,7 +848,7 @@
    "targets": {
     "base": {
      "group": "[Channel2]",
-     "key": "beatsync",
+     "key": "sync_enabled",
      "output_key": "sync_enabled"
     },
     "shift": {
@@ -4588,5 +4588,6 @@
    "key": "vinylcontrol_mode",
    "value": 0
   }
- ]
+ ],
+ "script_prefix": "DJMT1"
 }

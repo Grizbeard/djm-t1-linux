@@ -75,7 +75,7 @@
 | SHIFT + LOAD A | `NOTE 65` | `cloneFromB` (script) |
 | Play A | `NOTE 3` | `[Channel1]` `play` |
 | SHIFT + Play A | `NOTE 67` | `relativeA` (script) |
-| SYNC A | `NOTE 5` | `[Channel1]` `beatsync` |
+| SYNC A | `NOTE 5` | `[Channel1]` `sync_enabled` |
 | SHIFT + SYNC A | `NOTE 69` | `[Channel1]` `sync_leader` |
 
 ### Deck B
@@ -116,7 +116,7 @@
 | SHIFT + LOAD B | `NOTE 66` | `cloneFromA` (script) |
 | Play B | `NOTE 4` | `[Channel2]` `play` |
 | SHIFT + Play B | `NOTE 68` | `relativeB` (script) |
-| SYNC B | `NOTE 6` | `[Channel2]` `beatsync` |
+| SYNC B | `NOTE 6` | `[Channel2]` `sync_enabled` |
 | SHIFT + SYNC B | `NOTE 70` | `[Channel2]` `sync_leader` |
 
 ### FX1
