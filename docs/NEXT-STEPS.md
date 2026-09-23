@@ -39,8 +39,10 @@ control, then wire the field-to-high-res-CC table into the bridge.
 
 The mixer was built for Traktor Scratch; its phono inputs are digitized to the USB
 input channels we already stream, so control vinyl can drive Mixxx's vinyl control.
-Wiring and Mixxx configuration: [dvs-timecode.md](dvs-timecode.md). **Left:** confirm
-the input-pair-to-deck map and that Mixxx locks onto the timecode.
+Wiring and Mixxx configuration: [dvs-timecode.md](dvs-timecode.md). The input-pair-to-deck
+map is settled -- the manual states it, USB 1/2 is CH1 and USB 3/4 is CH2 -- and the
+Sound Hardware routing for hardware mixing is written up there. **Left:** confirm the
+timecode format and that Mixxx locks onto it.
 
 ## 5. Single unified daemon  (built)
 
