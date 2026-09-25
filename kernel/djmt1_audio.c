@@ -6,15 +6,21 @@
 // USB-Audio-Class, so the generic snd-usb-audio driver does not bind it. This is
 // a standalone ALSA card that streams it directly. The wire format was
 // reverse-engineered by the userspace tools in ../audio/ and is fixed:
-//   iface 0, alt 1; EP 0x01 OUT / 0x82 IN; isochronous; 864-byte packets;
+//   iface 0, alt 1; EP 0x01 OUT / 0x82 IN; isochronous; 864-byte OUT packets,
+//   IN packets up to 1024 bytes (normally 864);
 //   48 kHz, 24-bit, 6 channels; 18 bytes/frame (S24_3LE interleaved).
 // Because the device's frame layout is exactly ALSA's S24_3LE 6-channel
 // interleaved, the URB payload is copied to/from the PCM ring with no conversion.
 //
-// STATUS: assembled from the verified userspace format, but NOT yet loaded or
-// tested on hardware. Review before insmod; loading an untested USB/ALSA module
-// can wedge a device or oops. The userspace PipeWire driver in ../audio/ is the
-// tested path. This is the upstream-track kernel tier.
+// STATUS: loaded on a Pi 5 (6.18, aarch64) against real hardware: capture,
+// playback and full duplex stream clean at 48 kHz (60 s soak, no xHCI errors).
+// Playback verified by ear: USB out 1/2 -> CH1 L/R, 3/4 -> CH2, 5/6 -> master
+// L/R (bypassing the channel faders), no clicks. Hot-unplug mid-duplex is clean
+// (-ENODEV to userspace, rebinds on replug, rmmod after). The card is
+// hw:DJMT1Audio. Capture of a Serato Control CD on CH1 arrives on USB in 1/2 as
+// a clean 1 kHz quadrature pair (90.0 deg, no dropouts over 10 s).
+// The userspace PipeWire driver in ../audio/ remains the proven path; this is
+// the upstream-track kernel tier.
 //
 // Build (out-of-tree): make -C kernel   (needs the running kernel's build tree)
 
@@ -34,14 +40,14 @@
 #define ALT 1
 #define EP_OUT 0x01
 #define EP_IN  0x82
-#define PKT_BYTES 864
+#define PKT_OUT_BYTES 864                       /* always 48 frames */
+#define PKT_IN_BYTES 1024                       /* wMaxPacketSize: IN packets vary, >864 seen */
 #define FRAME_BYTES 18                          /* 6 ch * 3 bytes */
-#define FRAMES_PER_PKT (PKT_BYTES / FRAME_BYTES) /* 48 */
+#define FRAMES_PER_PKT (PKT_OUT_BYTES / FRAME_BYTES) /* 48 */
 #define RATE 48000
 #define CHANNELS 6
 #define NPKT 8                                  /* iso packets per URB */
 #define NURB 4                                  /* URBs in flight per direction */
-#define URB_BYTES (PKT_BYTES * NPKT)
 
 struct djmt1_stream {
 	struct snd_pcm_substream *substream;
@@ -104,11 +110,26 @@ static void djmt1_transfer(struct djmt1_stream *s, unsigned char *pkt,
 	}
 }
 
+static bool djmt1_urb_unlinked(struct urb *urb)
+{
+	switch (urb->status) {
+	case -ENOENT:
+	case -ECONNRESET:
+	case -ESHUTDOWN:
+	case -ENODEV:
+		return true;
+	default:
+		return false;
+	}
+}
+
 static void djmt1_in_complete(struct urb *urb)
 {
 	struct djmt1_stream *s = urb->context;
 	int i;
 
+	if (djmt1_urb_unlinked(urb))
+		return;
 	if (!atomic_read(&s->running) || urb->status)
 		goto resubmit;
 	for (i = 0; i < urb->number_of_packets; i++) {
@@ -122,8 +143,8 @@ static void djmt1_in_complete(struct urb *urb)
 resubmit:
 	if (atomic_read(&s->running)) {
 		for (i = 0; i < urb->number_of_packets; i++) {
-			urb->iso_frame_desc[i].offset = i * PKT_BYTES;
-			urb->iso_frame_desc[i].length = PKT_BYTES;
+			urb->iso_frame_desc[i].offset = i * PKT_IN_BYTES;
+			urb->iso_frame_desc[i].length = PKT_IN_BYTES;
 		}
 		usb_submit_urb(urb, GFP_ATOMIC);
 	}
@@ -134,13 +155,13 @@ static void djmt1_out_complete(struct urb *urb)
 	struct djmt1_stream *s = urb->context;
 	int i;
 
-	if (!atomic_read(&s->running))
+	if (djmt1_urb_unlinked(urb) || !atomic_read(&s->running))
 		return;
 	for (i = 0; i < urb->number_of_packets; i++) {
-		unsigned char *pkt = urb->transfer_buffer + i * PKT_BYTES;
+		unsigned char *pkt = urb->transfer_buffer + i * PKT_OUT_BYTES;
 
-		urb->iso_frame_desc[i].offset = i * PKT_BYTES;
-		urb->iso_frame_desc[i].length = PKT_BYTES;
+		urb->iso_frame_desc[i].offset = i * PKT_OUT_BYTES;
+		urb->iso_frame_desc[i].length = PKT_OUT_BYTES;
 		djmt1_transfer(s, pkt, FRAMES_PER_PKT, false);
 	}
 	usb_submit_urb(urb, GFP_ATOMIC);
@@ -149,6 +170,7 @@ static void djmt1_out_complete(struct urb *urb)
 static int djmt1_alloc_urbs(struct djmt1 *chip, struct djmt1_stream *s,
 			    unsigned int ep, usb_complete_t complete)
 {
+	unsigned int pkt = (ep & USB_DIR_IN) ? PKT_IN_BYTES : PKT_OUT_BYTES;
 	int u, p;
 
 	for (u = 0; u < NURB; u++) {
@@ -164,15 +186,15 @@ static int djmt1_alloc_urbs(struct djmt1 *chip, struct djmt1_stream *s,
 		urb->interval = 1;
 		urb->transfer_flags = URB_ISO_ASAP;
 		urb->number_of_packets = NPKT;
-		urb->transfer_buffer_length = URB_BYTES;
+		urb->transfer_buffer_length = pkt * NPKT;
 		urb->context = s;
 		urb->complete = complete;
-		urb->transfer_buffer = kzalloc(URB_BYTES, GFP_KERNEL);
+		urb->transfer_buffer = kzalloc(pkt * NPKT, GFP_KERNEL);
 		if (!urb->transfer_buffer)
 			return -ENOMEM;
 		for (p = 0; p < NPKT; p++) {
-			urb->iso_frame_desc[p].offset = p * PKT_BYTES;
-			urb->iso_frame_desc[p].length = PKT_BYTES;
+			urb->iso_frame_desc[p].offset = p * pkt;
+			urb->iso_frame_desc[p].length = pkt;
 		}
 	}
 	return 0;
@@ -192,6 +214,27 @@ static void djmt1_free_urbs(struct djmt1_stream *s)
 	}
 }
 
+/*
+ * TRIGGER_STOP runs in atomic context and cannot wait for URBs, so it only
+ * clears the running flag; the URBs are reaped here, from prepare and hw_free.
+ */
+static void djmt1_kill_urbs(struct djmt1_stream *s)
+{
+	int u;
+
+	atomic_set(&s->running, 0);
+	for (u = 0; u < NURB; u++)
+		usb_kill_urb(s->urb[u]);
+}
+
+static struct djmt1_stream *djmt1_stream_of(struct snd_pcm_substream *ss)
+{
+	struct djmt1 *chip = snd_pcm_substream_chip(ss);
+
+	return (ss->stream == SNDRV_PCM_STREAM_CAPTURE) ?
+		&chip->capture : &chip->playback;
+}
+
 static int djmt1_open(struct snd_pcm_substream *ss)
 {
 	ss->runtime->hw = djmt1_hw;
@@ -203,24 +246,34 @@ static int djmt1_close(struct snd_pcm_substream *ss)
 	return 0;
 }
 
+static int djmt1_hw_free(struct snd_pcm_substream *ss)
+{
+	djmt1_kill_urbs(djmt1_stream_of(ss));
+	return 0;
+}
+
 static int djmt1_prepare(struct snd_pcm_substream *ss)
 {
-	struct djmt1 *chip = snd_pcm_substream_chip(ss);
-	struct djmt1_stream *s = (ss->stream == SNDRV_PCM_STREAM_CAPTURE) ?
-		&chip->capture : &chip->playback;
+	struct djmt1_stream *s = djmt1_stream_of(ss);
+	int u;
 
+	/*
+	 * No usb_set_interface() here: probe already selected alt 1, and
+	 * re-selecting it resets both endpoints, killing the other direction's
+	 * stream mid-flight.
+	 */
+	djmt1_kill_urbs(s);
 	s->hwptr = 0;
 	s->period_pos = 0;
-	/* Activate the iso interface once (harmless if already alt 1). */
-	usb_set_interface(chip->udev, IFACE, ALT);
+	if (ss->stream == SNDRV_PCM_STREAM_PLAYBACK)
+		for (u = 0; u < NURB; u++)
+			memset(s->urb[u]->transfer_buffer, 0, PKT_OUT_BYTES * NPKT);
 	return 0;
 }
 
 static int djmt1_trigger(struct snd_pcm_substream *ss, int cmd)
 {
-	struct djmt1 *chip = snd_pcm_substream_chip(ss);
-	struct djmt1_stream *s = (ss->stream == SNDRV_PCM_STREAM_CAPTURE) ?
-		&chip->capture : &chip->playback;
+	struct djmt1_stream *s = djmt1_stream_of(ss);
 	int u, ret;
 
 	switch (cmd) {
@@ -244,16 +297,13 @@ static int djmt1_trigger(struct snd_pcm_substream *ss, int cmd)
 
 static snd_pcm_uframes_t djmt1_pointer(struct snd_pcm_substream *ss)
 {
-	struct djmt1 *chip = snd_pcm_substream_chip(ss);
-	struct djmt1_stream *s = (ss->stream == SNDRV_PCM_STREAM_CAPTURE) ?
-		&chip->capture : &chip->playback;
-
-	return s->hwptr;
+	return djmt1_stream_of(ss)->hwptr;
 }
 
 static const struct snd_pcm_ops djmt1_ops = {
 	.open = djmt1_open,
 	.close = djmt1_close,
+	.hw_free = djmt1_hw_free,
 	.prepare = djmt1_prepare,
 	.trigger = djmt1_trigger,
 	.pointer = djmt1_pointer,
@@ -271,7 +321,12 @@ static int djmt1_probe(struct usb_interface *intf,
 	if (intf->cur_altsetting->desc.bInterfaceNumber != IFACE)
 		return -ENODEV;
 
-	err = snd_card_new(&intf->dev, SNDRV_DEFAULT_IDX1, SNDRV_DEFAULT_STR1,
+	/*
+	 * Explicit id: left NULL, ALSA derives "DJMT1" from the shortname, the same
+	 * id snd-usb-audio derives for the MIDI interfaces, so hw:DJMT1 vs
+	 * hw:DJMT1_1 would depend on probe order and swap across replugs.
+	 */
+	err = snd_card_new(&intf->dev, SNDRV_DEFAULT_IDX1, "DJMT1Audio",
 			   THIS_MODULE, sizeof(*chip), &card);
 	if (err < 0)
 		return err;
@@ -331,6 +386,7 @@ static void djmt1_disconnect(struct usb_interface *intf)
 
 	if (!chip)
 		return;
+	snd_card_disconnect(chip->card);
 	atomic_set(&chip->capture.running, 0);
 	atomic_set(&chip->playback.running, 0);
 	djmt1_free_urbs(&chip->capture);

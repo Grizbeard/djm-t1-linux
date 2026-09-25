@@ -69,7 +69,7 @@ Note: `djm_arm` plus `amidi` alone will **not** show MIDI. Arming without the HI
 | `midi/systemd/` | per-user services: `djm-midi.service` (the tested two-service setup) plus `djm-full.service` (the unified daemon, drafted) |
 | `arm/djm_arm.c` | standalone reproduction of just the vendor "arm" command |
 | `audio/` | **the soundcard driver** (`djmt1-pipewire`): libusb iso streaming core + PipeWire device (6-in/6-out), plus capture/monitor tools and its user service |
-| `kernel/` | drafted in-kernel ALSA driver for the soundcard (compiles cleanly; not yet hardware-tested) |
+| `kernel/` | in-kernel ALSA driver for the soundcard (hardware-validated at the ALSA level; not yet run under Mixxx) |
 | `mixxx/` | Mixxx controller mapping (`.midi.xml` + script) |
 | `udev/99-djm-t1.rules` | non-root device access |
 | `systemd/djm-t1-arm.service` | legacy arm-only oneshot (superseded by the `midi/` bridge service) |
@@ -91,7 +91,7 @@ Both channels' trim, 3-band EQ, filter (color) and volume fader, plus the crossf
 | **Simultaneous audio + MIDI** | ✅ Confirmed |
 | **Mixxx mapping** | ✅ Complete for the mixer section |
 | **Unified daemon** | 🔜 Drafted: `djm_full` folds both halves into one process and compiles; not yet run end-to-end on hardware |
-| **Kernel audio driver** | 🔜 Drafted, compiles cleanly; needs hardware validation |
+| **Kernel audio driver** | 🔜 Validated on hardware at the ALSA level; Mixxx and MIDI-alongside tests pending |
 | **LED output feedback** | 🔜 Output path verified; panel check pending |
 | **10-bit control resolution** | 🔜 HID pipe carries 10-bit values; exposing as 14-bit MIDI is a code change |
 | **Digital vinyl (DVS / timecode)** | 🔜 Phono inputs already digitized to USB; can drive Mixxx vinyl control |
@@ -102,7 +102,7 @@ Details on each:
 - ✅ **Audio**: the mixer appears as a 6-in / 6-out, 48 kHz, 24-bit device via a userspace **PipeWire** driver ([`audio/`](audio/)). The vendor-specific isochronous format was reverse-engineered ([docs/audio-plan.md](docs/audio-plan.md)) and is streamed directly with libusb. Verified on hardware: a PipeWire recording matches the raw USB capture channel-for-channel, with 0 USB transfer errors.
 - ✅ **Simultaneous audio + MIDI**: run `djm_midi --no-audio` alongside the PipeWire driver and the DJM-T1 is a soundcard and a MIDI controller at once. This two-service setup is the tested default.
 - 🔜 **Unified daemon**: `midi/djm_full` folds the soundcard and the MIDI controller into one process (all four pipes, no start-order coordination). It reuses the two hardware-verified pieces unchanged and compiles cleanly, but has not yet been run end-to-end on the mixer; the two-service setup remains the tested default.
-- 🔜 **Kernel audio driver**: a standalone in-kernel ALSA driver ([`kernel/`](kernel/)) is drafted and **compiles cleanly** (a real 6-in/6-out card, upstream-track); it still needs loading and validation on hardware.
+- 🔜 **Kernel audio driver**: a standalone in-kernel ALSA driver ([`kernel/`](kernel/)) registers a real 6-in/6-out card, `hw:DJMT1Audio`, and is upstream-track. On a Pi 5 it passes capture, playback, a full-duplex soak, hot-unplug, and a clean timecode capture. Still to do: run it under Mixxx vinyl control, and alongside the MIDI bridge.
 - 🔜 **LED output feedback**: `djm_midi` is bidirectional and writing to the mixer's MIDI OUT (ep `0x04`) is verified; conventional CUE-LED `<output>` blocks are in the mapping, pending a panel check.
 - 🔜 **10-bit control resolution**: the HID pipe carries every continuous control at 10-bit precision (MIDI exposes only 7). Since `djm_midi` already reads that pipe, exposing it as 14-bit MIDI is a code change, not new hardware. Analysis: [docs/hid-analysis.md](docs/hid-analysis.md).
 - 🔜 **Digital vinyl (DVS / timecode)**: the mixer was built for Traktor Scratch; its phono inputs are digitized to the USB channels we already stream, so they can drive Mixxx's vinyl control. Wiring: [docs/dvs-timecode.md](docs/dvs-timecode.md).
