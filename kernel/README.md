@@ -25,6 +25,7 @@ aarch64, gcc; zero compiler warnings). The card registers as **`hw:DJMT1Audio`**
 | Hot-unplug mid-duplex | userspace gets `-ENODEV`, no kernel warnings; rebinds on replug, `rmmod` afterwards |
 | Timecode | a Serato Control CD on CH1 arrives on in 1/2 as a clean 1 kHz quadrature pair (90.0°, no dropouts). Forward play shows R leading L; if L leads, the RCAs are swapped. |
 | Alongside the MIDI bridge | `djm_midi --no-audio` runs next to this module with Mixxx holding the card open: the full Mixxx mapping responds and its LEDs light, with audio streaming both ways. The bridge re-arms about 4 s after a re-enumeration. See [With the MIDI bridge](#with-the-midi-bridge). |
+| Installed via DKMS | builds with zero warnings; after a cold boot udev loads it from `updates/dkms` about 3 s in, with no `modules-load.d` entry, and Mixxx opens the card with no manual step. See [Install](#install). |
 
 Not yet done: running under Mixxx vinyl control. Whether the MIDI gate stays open
 with *no* PCM open on this card is untested; in practice Mixxx always has it open.
@@ -58,6 +59,28 @@ arecord -D hw:DJMT1Audio -f S24_3LE -c 6 -r 48000 -t raw -d 5 cap.raw
 aplay   -D hw:DJMT1Audio -f S24_3LE -c 6 -r 48000 -t raw -d 5 /dev/zero
 sudo rmmod djmt1_audio
 ```
+
+## Install
+
+`insmod` lasts until the next reboot. To have the card whenever the mixer is
+plugged in, install through DKMS, which also rebuilds the module for each new
+kernel so an upgrade does not silently take the soundcard away:
+
+```sh
+sudo apt install dkms            # plus the headers for your kernel
+sudo cp -r . /usr/src/djmt1_audio-0.1   # from this kernel/ directory
+sudo dkms install djmt1_audio/0.1
+```
+
+Nothing else is needed. The module's USB alias matches only the mixer's
+interface 0, so udev loads it when the mixer appears, at boot or on a replug.
+Leave it out of `/etc/modules-load.d`. To remove it:
+`sudo dkms remove djmt1_audio/0.1 --all`.
+
+The ALSA card *number* can differ between boots, because this module and
+`snd-usb-audio` probe the same device in no fixed order. Use `hw:DJMT1Audio`,
+never `hw:2`. Mixxx is unaffected: when only one device carries the configured
+name, it matches by name and ignores the stored `hw:` index.
 
 `snd-usb-audio` does not bind iface 0 (vendor class 0xFF), so this module owns it
 directly. It does bind the MIDI interfaces as its own card, and that card is also

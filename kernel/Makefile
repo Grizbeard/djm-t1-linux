@@ -13,5 +13,5 @@ all:
 clean:
 	$(MAKE) -C $(KDIR) M=$(PWD) clean
 
-# Loading is intentionally manual and unverified; review the source first.
-# The tested audio path is the userspace PipeWire driver in ../audio/.
+# For a permanent install, use DKMS (dkms.conf) rather than copying the .ko
+# into /lib/modules: DKMS rebuilds it for each new kernel. See README.md.
