@@ -1,0 +1,19 @@
+[Unit]
+Description=Pioneer DJM-T1 native MIDI bridge (libusb -> ALSA sequencer), kernel audio driver
+Documentation=https://github.com/tek-cat/djm-t1-linux
+# Use this instead of djm-midi.service when audio comes from the djmt1_audio
+# kernel module (kernel/). The module owns interface 0, so there is no
+# djmt1-audio user service to pair with -- and that service must not run here,
+# because it detaches the module from the same interface.
+After=sound.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/djm_midi --no-audio
+# djm_midi exits when the mixer disappears. Restarting re-arms it after a
+# replug, which the re-enumeration otherwise leaves gated shut.
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
