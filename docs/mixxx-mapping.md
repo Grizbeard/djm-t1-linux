@@ -172,7 +172,7 @@ The panel was designed around TRAKTOR, and a few of its
 functions have no Mixxx counterpart. Each one below is a
 deliberate substitution, not an oversight.
 
-- FX ON steps the effect unit's chain preset, which nothing else on this panel reaches. Its light shows the unit's own master enable, which SHIFT+FX ON toggles -- so the lamp reports something the button actually controls.
+- FX ON switches the whole effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps the unit's chain preset, which nothing else on this panel reaches.
 - SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.
 - SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.
 - SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing.
