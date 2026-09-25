@@ -1,0 +1,4618 @@
+{
+ "schema": 1,
+ "id": "djm-t1-custom",
+ "name": "DJM-T1_Custom",
+ "created": "2026-09-25",
+ "units": "mm",
+ "panel": {
+  "w": 265.0,
+  "h": 403.0
+ },
+ "backdrop": {
+  "kind": "schematic"
+ },
+ "layers": [
+  "base",
+  "shift",
+  "sampler",
+  "sampler_shift"
+ ],
+ "midi": {
+  "channel": 1,
+  "led_off": "note_on_zero",
+  "led_off_note": "This mixer turns an LED off with note-on velocity 0 (0x9n nn 00) and ignores a real note-off (0x8n). Verified on hardware 2026-09-21; tools/probe-leds.sh has always used 90 nn 00."
+ },
+ "controls": [
+  {
+   "id": "load_a",
+   "label": "LOAD A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 92.495,
+    "cy": 42.318,
+    "w": 15.095,
+    "h": 9.102,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 65,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    }
+   },
+   "section": "Deck A",
+   "target": {
+    "group": "[Channel1]",
+    "key": "LoadSelectedTrack"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "LoadSelectedTrack"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.cloneFromB",
+     "script": "DJMT1.cloneFromB",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "load_b",
+   "label": "LOAD B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 172.504,
+    "cy": 42.318,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 2,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 66,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    }
+   },
+   "section": "Deck B",
+   "target": {
+    "group": "[Channel2]",
+    "key": "LoadSelectedTrack"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "LoadSelectedTrack"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.cloneFromA",
+     "script": "DJMT1.cloneFromA",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "master",
+   "label": "Master",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 229,
+    "cy": 44.1,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   }
+  },
+  {
+   "id": "browse",
+   "label": "BROWSE",
+   "kind": "encoder",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 132.501,
+    "cy": 49.321,
+    "d": 24.999
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 0,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 64,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    }
+   },
+   "section": "Browse",
+   "target": {
+    "group": "[Library]",
+    "key": "MoveVertical"
+   },
+   "targets": {
+    "base": {
+     "group": "[Library]",
+     "key": "MoveVertical",
+     "options": [
+      "selectknob"
+     ]
+    },
+    "shift": {
+     "group": "[Playlist]",
+     "key": "SelectPlaylist",
+     "options": [
+      "selectknob"
+     ]
+    }
+   }
+  },
+  {
+   "id": "ch1_midi",
+   "label": "CH1 Midi",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 19,
+    "cy": 50,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   }
+  },
+  {
+   "id": "ch2_midi",
+   "label": "CH2 Midi",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 36,
+    "cy": 50,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   }
+  },
+  {
+   "id": "utility",
+   "label": "UTILITY",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 53,
+    "cy": 50,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   }
+  },
+  {
+   "id": "play_a",
+   "label": "Play A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 84.3,
+    "cy": 62.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 3,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 3,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 67,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 67,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "play",
+     "output_key": "play_indicator"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.relativeA",
+     "script": "DJMT1.relativeA",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "cue_a",
+   "label": "Cue A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 100.7,
+    "cy": 62.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 11,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 11,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 75,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 75,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "cue_default",
+     "output_key": "cue_indicator"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.absoluteA",
+     "script": "DJMT1.absoluteA",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "play_b",
+   "label": "Play B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 164.3,
+    "cy": 62.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 4,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 4,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 68,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 68,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "play",
+     "output_key": "play_indicator"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.relativeB",
+     "script": "DJMT1.relativeB",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "cue_b",
+   "label": "CUE B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 180.7,
+    "cy": 62.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 12,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 12,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 76,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 76,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "cue_default",
+     "output_key": "cue_indicator"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.absoluteB",
+     "script": "DJMT1.absoluteB",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "booth",
+   "label": "Booth",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 229,
+    "cy": 74,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   }
+  },
+  {
+   "id": "snap",
+   "label": "SNAP",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 36,
+    "cy": 74.3,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 113,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 113,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 49,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 49,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.quantizeAll",
+     "script": "DJMT1.quantizeAll",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.slipAll",
+     "script": "DJMT1.slipAll",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "fx1_assign_a",
+   "label": "FX1 Assign A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 84.3,
+    "cy": 85.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 7,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 7,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 71,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 71,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "group_[Channel1]_enable",
+     "output_key": "group_[Channel1]_enable"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "rate_temp_down"
+    }
+   }
+  },
+  {
+   "id": "fx2_assign_a",
+   "label": "FX2 Assign A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 100.7,
+    "cy": 85.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 9,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 9,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 73,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 73,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "group_[Channel1]_enable",
+     "output_key": "group_[Channel1]_enable"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "rate_temp_up"
+    }
+   }
+  },
+  {
+   "id": "sync_a",
+   "label": "SYNC A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 121.8,
+    "cy": 85.3,
+    "w": 13.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 5,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 5,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 69,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 69,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "sync_enabled",
+     "output_key": "sync_enabled"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "sync_leader"
+    }
+   }
+  },
+  {
+   "id": "sync_b",
+   "label": "SYNC B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 143.2,
+    "cy": 85.3,
+    "w": 13.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 6,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 6,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 70,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 70,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "sync_enabled",
+     "output_key": "sync_enabled"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "sync_leader"
+    }
+   }
+  },
+  {
+   "id": "fx1_assign_b",
+   "label": "FX1 Assign B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 164.3,
+    "cy": 85.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 8,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 8,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 72,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 72,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "group_[Channel2]_enable",
+     "output_key": "group_[Channel2]_enable"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "rate_temp_down"
+    }
+   }
+  },
+  {
+   "id": "fx2_assign_b",
+   "label": "FX2 Assign B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 180.7,
+    "cy": 85.3,
+    "w": 11.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 10,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 10,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 74,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 74,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "group_[Channel2]_enable",
+     "output_key": "group_[Channel2]_enable"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "rate_temp_up"
+    }
+   }
+  },
+  {
+   "id": "fx1_on",
+   "label": "FX1 ON",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.5,
+    "cy": 107.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 13,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 13,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 77,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 77,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "next_chain_preset",
+     "output_key": "enabled"
+    }
+   }
+  },
+  {
+   "id": "fx1_dry_wet",
+   "label": "FX1 DRY/ WET",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.5,
+    "cy": 107.8,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 1,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 65,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "mix"
+    }
+   }
+  },
+  {
+   "id": "source_select_1",
+   "label": "Source Select 1",
+   "kind": "switch",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 92.6,
+    "cy": 105.2,
+    "w": 17,
+    "h": 7.6,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "switch",
+      "channel": 1,
+      "exclusive": true,
+      "reports_only": true,
+      "positions": [
+       {
+        "name": "CD",
+        "status": "cc",
+        "channel": 1,
+        "number": 101,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "PHONO",
+        "status": "cc",
+        "channel": 1,
+        "number": 107,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "USB",
+        "status": "cc",
+        "channel": 1,
+        "number": 113,
+        "on": 127,
+        "off": 0
+       }
+      ],
+      "note": "Routing happens inside the mixer's own audio path; the MIDI only reports which source is live. A change sends two messages about a millisecond apart -- the position being left goes to 0, then the position entered goes to 127."
+     }
+    }
+   },
+   "section": "CH1"
+  },
+  {
+   "id": "source_select_2",
+   "label": "Source Select 2",
+   "kind": "switch",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 171.7,
+    "cy": 102.9,
+    "w": 17,
+    "h": 7.6,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "switch",
+      "channel": 1,
+      "exclusive": true,
+      "reports_only": true,
+      "positions": [
+       {
+        "name": "CD",
+        "status": "cc",
+        "channel": 1,
+        "number": 104,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "PHONO",
+        "status": "cc",
+        "channel": 1,
+        "number": 110,
+        "on": 127,
+        "off": 0
+       },
+       {
+        "name": "USB",
+        "status": "cc",
+        "channel": 1,
+        "number": 116,
+        "on": 127,
+        "off": 0
+       }
+      ],
+      "note": "Routing happens inside the mixer's own audio path; the MIDI only reports which source is live. A change sends two messages about a millisecond apart -- the position being left goes to 0, then the position entered goes to 127."
+     }
+    }
+   },
+   "section": "CH2"
+  },
+  {
+   "id": "fx2_dry_wet",
+   "label": "FX2 DRY/ WET",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.5,
+    "cy": 107.8,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 2,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 66,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "mix"
+    }
+   }
+  },
+  {
+   "id": "fx2_on",
+   "label": "FX2 On",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.5,
+    "cy": 107.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 14,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 14,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 78,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 78,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "next_chain_preset",
+     "output_key": "enabled"
+    }
+   }
+  },
+  {
+   "id": "meter_1",
+   "label": "Meter 1",
+   "kind": "led",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 116.3,
+    "cy": 134.5,
+    "w": 5,
+    "h": 69.5,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
+   "section": "Meters"
+  },
+  {
+   "id": "fx1_1_on",
+   "label": "FX1_1 On",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.5,
+    "cy": 136.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 15,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 15,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 79,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 79,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "next_effect"
+    }
+   }
+  },
+  {
+   "id": "fx1_1_level",
+   "label": "FX1_1 Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.5,
+    "cy": 136.8,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 3,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 67,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect1]",
+     "key": "meta"
+    }
+   }
+  },
+  {
+   "id": "ch1_trim",
+   "label": "CH1 TRIM",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 136.814,
+    "d": 14.0
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 13,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 77,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    }
+   },
+   "section": "CH1",
+   "target": {
+    "group": "[Channel1]",
+    "key": "pregain"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "pregain"
+    }
+   }
+  },
+  {
+   "id": "ch2_trim",
+   "label": "CH2 TRIM",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 136.814,
+    "d": 13.999
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 14,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 78,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 43
+     }
+    }
+   },
+   "section": "CH2",
+   "target": {
+    "group": "[Channel2]",
+    "key": "pregain"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "pregain"
+    }
+   }
+  },
+  {
+   "id": "fx2_1_level",
+   "label": "FX2_1 Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.5,
+    "cy": 136.8,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 4,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 68,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "meta"
+    }
+   }
+  },
+  {
+   "id": "fx2_1_on",
+   "label": "FX2_1 On",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.5,
+    "cy": 136.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 16,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 16,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 80,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 80,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect1]",
+     "key": "next_effect"
+    }
+   }
+  },
+  {
+   "id": "fx1_2_on",
+   "label": "FX1_2 On",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.5,
+    "cy": 165.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 17,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 17,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 81,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 81,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "next_effect"
+    }
+   }
+  },
+  {
+   "id": "fx1_2_level",
+   "label": "FX1_2 Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.5,
+    "cy": 165.8,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 5,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 69,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect2]",
+     "key": "meta"
+    }
+   }
+  },
+  {
+   "id": "ch1_hi",
+   "label": "CH1 HI",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 165.811,
+    "d": 16.501
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 15,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 79,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "CH1",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel1]_Effect1]",
+    "key": "parameter3"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter3"
+    }
+   }
+  },
+  {
+   "id": "ch2_hi",
+   "label": "CH2 HI",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 165.811,
+    "d": 16.502
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 16,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 80,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 61
+     }
+    }
+   },
+   "section": "CH2",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel2]_Effect1]",
+    "key": "parameter3"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter3"
+    }
+   }
+  },
+  {
+   "id": "fx2_2_level",
+   "label": "FX2_2 Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.5,
+    "cy": 165.8,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 6,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 70,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "meta"
+    }
+   }
+  },
+  {
+   "id": "fx2_2_on",
+   "label": "FX2_2 On",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.5,
+    "cy": 165.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 18,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 18,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 82,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 82,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect2]",
+     "key": "next_effect"
+    }
+   }
+  },
+  {
+   "id": "fx1_3_level",
+   "label": "FX1_3 Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 49.5,
+    "cy": 194.7,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 7,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 71,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "meta"
+    }
+   }
+  },
+  {
+   "id": "ch1_mid",
+   "label": "CH1 MID",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 194.713,
+    "d": 16.501
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 17,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 81,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "CH1",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel1]_Effect1]",
+    "key": "parameter2"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter2"
+    }
+   }
+  },
+  {
+   "id": "ch2_mid",
+   "label": "CH2 MID",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 194.713,
+    "d": 16.502
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 18,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 82,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "CH2",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel2]_Effect1]",
+    "key": "parameter2"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter2"
+    }
+   }
+  },
+  {
+   "id": "fx2_3_level",
+   "label": "FX2_3 Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 215.5,
+    "cy": 194.7,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 8,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 72,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "meta"
+    }
+   }
+  },
+  {
+   "id": "fx1_3_on",
+   "label": "FX1_3 On",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 22.5,
+    "cy": 194.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 19,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 19,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 83,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 83,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX1",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1_Effect3]",
+     "key": "next_effect"
+    }
+   }
+  },
+  {
+   "id": "hp_mix",
+   "label": "HP Mix",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 132.5,
+    "cy": 194.8,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Master"
+  },
+  {
+   "id": "fx2_3_on",
+   "label": "FX2_3 On",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 242.5,
+    "cy": 194.8,
+    "w": 15.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 20,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 20,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 84,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 84,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "FX2",
+   "targets": {
+    "base": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "enabled",
+     "output_key": "enabled"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2_Effect3]",
+     "key": "next_effect"
+    }
+   }
+  },
+  {
+   "id": "ch1_low",
+   "label": "CH1 LOW",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 92.501,
+    "cy": 223.71,
+    "d": 16.501
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 19,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 83,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 63
+     }
+    }
+   },
+   "section": "CH1",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel1]_Effect1]",
+    "key": "parameter1"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel1]_Effect1]",
+     "key": "parameter1"
+    }
+   }
+  },
+  {
+   "id": "hp_level",
+   "label": "HP Level",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 132.5,
+    "cy": 223.7,
+    "d": 16.5
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Master"
+  },
+  {
+   "id": "ch2_low",
+   "label": "CH2 LOW",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 172.507,
+    "cy": 223.71,
+    "d": 16.502
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 20,
+      "mode": "absolute",
+      "source": "docs/midi-map.md",
+      "verified": false
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 84,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 59
+     }
+    }
+   },
+   "section": "CH2",
+   "detent": true,
+   "target": {
+    "group": "[EqualizerRack1_[Channel2]_Effect1]",
+    "key": "parameter1"
+   },
+   "targets": {
+    "base": {
+     "group": "[EqualizerRack1_[Channel2]_Effect1]",
+     "key": "parameter1"
+    }
+   }
+  },
+  {
+   "id": "auto_loop_a",
+   "label": "AUTO LOOP A",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 36,
+    "cy": 223.8,
+    "d": 16
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 9,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 73,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 10,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 74,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "beatloop_size",
+     "relative_action": "scale",
+     "min": 0.03125,
+     "max": 64
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "loop_move",
+     "options": [
+      "selectknob"
+     ]
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainA",
+     "script": "DJMT1.samplerGainA",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "auto_loop_b",
+   "label": "AUTO LOOP B",
+   "kind": "knob",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 229,
+    "cy": 223.8,
+    "d": 16
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 11,
+      "source": "manual"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 75,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ]
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 12,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "mode": "relative",
+      "sentinels": [
+       1,
+       127
+      ],
+      "number": 76,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "beatloop_size",
+     "relative_action": "scale",
+     "min": 0.03125,
+     "max": 64
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "loop_move",
+     "options": [
+      "selectknob"
+     ]
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainB",
+     "script": "DJMT1.samplerGainB",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "mode_select_a",
+   "label": "Mode Select A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 36,
+    "cy": 247,
+    "w": 13.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 25,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 89,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A"
+  },
+  {
+   "id": "ch1_cue",
+   "label": "CH1 CUE",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 92.495,
+    "cy": 247.018,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 47,
+      "mode": "button",
+      "press_value": 127,
+      "source": "docs/midi-map.md",
+      "verified": false
+     },
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 111,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 111,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "CH1",
+   "target": {
+    "group": "[Channel1]",
+    "key": "pfl",
+    "toggle": true
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "pfl"
+    },
+    "shift": {
+     "group": "[Channel1]",
+     "key": "bpm_tap",
+     "output_key": "pfl"
+    }
+   }
+  },
+  {
+   "id": "shift",
+   "label": "SHIFT",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 132.5,
+    "cy": 247,
+    "w": 17.1,
+    "h": 11.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     },
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
+   "section": "Global"
+  },
+  {
+   "id": "ch2_cue",
+   "label": "CH2 CUE",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 172.501,
+    "cy": 247.018,
+    "w": 15.095,
+    "h": 9.101,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 48,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 112,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 112,
+      "on": 127,
+      "off": 0
+     }
+    }
+   },
+   "section": "CH2",
+   "target": {
+    "group": "[Channel2]",
+    "key": "pfl",
+    "toggle": true
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "pfl"
+    },
+    "shift": {
+     "group": "[Channel2]",
+     "key": "bpm_tap",
+     "output_key": "pfl"
+    }
+   }
+  },
+  {
+   "id": "mode_select_b",
+   "label": "Mode Select B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 229,
+    "cy": 247,
+    "w": 13.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 26,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 90,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B"
+  },
+  {
+   "id": "hot_cue_1_a",
+   "label": "Hot Cue 1 A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 28,
+    "cy": 279.9,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 27,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 27,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 91,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 91,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 28,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 28,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 92,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 92,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA1",
+     "script": "DJMT1.hotcueA1",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA1Clear",
+     "script": "DJMT1.hotcueA1Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA1",
+     "script": "DJMT1.samplerA1",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA1Eject",
+     "script": "DJMT1.samplerA1Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "hot_cue_1_b",
+   "label": "Hot Cue 1 B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 237,
+    "cy": 279.9,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 29,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 29,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 93,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 93,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 30,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 30,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 94,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 94,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB1",
+     "script": "DJMT1.hotcueB1",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB1Clear",
+     "script": "DJMT1.hotcueB1Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB1",
+     "script": "DJMT1.samplerB1",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB1Eject",
+     "script": "DJMT1.samplerB1Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "hot_cue_2_a",
+   "label": "Hot Cue 2 A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 28,
+    "cy": 302.9,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 31,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 31,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 95,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 95,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 32,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 32,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 96,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 96,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA2",
+     "script": "DJMT1.hotcueA2",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA2Clear",
+     "script": "DJMT1.hotcueA2Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA2",
+     "script": "DJMT1.samplerA2",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA2Eject",
+     "script": "DJMT1.samplerA2Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "hot_cue_2_b",
+   "label": "Hot Cue 2 B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 237,
+    "cy": 302.9,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 33,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 33,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 97,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 97,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 34,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 34,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 98,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 98,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB2",
+     "script": "DJMT1.hotcueB2",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB2Clear",
+     "script": "DJMT1.hotcueB2Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB2",
+     "script": "DJMT1.samplerB2",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB2Eject",
+     "script": "DJMT1.samplerB2Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "hot_cue_3_a",
+   "label": "Hot Cue 3 A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 28,
+    "cy": 325.9,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 35,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 35,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 99,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 99,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 36,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 36,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 100,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 100,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA3",
+     "script": "DJMT1.hotcueA3",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA3Clear",
+     "script": "DJMT1.hotcueA3Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA3",
+     "script": "DJMT1.samplerA3",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA3Eject",
+     "script": "DJMT1.samplerA3Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "hot_cue_3_b",
+   "label": "Hot Cue 3 B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 237,
+    "cy": 326.1,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 37,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 37,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 101,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 101,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 38,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 38,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 102,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 102,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB3",
+     "script": "DJMT1.hotcueB3",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB3Clear",
+     "script": "DJMT1.hotcueB3Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB3",
+     "script": "DJMT1.samplerB3",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB3Eject",
+     "script": "DJMT1.samplerB3Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "hot_cue_4_a",
+   "label": "Hot Cue 4 A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 28,
+    "cy": 348.9,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 39,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 39,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 103,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 103,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 40,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 40,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 104,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 104,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA4",
+     "script": "DJMT1.hotcueA4",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueA4Clear",
+     "script": "DJMT1.hotcueA4Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA4",
+     "script": "DJMT1.samplerA4",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerA4Eject",
+     "script": "DJMT1.samplerA4Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "hot_cue_4_b",
+   "label": "Hot Cue 4 B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 237,
+    "cy": 348.9,
+    "w": 17.1,
+    "h": 10.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 41,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 41,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 105,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 105,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 42,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 42,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 106,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 106,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB4",
+     "script": "DJMT1.hotcueB4",
+     "external": true
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.hotcueB4Clear",
+     "script": "DJMT1.hotcueB4Clear",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB4",
+     "script": "DJMT1.samplerB4",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerB4Eject",
+     "script": "DJMT1.samplerB4Eject",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "active_a",
+   "label": "ACTIVE A",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 28,
+    "cy": 371.9,
+    "w": 13.1,
+    "h": 9.1,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 43,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 43,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 107,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 107,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 44,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 44,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 108,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 108,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.bankA",
+     "script": "DJMT1.bankA",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerHoldA",
+     "script": "DJMT1.samplerHoldA",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerRepeatA",
+     "script": "DJMT1.samplerRepeatA",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "active_b",
+   "label": "ACTIVE B",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "rect",
+    "cx": 237,
+    "cy": 371.9,
+    "w": 12.7,
+    "h": 9.4,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 45,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 45,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 109,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "number": 109,
+      "on": 127,
+      "off": 0
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 46,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 46,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 110,
+      "source": "manual"
+     },
+     "output": {
+      "status": "note",
+      "channel": 1,
+      "on": 127,
+      "off": 0,
+      "number": 110,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.bankB",
+     "script": "DJMT1.bankB",
+     "external": true
+    },
+    "sampler": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerHoldB",
+     "script": "DJMT1.samplerHoldB",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerRepeatB",
+     "script": "DJMT1.samplerRepeatB",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "ch1_volume",
+   "label": "CH1 VOLUME",
+   "section": "CH1",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 92.5,
+    "cy": 299.0,
+    "w": 6.0,
+    "h": 54.0,
+    "round": true
+   },
+   "confidence": 0.5,
+   "evidence": [
+    "placed by hand: faders are drawn as scale ticks, not as a slot, so they do not auto-detect"
+   ],
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 21,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 85,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    }
+   },
+   "target": {
+    "group": "[Channel1]",
+    "key": "volume"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel1]",
+     "key": "volume"
+    }
+   }
+  },
+  {
+   "id": "ch2_volume",
+   "label": "CH2 VOLUME",
+   "section": "CH2",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 172.5,
+    "cy": 299.0,
+    "w": 6.0,
+    "h": 54.0,
+    "round": true
+   },
+   "confidence": 0.5,
+   "evidence": [
+    "placed by hand: faders are drawn as scale ticks, not as a slot, so they do not auto-detect"
+   ],
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 22,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 86,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    }
+   },
+   "target": {
+    "group": "[Channel2]",
+    "key": "volume"
+   },
+   "targets": {
+    "base": {
+     "group": "[Channel2]",
+     "key": "volume"
+    }
+   }
+  },
+  {
+   "id": "crossfader",
+   "label": "CROSSFADER",
+   "section": "Master",
+   "kind": "fader",
+   "shape": {
+    "type": "rect",
+    "cx": 133,
+    "cy": 379,
+    "w": 56,
+    "h": 9,
+    "round": true
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 23,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 0
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "cc",
+      "channel": 1,
+      "number": 87,
+      "mode": "absolute",
+      "min": 0,
+      "max": 127,
+      "resting": 127
+     }
+    }
+   },
+   "target": {
+    "group": "[Master]",
+    "key": "crossfader"
+   },
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "crossfader"
+    }
+   }
+  },
+  {
+   "id": "browse_push",
+   "label": "BROWSE PUSH",
+   "section": "Browse",
+   "kind": "button",
+   "shape": {
+    "type": "circle",
+    "cx": 132.5,
+    "cy": 49.3,
+    "d": 10.0
+   },
+   "confidence": 0.5,
+   "evidence": [
+    "placed by hand: faders are drawn as scale ticks, not as a slot, so they do not auto-detect"
+   ],
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 0,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "number": 64,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero"
+     }
+    }
+   },
+   "target": {
+    "group": "[Library]",
+    "key": "GoToItem"
+   },
+   "targets": {
+    "base": {
+     "group": "[Library]",
+     "key": "GoToItem"
+    },
+    "shift": {
+     "group": "[Master]",
+     "key": "DJMT1.libraryFocus",
+     "script": "DJMT1.libraryFocus",
+     "external": true
+    }
+   }
+  },
+  {
+   "label": "Meter L",
+   "kind": "led",
+   "shape": {
+    "type": "rect",
+    "cx": 128.7,
+    "cy": 134.6,
+    "w": 4.3,
+    "h": 70.4,
+    "round": true
+   },
+   "id": "meter_l",
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
+   "section": "Meters"
+  },
+  {
+   "label": "Meter R",
+   "kind": "led",
+   "shape": {
+    "type": "rect",
+    "cx": 137.3,
+    "cy": 134.3,
+    "w": 4.5,
+    "h": 70.2,
+    "round": true
+   },
+   "id": "meter_r",
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
+   "section": "Meters"
+  },
+  {
+   "label": "Meter 2",
+   "kind": "led",
+   "shape": {
+    "type": "rect",
+    "cx": 149.7,
+    "cy": 133.7,
+    "w": 4.3,
+    "h": 69.2,
+    "round": true
+   },
+   "id": "meter_2",
+   "bindings": {
+    "base": {
+     "output": {
+      "status": "local"
+     }
+    },
+    "shift": {
+     "output": {
+      "status": "local"
+     }
+    }
+   },
+   "section": "Meters"
+  },
+  {
+   "label": "Mic Aux Select",
+   "kind": "switch",
+   "shape": {
+    "type": "rect",
+    "cx": 154.81,
+    "cy": 398.49,
+    "w": 14,
+    "h": 9,
+    "round": true
+   },
+   "id": "mic_aux_select",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Front"
+  },
+  {
+   "label": "Mic Aux Low",
+   "kind": "knob",
+   "shape": {
+    "type": "circle",
+    "cx": 218.95,
+    "cy": 397.32,
+    "d": 11.5
+   },
+   "id": "mic_aux_low",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Front",
+   "detent": true
+  },
+  {
+   "label": "Mic Aux High",
+   "kind": "knob",
+   "shape": {
+    "type": "circle",
+    "cx": 237.41,
+    "cy": 397.24,
+    "d": 11.5
+   },
+   "id": "mic_aux_high",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Front",
+   "detent": true
+  },
+  {
+   "label": "CF Reverse",
+   "kind": "switch",
+   "shape": {
+    "type": "rect",
+    "cx": 202.78,
+    "cy": 381.77,
+    "w": 14,
+    "h": 9,
+    "round": true
+   },
+   "id": "cf_reverse",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Front"
+  },
+  {
+   "label": "Mic Aux Volume",
+   "kind": "knob",
+   "shape": {
+    "type": "circle",
+    "cx": 187.2,
+    "cy": 396.3,
+    "d": 11.5
+   },
+   "id": "mic_aux_volume",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Front"
+  },
+  {
+   "label": "CF Curve",
+   "kind": "switch",
+   "shape": {
+    "type": "rect",
+    "cx": 202.3,
+    "cy": 367.7,
+    "w": 14,
+    "h": 9,
+    "round": true
+   },
+   "id": "cf_curve",
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "silent"
+     }
+    }
+   },
+   "section": "Front"
+  },
+  {
+   "id": "auto_loop_a_push",
+   "label": "AUTO LOOP A Push",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 36,
+    "cy": 223.8,
+    "d": 16
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 21,
+      "source": "manual"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 85,
+      "source": "manual"
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 22,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 86,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck A",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.loopA",
+     "script": "DJMT1.loopA",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainResetA",
+     "script": "DJMT1.samplerGainResetA",
+     "external": true
+    }
+   }
+  },
+  {
+   "id": "auto_loop_b_push",
+   "label": "AUTO LOOP B Push",
+   "kind": "button",
+   "tier": "control",
+   "shape": {
+    "type": "circle",
+    "cx": 229,
+    "cy": 223.8,
+    "d": 16
+   },
+   "bindings": {
+    "base": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 23,
+      "source": "manual"
+     }
+    },
+    "shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 87,
+      "source": "manual"
+     }
+    },
+    "sampler": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 24,
+      "source": "manual"
+     }
+    },
+    "sampler_shift": {
+     "input": {
+      "status": "note",
+      "channel": 1,
+      "mode": "button",
+      "press_value": 127,
+      "release": "note_on_zero",
+      "number": 88,
+      "source": "manual"
+     }
+    }
+   },
+   "section": "Deck B",
+   "targets": {
+    "base": {
+     "group": "[Master]",
+     "key": "DJMT1.loopB",
+     "script": "DJMT1.loopB",
+     "external": true
+    },
+    "sampler_shift": {
+     "group": "[Master]",
+     "key": "DJMT1.samplerGainResetB",
+     "script": "DJMT1.samplerGainResetB",
+     "external": true
+    }
+   }
+  }
+ ],
+ "controller_id": "PIONEER DJM-T1 MIDI 1",
+ "provenance": {
+  "geometry": "auto-detected from a 1:1 plan view of the top panel; positions are measurements in millimetres, no artwork is redistributed",
+  "bindings": "seeded from docs/midi-map.md where a control could be placed unambiguously; everything else is unmapped and awaits a learn pass",
+  "generated": "tools/mapping-studio, first pass then hand-placed faders",
+  "midi_map": "Pioneer DJM-T1 Operating Instructions (DRB1610), MIDI assignment map, pages 28-29. Note names read with C-1 = 0, which reproduced 114 of the 116 captured bindings exactly. Bindings marked source: manual come from that table and have not been confirmed on the wire.",
+  "derived_from": "pioneer-djm-t1 at tag djm-t1-mapping-v1.0, the 1:1 mapping of the panel's labelled functions. This profile diverges on purpose: it is tuned to the owner's setup and the Terminal-Wide Mixxx skin."
+ },
+ "banks": {
+  "decks": [
+   {
+    "deck": "A",
+    "group": "[Channel1]",
+    "channel": 1,
+    "hotcues": [
+     27,
+     31,
+     35,
+     39
+    ],
+    "per_bank": 4,
+    "banks": 2,
+    "bank_led": 43,
+    "samplers": [
+     "[Sampler1]",
+     "[Sampler2]",
+     "[Sampler3]",
+     "[Sampler4]"
+    ],
+    "sampler_buttons": [
+     28,
+     32,
+     36,
+     40
+    ],
+    "sampler_mode_led": 44
+   },
+   {
+    "deck": "B",
+    "group": "[Channel2]",
+    "channel": 1,
+    "hotcues": [
+     29,
+     33,
+     37,
+     41
+    ],
+    "per_bank": 4,
+    "banks": 2,
+    "bank_led": 45,
+    "samplers": [
+     "[Sampler5]",
+     "[Sampler6]",
+     "[Sampler7]",
+     "[Sampler8]"
+    ],
+    "sampler_buttons": [
+     30,
+     34,
+     38,
+     42
+    ],
+    "sampler_mode_led": 46
+   }
+  ]
+ },
+ "gangs": [
+  {
+   "id": "quantizeAll",
+   "key": "quantize",
+   "led": 49,
+   "channel": 1,
+   "groups": [
+    "[Channel1]",
+    "[Channel2]"
+   ]
+  },
+  {
+   "id": "slipAll",
+   "key": "slip_enabled",
+   "led": 113,
+   "channel": 1,
+   "groups": [
+    "[Channel1]",
+    "[Channel2]"
+   ]
+  }
+ ],
+ "deviations": [
+  "FX ON switches the whole effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps the unit's chain preset, which nothing else on this panel reaches.",
+  "SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.",
+  "SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.",
+  "SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing."
+ ],
+ "actions": [
+  {
+   "id": "cloneFromB",
+   "group": "[Channel1]",
+   "key": "CloneFromDeck",
+   "value": 2
+  },
+  {
+   "id": "cloneFromA",
+   "group": "[Channel2]",
+   "key": "CloneFromDeck",
+   "value": 1
+  },
+  {
+   "id": "relativeA",
+   "group": "[Channel1]",
+   "key": "vinylcontrol_mode",
+   "value": 1
+  },
+  {
+   "id": "absoluteA",
+   "group": "[Channel1]",
+   "key": "vinylcontrol_mode",
+   "value": 0
+  },
+  {
+   "id": "relativeB",
+   "group": "[Channel2]",
+   "key": "vinylcontrol_mode",
+   "value": 1
+  },
+  {
+   "id": "absoluteB",
+   "group": "[Channel2]",
+   "key": "vinylcontrol_mode",
+   "value": 0
+  }
+ ],
+ "script_prefix": "DJMT1",
+ "loop_buttons": [
+  {
+   "id": "loopA",
+   "group": "[Channel1]"
+  },
+  {
+   "id": "loopB",
+   "group": "[Channel2]"
+  }
+ ],
+ "library_focus": {
+  "id": "libraryFocus",
+  "between": [
+   2,
+   3
+  ]
+ }
+}
