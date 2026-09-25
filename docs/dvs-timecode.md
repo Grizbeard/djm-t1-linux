@@ -148,10 +148,11 @@ picking it up.
 - Use EffectUnit 3. The panel's FX1 and FX2 are units 1 and 2, so a unit the
   panel cannot reach cannot be knocked out of that state by accident.
 
-Unverified: whether USB out 5/6 arrives before or after the channel faders. It
-reaches the master (assigning main output there is plainly audible), but the
-test that matters is to ring an echo tail with both channel faders down and see
-whether the faders touch it.
+Verified on the bench (2026-09-25): USB out 5/6 bypasses the channel strips.
+With both channel faders fully down, test tones on out 5 and 6 played on master
+left and right, and the master meter moved while the channel meters stayed
+still. So anything Mixxx sends to 5/6, an echo tail included, is untouched by
+the channel faders.
 
 ## Still to check on the bench
 
