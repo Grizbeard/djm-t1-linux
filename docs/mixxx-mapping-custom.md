@@ -10,8 +10,8 @@
 |---|---|---|
 | BROWSE | `CC 0` | `[Library]` `MoveVertical` |
 | SHIFT + BROWSE | `CC 64` | `[Playlist]` `SelectPlaylist` |
-| BROWSE PUSH | `NOTE 0` | `[Library]` `GoToItem` |
-| SHIFT + BROWSE PUSH | `NOTE 64` | `libraryFocus` (script) |
+| BROWSE PUSH | `NOTE 0` | `browsePush` (script) |
+| SHIFT + BROWSE PUSH | `NOTE 64` | `browseShiftPush` (script) |
 
 ### CH1
 
@@ -19,11 +19,8 @@
 |---|---|---|
 | CH1 CUE | `NOTE 47` | `[Channel1]` `pfl` |
 | SHIFT + CH1 CUE | `NOTE 111` | `[Channel1]` `bpm_tap` |
-| CH1 HI | `CC 15` | `[EqualizerRack1_[Channel1]_Effect1]` `parameter3` |
-| CH1 LOW | `CC 19` | `[EqualizerRack1_[Channel1]_Effect1]` `parameter1` |
-| CH1 MID | `CC 17` | `[EqualizerRack1_[Channel1]_Effect1]` `parameter2` |
-| CH1 TRIM | `CC 13` | `[Channel1]` `pregain` |
-| CH1 VOLUME | `CC 21` | `[Channel1]` `volume` |
+| CH1 VOLUME | `CC 21` | `[EffectRack1_EffectUnit1]` `mix` |
+| SHIFT + CH1 VOLUME | `CC 85` | `[EffectRack1_EffectUnit1]` `mix` |
 
 ### CH2
 
@@ -31,11 +28,8 @@
 |---|---|---|
 | CH2 CUE | `NOTE 48` | `[Channel2]` `pfl` |
 | SHIFT + CH2 CUE | `NOTE 112` | `[Channel2]` `bpm_tap` |
-| CH2 HI | `CC 16` | `[EqualizerRack1_[Channel2]_Effect1]` `parameter3` |
-| CH2 LOW | `CC 20` | `[EqualizerRack1_[Channel2]_Effect1]` `parameter1` |
-| CH2 MID | `CC 18` | `[EqualizerRack1_[Channel2]_Effect1]` `parameter2` |
-| CH2 TRIM | `CC 14` | `[Channel2]` `pregain` |
-| CH2 VOLUME | `CC 22` | `[Channel2]` `volume` |
+| CH2 VOLUME | `CC 22` | `[EffectRack1_EffectUnit2]` `mix` |
+| SHIFT + CH2 VOLUME | `CC 86` | `[EffectRack1_EffectUnit2]` `mix` |
 
 ### Deck A
 
@@ -51,9 +45,9 @@
 | SAMPLER mode, SHIFT + AUTO LOOP A Push | `NOTE 86` | `samplerGainResetA` (script) |
 | Cue A | `NOTE 11` | `[Channel1]` `cue_default` |
 | SHIFT + Cue A | `NOTE 75` | `absoluteA` (script) |
-| FX1 Assign A | `NOTE 7` | `[EffectRack1_EffectUnit1]` `group_[Channel1]_enable` |
+| FX1 Assign A | `NOTE 7` | `[EffectRack1_EffectUnit3]` `group_[Channel1]_enable` |
 | SHIFT + FX1 Assign A | `NOTE 71` | `[Channel1]` `rate_temp_down` |
-| FX2 Assign A | `NOTE 9` | `[EffectRack1_EffectUnit2]` `group_[Channel1]_enable` |
+| FX2 Assign A | `NOTE 9` | `[EffectRack1_EffectUnit4]` `group_[Channel1]_enable` |
 | SHIFT + FX2 Assign A | `NOTE 73` | `[Channel1]` `rate_temp_up` |
 | Hot Cue 1 A | `NOTE 27` | `hotcueA1` (script) |
 | SHIFT + Hot Cue 1 A | `NOTE 91` | `hotcueA1Clear` (script) |
@@ -71,7 +65,7 @@
 | SHIFT + Hot Cue 4 A | `NOTE 103` | `hotcueA4Clear` (script) |
 | SAMPLER mode Hot Cue 4 A | `NOTE 40` | `samplerA4` (script) |
 | SAMPLER mode, SHIFT + Hot Cue 4 A | `NOTE 104` | `samplerA4Eject` (script) |
-| LOAD A | `NOTE 1` | `[Channel1]` `LoadSelectedTrack` |
+| LOAD A | `NOTE 1` | `loadA` (script) |
 | SHIFT + LOAD A | `NOTE 65` | `cloneFromB` (script) |
 | Play A | `NOTE 3` | `[Channel1]` `play` |
 | SHIFT + Play A | `NOTE 67` | `relativeA` (script) |
@@ -92,9 +86,9 @@
 | SAMPLER mode, SHIFT + AUTO LOOP B Push | `NOTE 88` | `samplerGainResetB` (script) |
 | CUE B | `NOTE 12` | `[Channel2]` `cue_default` |
 | SHIFT + CUE B | `NOTE 76` | `absoluteB` (script) |
-| FX1 Assign B | `NOTE 8` | `[EffectRack1_EffectUnit1]` `group_[Channel2]_enable` |
+| FX1 Assign B | `NOTE 8` | `[EffectRack1_EffectUnit3]` `group_[Channel2]_enable` |
 | SHIFT + FX1 Assign B | `NOTE 72` | `[Channel2]` `rate_temp_down` |
-| FX2 Assign B | `NOTE 10` | `[EffectRack1_EffectUnit2]` `group_[Channel2]_enable` |
+| FX2 Assign B | `NOTE 10` | `[EffectRack1_EffectUnit4]` `group_[Channel2]_enable` |
 | SHIFT + FX2 Assign B | `NOTE 74` | `[Channel2]` `rate_temp_up` |
 | Hot Cue 1 B | `NOTE 29` | `hotcueB1` (script) |
 | SHIFT + Hot Cue 1 B | `NOTE 93` | `hotcueB1Clear` (script) |
@@ -112,7 +106,7 @@
 | SHIFT + Hot Cue 4 B | `NOTE 105` | `hotcueB4Clear` (script) |
 | SAMPLER mode Hot Cue 4 B | `NOTE 42` | `samplerB4` (script) |
 | SAMPLER mode, SHIFT + Hot Cue 4 B | `NOTE 106` | `samplerB4Eject` (script) |
-| LOAD B | `NOTE 2` | `[Channel2]` `LoadSelectedTrack` |
+| LOAD B | `NOTE 2` | `loadB` (script) |
 | SHIFT + LOAD B | `NOTE 66` | `cloneFromA` (script) |
 | Play B | `NOTE 4` | `[Channel2]` `play` |
 | SHIFT + Play B | `NOTE 68` | `relativeB` (script) |
@@ -132,9 +126,9 @@
 | FX1_3 Level | `CC 7` | `[EffectRack1_EffectUnit1_Effect3]` `meta` |
 | FX1_3 On | `NOTE 19` | `[EffectRack1_EffectUnit1_Effect3]` `enabled` |
 | SHIFT + FX1_3 On | `NOTE 83` | `[EffectRack1_EffectUnit1_Effect3]` `next_effect` |
-| FX1 DRY/ WET | `CC 1` | `[EffectRack1_EffectUnit1]` `mix` |
-| FX1 ON | `NOTE 13` | `[EffectRack1_EffectUnit1]` `enabled` |
-| SHIFT + FX1 ON | `NOTE 77` | `[EffectRack1_EffectUnit1]` `next_chain_preset` |
+| FX1 DRY/ WET | `CC 1` | `[EffectRack1_EffectUnit3]` `super1` |
+| FX1 ON | `NOTE 13` | `[EffectRack1_EffectUnit3]` `enabled` |
+| SHIFT + FX1 ON | `NOTE 77` | `[EffectRack1_EffectUnit3]` `next_chain_preset` |
 
 ### FX2
 
@@ -149,15 +143,9 @@
 | FX2_3 Level | `CC 8` | `[EffectRack1_EffectUnit2_Effect3]` `meta` |
 | FX2_3 On | `NOTE 20` | `[EffectRack1_EffectUnit2_Effect3]` `enabled` |
 | SHIFT + FX2_3 On | `NOTE 84` | `[EffectRack1_EffectUnit2_Effect3]` `next_effect` |
-| FX2 DRY/ WET | `CC 2` | `[EffectRack1_EffectUnit2]` `mix` |
-| FX2 On | `NOTE 14` | `[EffectRack1_EffectUnit2]` `enabled` |
-| SHIFT + FX2 On | `NOTE 78` | `[EffectRack1_EffectUnit2]` `next_chain_preset` |
-
-### Master
-
-| Control | MIDI | Mixxx |
-|---|---|---|
-| CROSSFADER | `CC 23` | `[Master]` `crossfader` |
+| FX2 DRY/ WET | `CC 2` | `[EffectRack1_EffectUnit4]` `super1` |
+| FX2 On | `NOTE 14` | `[EffectRack1_EffectUnit4]` `enabled` |
+| SHIFT + FX2 On | `NOTE 78` | `[EffectRack1_EffectUnit4]` `next_chain_preset` |
 
 ### Other
 
@@ -172,10 +160,34 @@ The panel was designed around TRAKTOR, and a few of its
 functions have no Mixxx counterpart. Each one below is a
 deliberate substitution, not an oversight.
 
+- FX1 and FX2 ON and DRY/WET drive effect units 3 and 4, the pre-fader inserts: ON is the unit's enable (SHIFT steps its chain preset), DRY/WET its super knob, and ASSIGN A/B route those units to the decks. The per-effect knobs and buttons still address units 1 and 2.
+- Units 1 and 2 are post-fader effect returns, which needs the wet-only patch to Mixxx. Each is wet-only and routed to one crossfader bus (unit 1 to deck 1's, unit 2 to deck 2's), and Mixxx's main output goes to USB 5/6, past the channel faders. The CH1 and CH2 faders set each unit's send level through its mix knob, so closing a fader stops feeding the echo and lets its tail ring out. The mapping sets this routing every time it starts. On a Mixxx without the patch it sets none of it and logs a warning.
+- Mixer-section MIDI (the CH1/CH2 buttons) must be ON, for the faders. TRIM, HI/MID/LOW and the crossfader are captured but not mapped, since the analog mixer already does them and mapping them would apply them twice.
 - FX ON switches the whole effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps the unit's chain preset, which nothing else on this panel reaches.
 - SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.
 - SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.
 - SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing.
+- BROWSE PUSH moves between the Terminal-wide skin's pages: off the library page it opens the library, and in the library's track list it goes back to the decks. In the tree it still expands a folder or opens a crate. SHIFT + BROWSE PUSH opens the library on the tree, or swaps focus between the tree and the track list. LOAD A/B go back to the decks once the deck has actually taken the track; a rejected load stays put. With a skin that has no [Tab] pages, all of these behave as before.
+
+## Set at every start
+
+State the mapping depends on, asserted each time it loads. If a
+required value does not take, nothing below it is applied.
+
+| Mixxx | Value | |
+|---|---|---|
+| `[EffectRack1_EffectUnit1]` `wet_only` | 1 | required |
+| `[EffectRack1_EffectUnit2]` `wet_only` | 1 | required |
+| `[EffectRack1_EffectUnit1]` `group_[Channel1]_enable` | 0 |  |
+| `[EffectRack1_EffectUnit1]` `group_[Channel2]_enable` | 0 |  |
+| `[EffectRack1_EffectUnit1]` `group_[BusRight]_enable` | 0 |  |
+| `[EffectRack1_EffectUnit1]` `group_[BusLeft]_enable` | 1 |  |
+| `[EffectRack1_EffectUnit2]` `group_[Channel1]_enable` | 0 |  |
+| `[EffectRack1_EffectUnit2]` `group_[Channel2]_enable` | 0 |  |
+| `[EffectRack1_EffectUnit2]` `group_[BusLeft]_enable` | 0 |  |
+| `[EffectRack1_EffectUnit2]` `group_[BusRight]_enable` | 1 |  |
+| `[Channel1]` `orientation` | 0 |  |
+| `[Channel2]` `orientation` | 2 |  |
 
 ## Sends MIDI, deliberately unmapped
 
@@ -183,6 +195,15 @@ Mostly addresses the hardware emits for a TRAKTOR function
 that does not exist here, or that the manual lists as having
 no function at all. They are left free on purpose.
 
+- CH1 HI (`CC 15`)
+- CH1 LOW (`CC 19`)
+- CH1 MID (`CC 17`)
+- CH1 TRIM (`CC 13`)
+- CH2 HI (`CC 16`)
+- CH2 LOW (`CC 20`)
+- CH2 MID (`CC 18`)
+- CH2 TRIM (`CC 14`)
+- CROSSFADER (`CC 23`)
 - Mode Select A (`NOTE 25`)
 - Mode Select B (`NOTE 26`)
 - SAMPLER mode AUTO LOOP A (`CC 10`)
@@ -197,12 +218,10 @@ no function at all. They are left free on purpose.
 - SHIFT + CH1 LOW (`CC 83`)
 - SHIFT + CH1 MID (`CC 81`)
 - SHIFT + CH1 TRIM (`CC 77`)
-- SHIFT + CH1 VOLUME (`CC 85`)
 - SHIFT + CH2 HI (`CC 80`)
 - SHIFT + CH2 LOW (`CC 84`)
 - SHIFT + CH2 MID (`CC 82`)
 - SHIFT + CH2 TRIM (`CC 78`)
-- SHIFT + CH2 VOLUME (`CC 86`)
 - SHIFT + CROSSFADER (`CC 87`)
 - SHIFT + FX1 DRY/ WET (`CC 65`)
 - SHIFT + FX1_1 Level (`CC 67`)

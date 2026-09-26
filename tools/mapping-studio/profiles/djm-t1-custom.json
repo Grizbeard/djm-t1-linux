@@ -59,14 +59,12 @@
     }
    },
    "section": "Deck A",
-   "target": {
-    "group": "[Channel1]",
-    "key": "LoadSelectedTrack"
-   },
    "targets": {
     "base": {
-     "group": "[Channel1]",
-     "key": "LoadSelectedTrack"
+     "group": "[Master]",
+     "key": "DJMT1.loadA",
+     "script": "DJMT1.loadA",
+     "external": true
     },
     "shift": {
      "group": "[Master]",
@@ -112,14 +110,12 @@
     }
    },
    "section": "Deck B",
-   "target": {
-    "group": "[Channel2]",
-    "key": "LoadSelectedTrack"
-   },
    "targets": {
     "base": {
-     "group": "[Channel2]",
-     "key": "LoadSelectedTrack"
+     "group": "[Master]",
+     "key": "DJMT1.loadB",
+     "script": "DJMT1.loadB",
+     "external": true
     },
     "shift": {
      "group": "[Master]",
@@ -661,7 +657,7 @@
    "section": "Deck A",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1]",
+     "group": "[EffectRack1_EffectUnit3]",
      "key": "group_[Channel1]_enable",
      "output_key": "group_[Channel1]_enable"
     },
@@ -723,7 +719,7 @@
    "section": "Deck A",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2]",
+     "group": "[EffectRack1_EffectUnit4]",
      "key": "group_[Channel1]_enable",
      "output_key": "group_[Channel1]_enable"
     },
@@ -909,7 +905,7 @@
    "section": "Deck B",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1]",
+     "group": "[EffectRack1_EffectUnit3]",
      "key": "group_[Channel2]_enable",
      "output_key": "group_[Channel2]_enable"
     },
@@ -971,7 +967,7 @@
    "section": "Deck B",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2]",
+     "group": "[EffectRack1_EffectUnit4]",
      "key": "group_[Channel2]_enable",
      "output_key": "group_[Channel2]_enable"
     },
@@ -1033,11 +1029,11 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1]",
+     "group": "[EffectRack1_EffectUnit3]",
      "key": "enabled"
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit1]",
+     "group": "[EffectRack1_EffectUnit3]",
      "key": "next_chain_preset",
      "output_key": "enabled"
     }
@@ -1081,8 +1077,8 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1]",
-     "key": "mix"
+     "group": "[EffectRack1_EffectUnit3]",
+     "key": "super1"
     }
    }
   },
@@ -1228,8 +1224,8 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2]",
-     "key": "mix"
+     "group": "[EffectRack1_EffectUnit4]",
+     "key": "super1"
     }
    }
   },
@@ -1285,11 +1281,11 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2]",
+     "group": "[EffectRack1_EffectUnit4]",
      "key": "enabled"
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit2]",
+     "group": "[EffectRack1_EffectUnit4]",
      "key": "next_chain_preset",
      "output_key": "enabled"
     }
@@ -1461,17 +1457,7 @@
      }
     }
    },
-   "section": "CH1",
-   "target": {
-    "group": "[Channel1]",
-    "key": "pregain"
-   },
-   "targets": {
-    "base": {
-     "group": "[Channel1]",
-     "key": "pregain"
-    }
-   }
+   "section": "CH1"
   },
   {
    "id": "ch2_trim",
@@ -1507,17 +1493,7 @@
      }
     }
    },
-   "section": "CH2",
-   "target": {
-    "group": "[Channel2]",
-    "key": "pregain"
-   },
-   "targets": {
-    "base": {
-     "group": "[Channel2]",
-     "key": "pregain"
-    }
-   }
+   "section": "CH2"
   },
   {
    "id": "fx2_1_level",
@@ -1764,17 +1740,7 @@
     }
    },
    "section": "CH1",
-   "detent": true,
-   "target": {
-    "group": "[EqualizerRack1_[Channel1]_Effect1]",
-    "key": "parameter3"
-   },
-   "targets": {
-    "base": {
-     "group": "[EqualizerRack1_[Channel1]_Effect1]",
-     "key": "parameter3"
-    }
-   }
+   "detent": true
   },
   {
    "id": "ch2_hi",
@@ -1811,17 +1777,7 @@
     }
    },
    "section": "CH2",
-   "detent": true,
-   "target": {
-    "group": "[EqualizerRack1_[Channel2]_Effect1]",
-    "key": "parameter3"
-   },
-   "targets": {
-    "base": {
-     "group": "[EqualizerRack1_[Channel2]_Effect1]",
-     "key": "parameter3"
-    }
-   }
+   "detent": true
   },
   {
    "id": "fx2_2_level",
@@ -2006,17 +1962,7 @@
     }
    },
    "section": "CH1",
-   "detent": true,
-   "target": {
-    "group": "[EqualizerRack1_[Channel1]_Effect1]",
-    "key": "parameter2"
-   },
-   "targets": {
-    "base": {
-     "group": "[EqualizerRack1_[Channel1]_Effect1]",
-     "key": "parameter2"
-    }
-   }
+   "detent": true
   },
   {
    "id": "ch2_mid",
@@ -2053,17 +1999,7 @@
     }
    },
    "section": "CH2",
-   "detent": true,
-   "target": {
-    "group": "[EqualizerRack1_[Channel2]_Effect1]",
-    "key": "parameter2"
-   },
-   "targets": {
-    "base": {
-     "group": "[EqualizerRack1_[Channel2]_Effect1]",
-     "key": "parameter2"
-    }
-   }
+   "detent": true
   },
   {
    "id": "fx2_3_level",
@@ -2287,17 +2223,7 @@
     }
    },
    "section": "CH1",
-   "detent": true,
-   "target": {
-    "group": "[EqualizerRack1_[Channel1]_Effect1]",
-    "key": "parameter1"
-   },
-   "targets": {
-    "base": {
-     "group": "[EqualizerRack1_[Channel1]_Effect1]",
-     "key": "parameter1"
-    }
-   }
+   "detent": true
   },
   {
    "id": "hp_level",
@@ -2354,17 +2280,7 @@
     }
    },
    "section": "CH2",
-   "detent": true,
-   "target": {
-    "group": "[EqualizerRack1_[Channel2]_Effect1]",
-    "key": "parameter1"
-   },
-   "targets": {
-    "base": {
-     "group": "[EqualizerRack1_[Channel2]_Effect1]",
-     "key": "parameter1"
-    }
-   }
+   "detent": true
   },
   {
    "id": "auto_loop_a",
@@ -3953,14 +3869,14 @@
      }
     }
    },
-   "target": {
-    "group": "[Channel1]",
-    "key": "volume"
-   },
    "targets": {
     "base": {
-     "group": "[Channel1]",
-     "key": "volume"
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "mix"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit1]",
+     "key": "mix"
     }
    }
   },
@@ -4005,14 +3921,14 @@
      }
     }
    },
-   "target": {
-    "group": "[Channel2]",
-    "key": "volume"
-   },
    "targets": {
     "base": {
-     "group": "[Channel2]",
-     "key": "volume"
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "mix"
+    },
+    "shift": {
+     "group": "[EffectRack1_EffectUnit2]",
+     "key": "mix"
     }
    }
   },
@@ -4051,16 +3967,6 @@
       "max": 127,
       "resting": 127
      }
-    }
-   },
-   "target": {
-    "group": "[Master]",
-    "key": "crossfader"
-   },
-   "targets": {
-    "base": {
-     "group": "[Master]",
-     "key": "crossfader"
     }
    }
   },
@@ -4101,19 +4007,17 @@
      }
     }
    },
-   "target": {
-    "group": "[Library]",
-    "key": "GoToItem"
-   },
    "targets": {
     "base": {
-     "group": "[Library]",
-     "key": "GoToItem"
+     "group": "[Master]",
+     "key": "DJMT1.browsePush",
+     "script": "DJMT1.browsePush",
+     "external": true
     },
     "shift": {
      "group": "[Master]",
-     "key": "DJMT1.libraryFocus",
-     "script": "DJMT1.libraryFocus",
+     "key": "DJMT1.browseShiftPush",
+     "script": "DJMT1.browseShiftPush",
      "external": true
     }
    }
@@ -4554,10 +4458,14 @@
   }
  ],
  "deviations": [
+  "FX1 and FX2 ON and DRY/WET drive effect units 3 and 4, the pre-fader inserts: ON is the unit's enable (SHIFT steps its chain preset), DRY/WET its super knob, and ASSIGN A/B route those units to the decks. The per-effect knobs and buttons still address units 1 and 2.",
+  "Units 1 and 2 are post-fader effect returns, which needs the wet-only patch to Mixxx. Each is wet-only and routed to one crossfader bus (unit 1 to deck 1's, unit 2 to deck 2's), and Mixxx's main output goes to USB 5/6, past the channel faders. The CH1 and CH2 faders set each unit's send level through its mix knob, so closing a fader stops feeding the echo and lets its tail ring out. The mapping sets this routing every time it starts. On a Mixxx without the patch it sets none of it and logs a warning.",
+  "Mixer-section MIDI (the CH1/CH2 buttons) must be ON, for the faders. TRIM, HI/MID/LOW and the crossfader are captured but not mapped, since the analog mixer already does them and mapping them would apply them twice.",
   "FX ON switches the whole effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps the unit's chain preset, which nothing else on this panel reaches.",
   "SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.",
   "SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.",
-  "SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing."
+  "SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing.",
+  "BROWSE PUSH moves between the Terminal-wide skin's pages: off the library page it opens the library, and in the library's track list it goes back to the decks. In the tree it still expands a folder or opens a crate. SHIFT + BROWSE PUSH opens the library on the tree, or swaps focus between the tree and the track list. LOAD A/B go back to the decks once the deck has actually taken the track; a rejected load stays put. With a skin that has no [Tab] pages, all of these behave as before."
  ],
  "actions": [
   {
@@ -4608,11 +4516,87 @@
    "group": "[Channel2]"
   }
  ],
- "library_focus": {
-  "id": "libraryFocus",
-  "between": [
-   2,
-   3
-  ]
+ "startup": [
+  {
+   "group": "[EffectRack1_EffectUnit1]",
+   "key": "wet_only",
+   "value": 1,
+   "require": true
+  },
+  {
+   "group": "[EffectRack1_EffectUnit2]",
+   "key": "wet_only",
+   "value": 1,
+   "require": true
+  },
+  {
+   "group": "[EffectRack1_EffectUnit1]",
+   "key": "group_[Channel1]_enable",
+   "value": 0
+  },
+  {
+   "group": "[EffectRack1_EffectUnit1]",
+   "key": "group_[Channel2]_enable",
+   "value": 0
+  },
+  {
+   "group": "[EffectRack1_EffectUnit1]",
+   "key": "group_[BusRight]_enable",
+   "value": 0
+  },
+  {
+   "group": "[EffectRack1_EffectUnit1]",
+   "key": "group_[BusLeft]_enable",
+   "value": 1
+  },
+  {
+   "group": "[EffectRack1_EffectUnit2]",
+   "key": "group_[Channel1]_enable",
+   "value": 0
+  },
+  {
+   "group": "[EffectRack1_EffectUnit2]",
+   "key": "group_[Channel2]_enable",
+   "value": 0
+  },
+  {
+   "group": "[EffectRack1_EffectUnit2]",
+   "key": "group_[BusLeft]_enable",
+   "value": 0
+  },
+  {
+   "group": "[EffectRack1_EffectUnit2]",
+   "key": "group_[BusRight]_enable",
+   "value": 1
+  },
+  {
+   "group": "[Channel1]",
+   "key": "orientation",
+   "value": 0
+  },
+  {
+   "group": "[Channel2]",
+   "key": "orientation",
+   "value": 2
+  }
+ ],
+ "page_nav": {
+  "tab_group": "[Tab]",
+  "home": "decks",
+  "library": "library",
+  "pages": [
+   "decks",
+   "library",
+   "fx",
+   "options"
+  ],
+  "push": "browsePush",
+  "shift_push": "browseShiftPush",
+  "loads": {
+   "loadA": "[Channel1]",
+   "loadB": "[Channel2]"
+  },
+  "focus_delay_ms": 60,
+  "load_window_ms": 5000
  }
 }

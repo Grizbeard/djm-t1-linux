@@ -3,16 +3,18 @@
 //
 // Controller: DJM-T1_Custom
 // Layer:      base
-// Generated:  2026-09-25
+// Generated:  2026-09-26
 
 var DJMT1 = {};
 
 DJMT1.init = function (id, debugging) {
+    DJMT1.applyStartup();
     DJMT1.allLedsOff();
     DJMT1.refreshOutputs();
     DJMT1.initBanks();
     DJMT1.connectGangs();
     DJMT1.paintGangs();
+    DJMT1.initNav();
 };
 
 DJMT1.shutdown = function () {
@@ -32,23 +34,23 @@ DJMT1.OUTPUT_CONTROLS = [
     ["[Channel1]", "pfl"],
     ["[Channel2]", "pfl"],
     ["[Channel1]", "cue_indicator"],
-    ["[EffectRack1_EffectUnit1]", "group_[Channel1]_enable"],
-    ["[EffectRack1_EffectUnit2]", "group_[Channel1]_enable"],
+    ["[EffectRack1_EffectUnit3]", "group_[Channel1]_enable"],
+    ["[EffectRack1_EffectUnit4]", "group_[Channel1]_enable"],
     ["[Channel1]", "play_indicator"],
     ["[Channel1]", "sync_enabled"],
     ["[Channel2]", "cue_indicator"],
-    ["[EffectRack1_EffectUnit1]", "group_[Channel2]_enable"],
-    ["[EffectRack1_EffectUnit2]", "group_[Channel2]_enable"],
+    ["[EffectRack1_EffectUnit3]", "group_[Channel2]_enable"],
+    ["[EffectRack1_EffectUnit4]", "group_[Channel2]_enable"],
     ["[Channel2]", "play_indicator"],
     ["[Channel2]", "sync_enabled"],
     ["[EffectRack1_EffectUnit1_Effect1]", "enabled"],
     ["[EffectRack1_EffectUnit1_Effect2]", "enabled"],
     ["[EffectRack1_EffectUnit1_Effect3]", "enabled"],
-    ["[EffectRack1_EffectUnit1]", "enabled"],
+    ["[EffectRack1_EffectUnit3]", "enabled"],
     ["[EffectRack1_EffectUnit2_Effect1]", "enabled"],
     ["[EffectRack1_EffectUnit2_Effect2]", "enabled"],
     ["[EffectRack1_EffectUnit2_Effect3]", "enabled"],
-    ["[EffectRack1_EffectUnit2]", "enabled"],
+    ["[EffectRack1_EffectUnit4]", "enabled"],
 ];
 
 DJMT1.LED_NOTES = [
@@ -86,6 +88,39 @@ DJMT1.refreshOutputs = function () {
     for (var i = 0; i < DJMT1.OUTPUT_CONTROLS.length; i++) {
         var c = DJMT1.OUTPUT_CONTROLS[i];
         engine.trigger(c[0], c[1]);
+    }
+};
+
+// ---------------------------------------------------------------
+// Startup values (profile "startup").
+//
+// State this mapping depends on, asserted at every start. A required
+// entry that does not take stops the rest from being applied.
+
+DJMT1.STARTUP = [
+    ["[EffectRack1_EffectUnit1]", "wet_only", 1, true],
+    ["[EffectRack1_EffectUnit2]", "wet_only", 1, true],
+    ["[EffectRack1_EffectUnit1]", "group_[Channel1]_enable", 0, false],
+    ["[EffectRack1_EffectUnit1]", "group_[Channel2]_enable", 0, false],
+    ["[EffectRack1_EffectUnit1]", "group_[BusRight]_enable", 0, false],
+    ["[EffectRack1_EffectUnit1]", "group_[BusLeft]_enable", 1, false],
+    ["[EffectRack1_EffectUnit2]", "group_[Channel1]_enable", 0, false],
+    ["[EffectRack1_EffectUnit2]", "group_[Channel2]_enable", 0, false],
+    ["[EffectRack1_EffectUnit2]", "group_[BusLeft]_enable", 0, false],
+    ["[EffectRack1_EffectUnit2]", "group_[BusRight]_enable", 1, false],
+    ["[Channel1]", "orientation", 0, false],
+    ["[Channel2]", "orientation", 2, false],
+];
+
+DJMT1.applyStartup = function () {
+    for (var i = 0; i < DJMT1.STARTUP.length; i++) {
+        var s = DJMT1.STARTUP[i];
+        engine.setValue(s[0], s[1], s[2]);
+        if (s[3] && engine.getValue(s[0], s[1]) !== s[2]) {
+            console.warn("DJMT1: " + s[0] + "," + s[1] +
+                " did not take; skipping the startup values after it");
+            return;
+        }
     }
 };
 
@@ -561,15 +596,129 @@ DJMT1.loopB = function (ch, ctrl, value) {
     }
 };
 
-// Library focus: straight to the track list from wherever the tree is.
+// ---------------------------------------------------------------
+// Page navigation (profile "page_nav").
+//
+// Browse push opens the library page and takes you back; a LOAD that
+// the deck actually takes returns you to the home page. Pages are the
+// skin's [Tab] triggers; a skin without them gets the old behaviour.
 
-DJMT1.libraryFocus = function (ch, ctrl, value) {
-    if (value === 0) {
+DJMT1.NAV = {"tabs": "[Tab]", "home": "decks", "library": "library", "pages": ["decks", "library", "fx", "options"], "focusDelay": 60, "loadWindow": 5000};
+DJMT1.navFocus = 3;   // library focus to restore on the way in
+DJMT1.navPending = {};   // deck group -> timer, while its load is awaited
+
+// A press is a note-on with a non-zero value. A release is either a
+// note-on at zero or a real note-off, whose velocity can be anything.
+DJMT1.navPressed = function (value, status) {
+    return value > 0 && (status & 0xF0) !== 0x80;
+};
+
+DJMT1.navHasTabs = function () {
+    for (var i = 0; i < DJMT1.NAV.pages.length; i++) {
+        if (engine.getValue(DJMT1.NAV.tabs, DJMT1.NAV.pages[i]) > 0) {
+            return true;
+        }
+    }
+    return false;
+};
+
+DJMT1.navOnLibrary = function () {
+    return engine.getValue(DJMT1.NAV.tabs, DJMT1.NAV.library) > 0;
+};
+
+DJMT1.navShowHome = function () {
+    if (DJMT1.navOnLibrary()) {
+        var f = engine.getValue("[Library]", "focused_widget");
+        if (f === 2 || f === 3) {
+            DJMT1.navFocus = f;
+        }
+    }
+    engine.setValue(DJMT1.NAV.tabs, DJMT1.NAV.home, 1);
+};
+
+// The page has to be showing before its widgets can take focus, and the
+// switch reaches the GUI thread asynchronously, so focus follows a beat
+// later.
+DJMT1.navShowLibrary = function (focus) {
+    engine.setValue(DJMT1.NAV.tabs, DJMT1.NAV.library, 1);
+    engine.beginTimer(DJMT1.NAV.focusDelay, function () {
+        engine.setValue("[Library]", "focused_widget", focus);
+    }, true);
+};
+
+DJMT1.browsePush = function (ch, ctrl, value, status) {
+    if (!DJMT1.navPressed(value, status)) {
         return;
     }
-    var now = engine.getValue("[Library]", "focused_widget");
+    if (!DJMT1.navHasTabs()) {
+        engine.setValue("[Library]", "GoToItem", 1);
+        return;
+    }
+    if (!DJMT1.navOnLibrary()) {
+        DJMT1.navShowLibrary(DJMT1.navFocus);
+        return;
+    }
+    // In the track list (or with nothing in the library focused, e.g.
+    // after a tap on the screen) push means done here. In the tree or a
+    // dialog it keeps meaning GoToItem: expand, open, confirm.
+    var f = engine.getValue("[Library]", "focused_widget");
+    if (f === 3 || f === 0) {
+        DJMT1.navShowHome();
+    } else {
+        engine.setValue("[Library]", "GoToItem", 1);
+    }
+};
+
+DJMT1.browseShiftPush = function (ch, ctrl, value, status) {
+    if (!DJMT1.navPressed(value, status)) {
+        return;
+    }
+    if (DJMT1.navHasTabs() && !DJMT1.navOnLibrary()) {
+        DJMT1.navShowLibrary(2);
+        return;
+    }
+    var f = engine.getValue("[Library]", "focused_widget");
     engine.setValue("[Library]", "focused_widget",
-        now === 3 ? 2 : 3);
+        f === 2 ? 3 : 2);
+};
+
+DJMT1.navLoad = function (group, value, status) {
+    if (!DJMT1.navPressed(value, status)) {
+        return;
+    }
+    if (DJMT1.navPending[group] !== undefined) {
+        engine.stopTimer(DJMT1.navPending[group]);
+    }
+    DJMT1.navPending[group] = engine.beginTimer(DJMT1.NAV.loadWindow, function () {
+        delete DJMT1.navPending[group];
+    }, true);
+    engine.setValue(group, "LoadSelectedTrack", 1);
+};
+
+// track_loaded is force-set to 1 on every successful load, the same
+// track again included, and never on a rejected one.
+DJMT1.navTrackLoaded = function (value, group) {
+    if (value !== 1 || DJMT1.navPending[group] === undefined) {
+        return;
+    }
+    engine.stopTimer(DJMT1.navPending[group]);
+    delete DJMT1.navPending[group];
+    if (DJMT1.navHasTabs() && DJMT1.navOnLibrary()) {
+        DJMT1.navShowHome();
+    }
+};
+
+DJMT1.loadA = function (ch, ctrl, value, status) {
+    DJMT1.navLoad("[Channel1]", value, status);
+};
+
+DJMT1.loadB = function (ch, ctrl, value, status) {
+    DJMT1.navLoad("[Channel2]", value, status);
+};
+
+DJMT1.initNav = function () {
+    engine.makeConnection("[Channel1]", "track_loaded", DJMT1.navTrackLoaded);
+    engine.makeConnection("[Channel2]", "track_loaded", DJMT1.navTrackLoaded);
 };
 
 // AUTO LOOP A
