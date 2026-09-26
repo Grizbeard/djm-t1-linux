@@ -80,10 +80,6 @@ carries Mixxx's faders and crossfader and the other the analog ones. For the
 same reason, do not assign an Auxiliary input to 5/6 while main is going out on
 it -- that is a feedback loop.
 
-The one exception is the post-fader FX setup at the end of this page, where a
-patched Mixxx makes its main output a wet-only effects return, and 5/6 carries
-that instead of a copy of the mix.
-
 ### Turn the mixer-section MIDI off
 
 The `CH1` / `CH2` buttons in the MIDI section decide whether the mixer strip
@@ -101,10 +97,9 @@ fader pulled halfway would attenuate twice.
 (An earlier version of this page said the volume and crossfader gains were
 applied only when summing to main. The engine source says otherwise.)
 
-The DJM-T1_Custom mapping is the exception: it needs mixer-section MIDI **on**,
-because its channel faders drive the post-fader effect sends (see below), and it
-leaves TRIM, the EQ and the crossfader unmapped so that nothing is applied
-twice.
+The DJM-T1_Custom mapping leaves the faders, TRIM, the EQ and the crossfader
+unmapped, so with it nothing is applied twice even if the mixer-section MIDI is
+on.
 
 The performance controls are not in that section and keep working either way.
 Those buttons are really the switch between two whole configurations:
@@ -151,48 +146,18 @@ input back before the crossfade. Dry+Wet always adds it, and a unit that is off
 or empty passes its input straight through. Any of these puts the whole mix on
 the master a second time.
 
-What works is patch 0012 in the Terminal-wide repository
-(`patches/0012-Let-an-effect-unit-be-a-wet-only-send-return.patch`) plus the
-DJM-T1_Custom mapping:
-
-- `[EffectRack1_EffectUnitN],wet_only` turns a unit into a send/return: its mix
-  knob is the send level into the effects, and it outputs only what they
-  produce -- silence when it is off or empty.
-- Units 1 and 2 are wet-only returns on the left and right crossfader buses,
-  with deck 1 oriented left and deck 2 right, so each bus is one deck. Mixxx's
-  crossfader stays centred, where the default additive curve is unity; the
-  constant-power curve is not, and would drop both decks.
-- Main goes out on **USB 5/6**, which is now the effects return rather than a
-  second copy of the mix.
-- With mixer-section MIDI on, the CH1 and CH2 faders set units 1 and 2's send
-  levels. Closing a fader cuts the dry signal in the analog strip and stops
-  feeding the echo, and the tail it already has rings out on the master.
-- Units 3 and 4 stay ordinary pre-fader inserts on the decks, on the panel's
-  FX1/FX2 ON and DRY/WET.
-
-The mapping sets the wet-only flags, the bus routing and the orientations every
-time it starts. On a Mixxx without the patch, `wet_only` does not exist, so the
-mapping applies none of it and logs a warning. Its fader sends then do nothing
-useful, and main must stay unassigned as before.
-
-| | Hardware mixing, stock | Hardware mixing, post-fader FX |
-|---|---|---|
-| Deck outs | 1/2, 3/4 | 1/2, 3/4 |
-| Main out | unassigned | **5/6** (the FX return) |
-| Mixer MIDI | off | **on** |
-| Mapping | Pioneer DJM-T1 | DJM-T1_Custom |
-| Mixxx | stock | with patch 0012 |
+A patched Mixxx that does it -- wet-only effect units as returns on the
+crossfader buses, sent to the master on USB 5/6 past the channel faders, with
+the faders driving the sends -- was built and tried, and is kept on the
+`post-fader-fx` branch of this repository and of the Terminal-wide repository.
+The working configuration is the stock one above: effects are pre-fader
+inserts on the decks.
 
 Verified on the bench (2026-09-25): USB out 5/6 bypasses the channel strips.
 With both channel faders fully down, test tones on out 5 and 6 played on master
 left and right, and the master meter moved while the channel meters stayed
 still. So anything Mixxx sends to 5/6, an echo tail included, is untouched by
 the channel faders.
-
-Verified in Mixxx on Windows (2026-09-25), recording the main mix with a tone
-on deck 1 and Reverb in unit 1: the return carried the reverb and no dry
-signal; with the slot off it was silent while the deck played; and closing the
-send faded the input out, let the tail ring down, and left silence.
 
 ## Still to check on the bench
 

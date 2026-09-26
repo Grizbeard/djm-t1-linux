@@ -14,12 +14,14 @@ DJMT1.init = function (id, debugging) {
     DJMT1.initBanks();
     DJMT1.connectGangs();
     DJMT1.paintGangs();
+    DJMT1.initFxSections();
     DJMT1.initNav();
 };
 
 DJMT1.shutdown = function () {
     DJMT1.shutdownBanks();
     DJMT1.gangLedsOff();
+    DJMT1.fxLedsOff();
     DJMT1.allLedsOff();
 };
 
@@ -34,46 +36,30 @@ DJMT1.OUTPUT_CONTROLS = [
     ["[Channel1]", "pfl"],
     ["[Channel2]", "pfl"],
     ["[Channel1]", "cue_indicator"],
-    ["[EffectRack1_EffectUnit3]", "group_[Channel1]_enable"],
-    ["[EffectRack1_EffectUnit4]", "group_[Channel1]_enable"],
+    ["[Channel1]", "rate_temp_down"],
+    ["[Channel1]", "rate_temp_up"],
     ["[Channel1]", "play_indicator"],
     ["[Channel1]", "sync_enabled"],
     ["[Channel2]", "cue_indicator"],
-    ["[EffectRack1_EffectUnit3]", "group_[Channel2]_enable"],
-    ["[EffectRack1_EffectUnit4]", "group_[Channel2]_enable"],
+    ["[Channel2]", "rate_temp_down"],
+    ["[Channel2]", "rate_temp_up"],
     ["[Channel2]", "play_indicator"],
     ["[Channel2]", "sync_enabled"],
-    ["[EffectRack1_EffectUnit1_Effect1]", "enabled"],
-    ["[EffectRack1_EffectUnit1_Effect2]", "enabled"],
-    ["[EffectRack1_EffectUnit1_Effect3]", "enabled"],
-    ["[EffectRack1_EffectUnit3]", "enabled"],
-    ["[EffectRack1_EffectUnit2_Effect1]", "enabled"],
-    ["[EffectRack1_EffectUnit2_Effect2]", "enabled"],
-    ["[EffectRack1_EffectUnit2_Effect3]", "enabled"],
-    ["[EffectRack1_EffectUnit4]", "enabled"],
 ];
 
 DJMT1.LED_NOTES = [
     [0x90, 0x6F, 0x00],
     [0x90, 0x70, 0x00],
     [0x90, 0x0B, 0x00],
-    [0x90, 0x07, 0x00],
-    [0x90, 0x09, 0x00],
+    [0x90, 0x47, 0x00],
+    [0x90, 0x49, 0x00],
     [0x90, 0x03, 0x00],
     [0x90, 0x05, 0x00],
     [0x90, 0x0C, 0x00],
-    [0x90, 0x08, 0x00],
-    [0x90, 0x0A, 0x00],
+    [0x90, 0x48, 0x00],
+    [0x90, 0x4A, 0x00],
     [0x90, 0x04, 0x00],
     [0x90, 0x06, 0x00],
-    [0x90, 0x0F, 0x00],
-    [0x90, 0x11, 0x00],
-    [0x90, 0x13, 0x00],
-    [0x90, 0x0D, 0x00],
-    [0x90, 0x10, 0x00],
-    [0x90, 0x12, 0x00],
-    [0x90, 0x14, 0x00],
-    [0x90, 0x0E, 0x00],
 ];
 
 DJMT1.allLedsOff = function () {
@@ -98,18 +84,14 @@ DJMT1.refreshOutputs = function () {
 // entry that does not take stops the rest from being applied.
 
 DJMT1.STARTUP = [
-    ["[EffectRack1_EffectUnit1]", "wet_only", 1, true],
-    ["[EffectRack1_EffectUnit2]", "wet_only", 1, true],
-    ["[EffectRack1_EffectUnit1]", "group_[Channel1]_enable", 0, false],
+    ["[EffectRack1_EffectUnit1]", "group_[Channel1]_enable", 1, false],
     ["[EffectRack1_EffectUnit1]", "group_[Channel2]_enable", 0, false],
-    ["[EffectRack1_EffectUnit1]", "group_[BusRight]_enable", 0, false],
-    ["[EffectRack1_EffectUnit1]", "group_[BusLeft]_enable", 1, false],
-    ["[EffectRack1_EffectUnit2]", "group_[Channel1]_enable", 0, false],
+    ["[EffectRack1_EffectUnit2]", "group_[Channel1]_enable", 1, false],
     ["[EffectRack1_EffectUnit2]", "group_[Channel2]_enable", 0, false],
-    ["[EffectRack1_EffectUnit2]", "group_[BusLeft]_enable", 0, false],
-    ["[EffectRack1_EffectUnit2]", "group_[BusRight]_enable", 1, false],
-    ["[Channel1]", "orientation", 0, false],
-    ["[Channel2]", "orientation", 2, false],
+    ["[EffectRack1_EffectUnit3]", "group_[Channel1]_enable", 0, false],
+    ["[EffectRack1_EffectUnit3]", "group_[Channel2]_enable", 1, false],
+    ["[EffectRack1_EffectUnit4]", "group_[Channel1]_enable", 0, false],
+    ["[EffectRack1_EffectUnit4]", "group_[Channel2]_enable", 1, false],
 ];
 
 DJMT1.applyStartup = function () {
@@ -650,6 +632,292 @@ DJMT1.loopB = function (ch, ctrl, value) {
         engine.setValue("[Channel2]", "beatloop_activate", 0);
     }
 };
+
+// ---------------------------------------------------------------
+// FX sections: each switches between effect units.
+// ---------------------------------------------------------------
+
+DJMT1.FX_SECTIONS = [
+    {
+        "name": "FX1",
+        "units": [
+            "[EffectRack1_EffectUnit1]",
+            "[EffectRack1_EffectUnit2]"
+        ],
+        "slotGroups": [
+            [
+                "[EffectRack1_EffectUnit1_Effect1]",
+                "[EffectRack1_EffectUnit1_Effect2]",
+                "[EffectRack1_EffectUnit1_Effect3]"
+            ],
+            [
+                "[EffectRack1_EffectUnit2_Effect1]",
+                "[EffectRack1_EffectUnit2_Effect2]",
+                "[EffectRack1_EffectUnit2_Effect3]"
+            ]
+        ],
+        "slots": 3,
+        "selectLeds": [
+            {
+                "status": 144,
+                "midino": 7,
+                "on": 127,
+                "off": 0
+            },
+            {
+                "status": 144,
+                "midino": 9,
+                "on": 127,
+                "off": 0
+            }
+        ],
+        "onLed": {
+            "status": 144,
+            "midino": 13,
+            "on": 127,
+            "off": 0
+        },
+        "slotLeds": [
+            {
+                "status": 144,
+                "midino": 15,
+                "on": 127,
+                "off": 0
+            },
+            {
+                "status": 144,
+                "midino": 17,
+                "on": 127,
+                "off": 0
+            },
+            {
+                "status": 144,
+                "midino": 19,
+                "on": 127,
+                "off": 0
+            }
+        ]
+    },
+    {
+        "name": "FX2",
+        "units": [
+            "[EffectRack1_EffectUnit3]",
+            "[EffectRack1_EffectUnit4]"
+        ],
+        "slotGroups": [
+            [
+                "[EffectRack1_EffectUnit3_Effect1]",
+                "[EffectRack1_EffectUnit3_Effect2]",
+                "[EffectRack1_EffectUnit3_Effect3]"
+            ],
+            [
+                "[EffectRack1_EffectUnit4_Effect1]",
+                "[EffectRack1_EffectUnit4_Effect2]",
+                "[EffectRack1_EffectUnit4_Effect3]"
+            ]
+        ],
+        "slots": 3,
+        "selectLeds": [
+            {
+                "status": 144,
+                "midino": 8,
+                "on": 127,
+                "off": 0
+            },
+            {
+                "status": 144,
+                "midino": 10,
+                "on": 127,
+                "off": 0
+            }
+        ],
+        "onLed": {
+            "status": 144,
+            "midino": 14,
+            "on": 127,
+            "off": 0
+        },
+        "slotLeds": [
+            {
+                "status": 144,
+                "midino": 16,
+                "on": 127,
+                "off": 0
+            },
+            {
+                "status": 144,
+                "midino": 18,
+                "on": 127,
+                "off": 0
+            },
+            {
+                "status": 144,
+                "midino": 20,
+                "on": 127,
+                "off": 0
+            }
+        ]
+    }
+];
+
+// Which unit each section is on: an index into its units.
+DJMT1.fxSel = [];
+
+DJMT1.fxUnit = function (s) {
+    return DJMT1.FX_SECTIONS[s].units[DJMT1.fxSel[s]];
+};
+
+DJMT1.fxSlot = function (s, n) {
+    return DJMT1.FX_SECTIONS[s].slotGroups[DJMT1.fxSel[s]][n];
+};
+
+// Mixxx's own curve for a plain absolute knob (<normal/>), so these
+// knobs feel as they did bound straight to the controls: 64 is the
+// middle, 0 and 127 the ends.
+DJMT1.fxKnob = function (value) {
+    return value <= 64 ? value / 128 : 0.5 + (value - 64) / 126;
+};
+
+DJMT1.initFxSections = function () {
+    for (var s = 0; s < DJMT1.FX_SECTIONS.length; s++) {
+        var d = DJMT1.FX_SECTIONS[s];
+        DJMT1.fxSel[s] = 0;
+        for (var k = 0; k < d.units.length; k++) {
+            var u = d.units[k];
+            engine.softTakeover(u, "mix", true);
+            for (var n = 0; n < d.slots; n++) {
+                engine.softTakeover(d.slotGroups[k][n], "meta", true);
+            }
+            DJMT1.connectFxUnit(s, k);
+        }
+        DJMT1.paintFx(s);
+    }
+};
+
+DJMT1.connectFxUnit = function (s, k) {
+    var d = DJMT1.FX_SECTIONS[s];
+    var u = d.units[k];
+    engine.makeConnection(u, "enabled", function () {
+        DJMT1.paintFx(s);
+    });
+    for (var n = 0; n < d.slots; n++) {
+        engine.makeConnection(d.slotGroups[k][n], "enabled",
+            function () { DJMT1.paintFx(s); });
+    }
+};
+
+// Select unit k of section s: only what the section's controls
+// address. Both units keep their own on/off state.
+DJMT1.fxSelect = function (s, k) {
+    var d = DJMT1.FX_SECTIONS[s];
+    if (k < 0 || k >= d.units.length) {
+        return;
+    }
+    DJMT1.fxSel[s] = k;
+    DJMT1.paintFx(s);
+};
+
+DJMT1.fxLed = function (led, lit) {
+    if (led) {
+        midi.sendShortMsg(led.status, led.midino, lit ? led.on : led.off);
+    }
+};
+
+DJMT1.paintFx = function (s) {
+    var d = DJMT1.FX_SECTIONS[s];
+    var u = DJMT1.fxUnit(s);
+    for (var k = 0; k < d.selectLeds.length; k++) {
+        DJMT1.fxLed(d.selectLeds[k], k === DJMT1.fxSel[s]);
+    }
+    DJMT1.fxLed(d.onLed, engine.getValue(u, "enabled") > 0);
+    for (var n = 0; n < d.slotLeds.length; n++) {
+        DJMT1.fxLed(d.slotLeds[n], engine.getValue(DJMT1.fxSlot(s, n), "enabled") > 0);
+    }
+};
+
+DJMT1.fxLedsOff = function () {
+    for (var s = 0; s < DJMT1.FX_SECTIONS.length; s++) {
+        var d = DJMT1.FX_SECTIONS[s];
+        var leds = d.selectLeds.concat([d.onLed], d.slotLeds);
+        for (var i = 0; i < leds.length; i++) {
+            DJMT1.fxLed(leds[i], false);
+        }
+    }
+};
+
+// --- handlers: buttons act on the press, knobs on every value ---
+
+DJMT1.fxPressSelect = function (s, k, value) {
+    if (value !== 0) {
+        DJMT1.fxSelect(s, k);
+    }
+};
+
+DJMT1.fxPressOn = function (s, value) {
+    if (value !== 0) {
+        var u = DJMT1.fxUnit(s);
+        engine.setValue(u, "enabled", engine.getValue(u, "enabled") > 0 ? 0 : 1);
+    }
+};
+
+DJMT1.fxPressNextChain = function (s, value) {
+    if (value !== 0) {
+        engine.setValue(DJMT1.fxUnit(s), "next_chain_preset", 1);
+    }
+};
+
+DJMT1.fxTurnMix = function (s, value) {
+    engine.setParameter(DJMT1.fxUnit(s), "mix", DJMT1.fxKnob(value));
+};
+
+DJMT1.fxTurnLevel = function (s, n, value) {
+    engine.setParameter(DJMT1.fxSlot(s, n), "meta", DJMT1.fxKnob(value));
+};
+
+DJMT1.fxPressSlot = function (s, n, value) {
+    if (value !== 0) {
+        var g = DJMT1.fxSlot(s, n);
+        engine.setValue(g, "enabled", engine.getValue(g, "enabled") > 0 ? 0 : 1);
+    }
+};
+
+DJMT1.fxPressNextEffect = function (s, n, value) {
+    if (value !== 0) {
+        engine.setValue(DJMT1.fxSlot(s, n), "next_effect", 1);
+    }
+};
+
+// FX1
+DJMT1.fx1Select1 = function (ch, ctrl, value) { DJMT1.fxPressSelect(0, 0, value); };
+DJMT1.fx1Select2 = function (ch, ctrl, value) { DJMT1.fxPressSelect(0, 1, value); };
+DJMT1.fx1On = function (ch, ctrl, value) { DJMT1.fxPressOn(0, value); };
+DJMT1.fx1NextChain = function (ch, ctrl, value) { DJMT1.fxPressNextChain(0, value); };
+DJMT1.fx1Mix = function (ch, ctrl, value) { DJMT1.fxTurnMix(0, value); };
+DJMT1.fx1Level1 = function (ch, ctrl, value) { DJMT1.fxTurnLevel(0, 0, value); };
+DJMT1.fx1Level2 = function (ch, ctrl, value) { DJMT1.fxTurnLevel(0, 1, value); };
+DJMT1.fx1Level3 = function (ch, ctrl, value) { DJMT1.fxTurnLevel(0, 2, value); };
+DJMT1.fx1Slot1 = function (ch, ctrl, value) { DJMT1.fxPressSlot(0, 0, value); };
+DJMT1.fx1Slot2 = function (ch, ctrl, value) { DJMT1.fxPressSlot(0, 1, value); };
+DJMT1.fx1Slot3 = function (ch, ctrl, value) { DJMT1.fxPressSlot(0, 2, value); };
+DJMT1.fx1NextEffect1 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(0, 0, value); };
+DJMT1.fx1NextEffect2 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(0, 1, value); };
+DJMT1.fx1NextEffect3 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(0, 2, value); };
+
+// FX2
+DJMT1.fx2Select1 = function (ch, ctrl, value) { DJMT1.fxPressSelect(1, 0, value); };
+DJMT1.fx2Select2 = function (ch, ctrl, value) { DJMT1.fxPressSelect(1, 1, value); };
+DJMT1.fx2On = function (ch, ctrl, value) { DJMT1.fxPressOn(1, value); };
+DJMT1.fx2NextChain = function (ch, ctrl, value) { DJMT1.fxPressNextChain(1, value); };
+DJMT1.fx2Mix = function (ch, ctrl, value) { DJMT1.fxTurnMix(1, value); };
+DJMT1.fx2Level1 = function (ch, ctrl, value) { DJMT1.fxTurnLevel(1, 0, value); };
+DJMT1.fx2Level2 = function (ch, ctrl, value) { DJMT1.fxTurnLevel(1, 1, value); };
+DJMT1.fx2Level3 = function (ch, ctrl, value) { DJMT1.fxTurnLevel(1, 2, value); };
+DJMT1.fx2Slot1 = function (ch, ctrl, value) { DJMT1.fxPressSlot(1, 0, value); };
+DJMT1.fx2Slot2 = function (ch, ctrl, value) { DJMT1.fxPressSlot(1, 1, value); };
+DJMT1.fx2Slot3 = function (ch, ctrl, value) { DJMT1.fxPressSlot(1, 2, value); };
+DJMT1.fx2NextEffect1 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(1, 0, value); };
+DJMT1.fx2NextEffect2 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(1, 1, value); };
+DJMT1.fx2NextEffect3 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(1, 2, value); };
 
 // ---------------------------------------------------------------
 // Page navigation (profile "page_nav").

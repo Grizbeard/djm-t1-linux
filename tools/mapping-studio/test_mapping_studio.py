@@ -533,6 +533,67 @@ class TestBankControl(unittest.TestCase):
             os.unlink(f.name)
 
 
+
+class TestFxSections(unittest.TestCase):
+    """FX sections that switch between effect units (fxsections.py)."""
+
+    PROFILE = TestPageNav.PROFILE
+    HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "tools", "fx_harness.js")
+
+    def profile(self):
+        return Profile.load(self.PROFILE)
+
+    def test_every_script_binding_resolves(self):
+        xml, js, _fn = export_mixxx.export(self.profile())
+        root = ET.fromstring(xml)
+        dangling = sorted({
+            c.findtext("key") for c in root.findall(".//controls/control")
+            if c.find("options/script-binding") is not None
+            and (c.findtext("key") + " = function") not in js})
+        self.assertEqual(dangling, [])
+
+    def test_no_output_is_left_on_a_switched_control(self):
+        # Their lights follow the selected unit, so the script drives them; a
+        # static <output> would pin a light to one unit and fight the script.
+        xml, _js, _fn = export_mixxx.export(self.profile())
+        root = ET.fromstring(xml)
+        fx = [o.findtext("group") for o in root.findall(".//outputs/output")
+              if "EffectRack" in o.findtext("group")]
+        self.assertEqual(fx, [])
+
+    def test_init_and_shutdown(self):
+        _xml, js, _fn = export_mixxx.export(self.profile())
+        init = js[js.index(".init = function"):]
+        self.assertIn(".initFxSections();", init[:init.index("};")])
+        down = js[js.index(".shutdown = function"):]
+        self.assertIn(".fxLedsOff();", down[:down.index("};")])
+
+    def test_mismatched_select_buttons_are_refused(self):
+        p = self.profile()
+        p.data["fx_sections"][0]["select"] = ["fx1_assign_a"]
+        with self.assertRaises(ValueError):
+            export_mixxx.export(p)
+
+    def test_no_sections_means_no_code(self):
+        p = self.profile()
+        p.data.pop("fx_sections")
+        _xml, js, _fn = export_mixxx.export(p)
+        self.assertNotIn("FX_SECTIONS", js)
+
+    @unittest.skipUnless(shutil.which("node"), "node is not installed")
+    def test_behaviour_against_a_mock_engine(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False,
+                                         encoding="utf-8") as f:
+            f.write(export_mixxx.export(self.profile())[1])
+        try:
+            r = subprocess.run(["node", self.HARNESS, f.name],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        finally:
+            os.unlink(f.name)
+
 class TestColourExport(unittest.TestCase):
     def make(self):
         p = Profile.new("t", "Pad Device", {"w": 100, "h": 100})

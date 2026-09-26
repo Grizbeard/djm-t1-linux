@@ -657,9 +657,10 @@
    "section": "Deck A",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit3]",
-     "key": "group_[Channel1]_enable",
-     "output_key": "group_[Channel1]_enable"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Select1",
+     "script": "DJMT1.fx1Select1",
+     "external": true
     },
     "shift": {
      "group": "[Channel1]",
@@ -719,9 +720,10 @@
    "section": "Deck A",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit4]",
-     "key": "group_[Channel1]_enable",
-     "output_key": "group_[Channel1]_enable"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Select2",
+     "script": "DJMT1.fx1Select2",
+     "external": true
     },
     "shift": {
      "group": "[Channel1]",
@@ -905,9 +907,10 @@
    "section": "Deck B",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit3]",
-     "key": "group_[Channel2]_enable",
-     "output_key": "group_[Channel2]_enable"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Select1",
+     "script": "DJMT1.fx2Select1",
+     "external": true
     },
     "shift": {
      "group": "[Channel2]",
@@ -967,9 +970,10 @@
    "section": "Deck B",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit4]",
-     "key": "group_[Channel2]_enable",
-     "output_key": "group_[Channel2]_enable"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Select2",
+     "script": "DJMT1.fx2Select2",
+     "external": true
     },
     "shift": {
      "group": "[Channel2]",
@@ -1029,13 +1033,16 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit3]",
-     "key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx1On",
+     "script": "DJMT1.fx1On",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit3]",
-     "key": "next_chain_preset",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx1NextChain",
+     "script": "DJMT1.fx1NextChain",
+     "external": true
     }
    }
   },
@@ -1077,8 +1084,10 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit3]",
-     "key": "super1"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Mix",
+     "script": "DJMT1.fx1Mix",
+     "external": true
     }
    }
   },
@@ -1224,8 +1233,10 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit4]",
-     "key": "super1"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Mix",
+     "script": "DJMT1.fx2Mix",
+     "external": true
     }
    }
   },
@@ -1281,13 +1292,16 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit4]",
-     "key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx2On",
+     "script": "DJMT1.fx2On",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit4]",
-     "key": "next_chain_preset",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx2NextChain",
+     "script": "DJMT1.fx2NextChain",
+     "external": true
     }
    }
   },
@@ -1370,13 +1384,16 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1_Effect1]",
-     "key": "enabled",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Slot1",
+     "script": "DJMT1.fx1Slot1",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit1_Effect1]",
-     "key": "next_effect"
+     "group": "[Master]",
+     "key": "DJMT1.fx1NextEffect1",
+     "script": "DJMT1.fx1NextEffect1",
+     "external": true
     }
    }
   },
@@ -1418,8 +1435,10 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1_Effect1]",
-     "key": "meta"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Level1",
+     "script": "DJMT1.fx1Level1",
+     "external": true
     }
    }
   },
@@ -1533,8 +1552,10 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2_Effect1]",
-     "key": "meta"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Level1",
+     "script": "DJMT1.fx2Level1",
+     "external": true
     }
    }
   },
@@ -1590,13 +1611,16 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2_Effect1]",
-     "key": "enabled",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Slot1",
+     "script": "DJMT1.fx2Slot1",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit2_Effect1]",
-     "key": "next_effect"
+     "group": "[Master]",
+     "key": "DJMT1.fx2NextEffect1",
+     "script": "DJMT1.fx2NextEffect1",
+     "external": true
     }
    }
   },
@@ -1652,13 +1676,16 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1_Effect2]",
-     "key": "enabled",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Slot2",
+     "script": "DJMT1.fx1Slot2",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit1_Effect2]",
-     "key": "next_effect"
+     "group": "[Master]",
+     "key": "DJMT1.fx1NextEffect2",
+     "script": "DJMT1.fx1NextEffect2",
+     "external": true
     }
    }
   },
@@ -1700,8 +1727,10 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1_Effect2]",
-     "key": "meta"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Level2",
+     "script": "DJMT1.fx1Level2",
+     "external": true
     }
    }
   },
@@ -1817,8 +1846,10 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2_Effect2]",
-     "key": "meta"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Level2",
+     "script": "DJMT1.fx2Level2",
+     "external": true
     }
    }
   },
@@ -1874,13 +1905,16 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2_Effect2]",
-     "key": "enabled",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Slot2",
+     "script": "DJMT1.fx2Slot2",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit2_Effect2]",
-     "key": "next_effect"
+     "group": "[Master]",
+     "key": "DJMT1.fx2NextEffect2",
+     "script": "DJMT1.fx2NextEffect2",
+     "external": true
     }
    }
   },
@@ -1922,8 +1956,10 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1_Effect3]",
-     "key": "meta"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Level3",
+     "script": "DJMT1.fx1Level3",
+     "external": true
     }
    }
   },
@@ -2039,8 +2075,10 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2_Effect3]",
-     "key": "meta"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Level3",
+     "script": "DJMT1.fx2Level3",
+     "external": true
     }
    }
   },
@@ -2096,13 +2134,16 @@
    "section": "FX1",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit1_Effect3]",
-     "key": "enabled",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx1Slot3",
+     "script": "DJMT1.fx1Slot3",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit1_Effect3]",
-     "key": "next_effect"
+     "group": "[Master]",
+     "key": "DJMT1.fx1NextEffect3",
+     "script": "DJMT1.fx1NextEffect3",
+     "external": true
     }
    }
   },
@@ -2178,13 +2219,16 @@
    "section": "FX2",
    "targets": {
     "base": {
-     "group": "[EffectRack1_EffectUnit2_Effect3]",
-     "key": "enabled",
-     "output_key": "enabled"
+     "group": "[Master]",
+     "key": "DJMT1.fx2Slot3",
+     "script": "DJMT1.fx2Slot3",
+     "external": true
     },
     "shift": {
-     "group": "[EffectRack1_EffectUnit2_Effect3]",
-     "key": "next_effect"
+     "group": "[Master]",
+     "key": "DJMT1.fx2NextEffect3",
+     "script": "DJMT1.fx2NextEffect3",
+     "external": true
     }
    }
   },
@@ -3869,16 +3913,7 @@
      }
     }
    },
-   "targets": {
-    "base": {
-     "group": "[EffectRack1_EffectUnit1]",
-     "key": "mix"
-    },
-    "shift": {
-     "group": "[EffectRack1_EffectUnit1]",
-     "key": "mix"
-    }
-   }
+   "targets": null
   },
   {
    "id": "ch2_volume",
@@ -3921,16 +3956,7 @@
      }
     }
    },
-   "targets": {
-    "base": {
-     "group": "[EffectRack1_EffectUnit2]",
-     "key": "mix"
-    },
-    "shift": {
-     "group": "[EffectRack1_EffectUnit2]",
-     "key": "mix"
-    }
-   }
+   "targets": null
   },
   {
    "id": "crossfader",
@@ -4460,10 +4486,10 @@
   }
  ],
  "deviations": [
-  "FX1 and FX2 ON and DRY/WET drive effect units 3 and 4, the pre-fader inserts: ON is the unit's enable (SHIFT steps its chain preset), DRY/WET its super knob, and ASSIGN A/B route those units to the decks. The per-effect knobs and buttons still address units 1 and 2.",
-  "Units 1 and 2 are post-fader effect returns, which needs the wet-only patch to Mixxx. Each is wet-only and routed to one crossfader bus (unit 1 to deck 1's, unit 2 to deck 2's), and Mixxx's main output goes to USB 5/6, past the channel faders. The CH1 and CH2 faders set each unit's send level through its mix knob, so closing a fader stops feeding the echo and lets its tail ring out. The mapping sets this routing every time it starts. On a Mixxx without the patch it sets none of it and logs a warning.",
-  "Mixer-section MIDI (the CH1/CH2 buttons) must be ON, for the faders. TRIM, HI/MID/LOW and the crossfader are captured but not mapped, since the analog mixer already does them and mapping them would apply them twice.",
-  "FX ON switches the whole effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps the unit's chain preset, which nothing else on this panel reaches.",
+  "Each FX section plays two effect units on one deck: FX1 units 1 and 2 on deck 1, FX2 units 3 and 4 on deck 2. The mapping sets that routing every time it starts. The ASSIGN buttons are grouped by deck, and each deck's pair picks which of its two units the FX section controls: under deck A, FX1 ASSIGN picks unit 1 and FX2 ASSIGN unit 2; under deck B, FX1 ASSIGN picks unit 3 and FX2 ASSIGN unit 4. The lit button says which. The section's ON, DRY/WET, level knobs and effect buttons all follow it. SHIFT + ASSIGN keeps the stock pitch bend.",
+  "Picking a unit changes only what the section controls. Each unit keeps its own on/off state, so both of a deck's units can run at once and one left on keeps playing while the other is adjusted. After a switch the knobs pick up the new unit's settings by soft takeover: a knob does nothing until it passes the value the unit already has.",
+  "The CH1/CH2 faders, TRIM, HI/MID/LOW and the crossfader are captured but not mapped, since the analog mixer already does them and mapping them would apply them twice. Mixer-section MIDI (the CH1/CH2 buttons) can stay off.",
+  "FX ON switches the selected effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps that unit's chain preset, which nothing else on this panel reaches.",
   "SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.",
   "SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.",
   "ACTIVE A/B, which switches that deck's four cue buttons between hot cues 1-4 and 5-8, also publishes the deck's bank as [TerminalWide],hotcue_bank_1 and _2 (0 = cues 1-4, 1 = 5-8). The Terminal-wide skin's four-cue row follows it, so the screen shows the four cues the buttons address. With a skin that has no such control the bank stays private to the mapping, as before.",
@@ -4522,20 +4548,8 @@
  "startup": [
   {
    "group": "[EffectRack1_EffectUnit1]",
-   "key": "wet_only",
-   "value": 1,
-   "require": true
-  },
-  {
-   "group": "[EffectRack1_EffectUnit2]",
-   "key": "wet_only",
-   "value": 1,
-   "require": true
-  },
-  {
-   "group": "[EffectRack1_EffectUnit1]",
    "key": "group_[Channel1]_enable",
-   "value": 0
+   "value": 1
   },
   {
    "group": "[EffectRack1_EffectUnit1]",
@@ -4543,19 +4557,9 @@
    "value": 0
   },
   {
-   "group": "[EffectRack1_EffectUnit1]",
-   "key": "group_[BusRight]_enable",
-   "value": 0
-  },
-  {
-   "group": "[EffectRack1_EffectUnit1]",
-   "key": "group_[BusLeft]_enable",
-   "value": 1
-  },
-  {
    "group": "[EffectRack1_EffectUnit2]",
    "key": "group_[Channel1]_enable",
-   "value": 0
+   "value": 1
   },
   {
    "group": "[EffectRack1_EffectUnit2]",
@@ -4563,24 +4567,24 @@
    "value": 0
   },
   {
-   "group": "[EffectRack1_EffectUnit2]",
-   "key": "group_[BusLeft]_enable",
+   "group": "[EffectRack1_EffectUnit3]",
+   "key": "group_[Channel1]_enable",
    "value": 0
   },
   {
-   "group": "[EffectRack1_EffectUnit2]",
-   "key": "group_[BusRight]_enable",
+   "group": "[EffectRack1_EffectUnit3]",
+   "key": "group_[Channel2]_enable",
    "value": 1
   },
   {
-   "group": "[Channel1]",
-   "key": "orientation",
+   "group": "[EffectRack1_EffectUnit4]",
+   "key": "group_[Channel1]_enable",
    "value": 0
   },
   {
-   "group": "[Channel2]",
-   "key": "orientation",
-   "value": 2
+   "group": "[EffectRack1_EffectUnit4]",
+   "key": "group_[Channel2]_enable",
+   "value": 1
   }
  ],
  "page_nav": {
@@ -4601,5 +4605,53 @@
   },
   "focus_delay_ms": 60,
   "load_window_ms": 5000
- }
+ },
+ "fx_sections": [
+  {
+   "name": "FX1",
+   "units": [
+    1,
+    2
+   ],
+   "select": [
+    "fx1_assign_a",
+    "fx2_assign_a"
+   ],
+   "on": "fx1_on",
+   "mix": "fx1_dry_wet",
+   "levels": [
+    "fx1_1_level",
+    "fx1_2_level",
+    "fx1_3_level"
+   ],
+   "slots": [
+    "fx1_1_on",
+    "fx1_2_on",
+    "fx1_3_on"
+   ]
+  },
+  {
+   "name": "FX2",
+   "units": [
+    3,
+    4
+   ],
+   "select": [
+    "fx1_assign_b",
+    "fx2_assign_b"
+   ],
+   "on": "fx2_on",
+   "mix": "fx2_dry_wet",
+   "levels": [
+    "fx2_1_level",
+    "fx2_2_level",
+    "fx2_3_level"
+   ],
+   "slots": [
+    "fx2_1_on",
+    "fx2_2_on",
+    "fx2_3_on"
+   ]
+  }
+ ]
 }

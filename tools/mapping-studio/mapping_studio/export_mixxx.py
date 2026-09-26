@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
 
 import re
 import time
-from . import banks, colour, jogs, padmodes, pagenav
+from . import banks, colour, fxsections, jogs, padmodes, pagenav
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -429,6 +429,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     if has_gang_leds:
         out += [f"    {prefix}.connectGangs();",
                 f"    {prefix}.paintGangs();"]
+    out += fxsections.init_calls(profile, prefix)
     out += pagenav.init_calls(profile, prefix)
     out += [
         "};",
@@ -441,6 +442,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
         out.append(f"    {prefix}.shutdownBanks();")
     if has_gang_leds:
         out.append(f"    {prefix}.gangLedsOff();")
+    out += fxsections.shutdown_calls(profile, prefix)
     if outputs:
         out.append(f"    {prefix}.allLedsOff();")
     out += [
@@ -457,6 +459,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     out.extend(banks.generate_actions(profile, prefix))
     out.extend(banks.generate_loops(profile, prefix))
     out.extend(banks.generate_focus(profile, prefix))
+    out.extend(fxsections.generate(profile, prefix))
     out.extend(pagenav.generate(profile, prefix))
 
     pads = padmodes.generate(profile, prefix)
