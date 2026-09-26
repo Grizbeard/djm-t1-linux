@@ -78,6 +78,16 @@ def main(path):
         out += [f"- {d}" for d in dev]
         out.append("")
 
+    startup = p.data.get("startup") or []
+    if startup:
+        out += ["## Set at every start", "",
+                "State the mapping depends on, asserted each time it loads. If a",
+                "required value does not take, nothing below it is applied.", "",
+                "| Mixxx | Value | |", "|---|---|---|"]
+        out += [f"| `{e['group']}` `{e['key']}` | {e['value']} | "
+                f"{'required' if e.get('require') else ''} |" for e in startup]
+        out.append("")
+
     unmapped = []
     for c in p.controls:
         for layer in p.layers:

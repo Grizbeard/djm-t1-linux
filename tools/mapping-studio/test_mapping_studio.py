@@ -11,6 +11,8 @@ import os
 import re
 import sys
 import unittest
+import subprocess
+import shutil
 import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -285,6 +287,26 @@ class TestExport(unittest.TestCase):
         ET.fromstring(xml)
         self.assertNotIn("--&", xml)
 
+    def test_startup_values_are_applied_first_and_a_required_one_gates_the_rest(self):
+        p = self.make()
+        p.data["startup"] = [
+            {"group": "[EffectRack1_EffectUnit1]", "key": "wet_only", "value": 1,
+             "require": True},
+            {"group": "[Channel1]", "key": "orientation", "value": 0},
+        ]
+        _xml, js, _fn = export_mixxx.export(p)
+        init = js[js.index(".init = function"):]
+        init = init[:init.index("};")]
+        self.assertTrue(init.splitlines()[1].strip().endswith(".applyStartup();"),
+                        init)
+        self.assertIn('["[EffectRack1_EffectUnit1]", "wet_only", 1, true],', js)
+        self.assertIn('["[Channel1]", "orientation", 0, false],', js)
+        self.assertIn("did not take", js)
+
+    def test_no_startup_values_means_no_startup_code(self):
+        _xml, js, _fn = export_mixxx.export(self.make())
+        self.assertNotIn("applyStartup", js)
+
     def test_relative_binding_exports_as_selectknob(self):
         p = self.make()
         p.set_binding("fader", "base", "input",
@@ -417,6 +439,48 @@ class TestColour(unittest.TestCase):
     def test_unknown_colour_name_is_refused(self):
         with self.assertRaises(colour.ColourError):
             colour.named("burnt sienna")
+
+
+class TestPageNav(unittest.TestCase):
+    """Browse push / LOAD page navigation (pagenav.py)."""
+
+    PROFILE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "profiles", "djm-t1-custom.json")
+    HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "tools", "pagenav_harness.js")
+
+    def script(self):
+        from mapping_studio.profile import Profile
+        p = Profile.load(self.PROFILE)
+        _xml, js, _fn = export_mixxx.export(p)
+        return js
+
+    def test_generated_and_initialised(self):
+        js = self.script()
+        init = js[js.index(".init = function"):]
+        init = init[:init.index("};")]
+        self.assertIn(".initNav();", init)
+        for fn in ("browsePush", "browseShiftPush", "loadA", "loadB"):
+            self.assertIn(f"DJMT1.{fn} = function", js)
+
+    def test_no_page_nav_means_no_nav_code(self):
+        p = Profile.new("t", "Test Device", {"w": 100, "h": 100})
+        _xml, js, _fn = export_mixxx.export(p)
+        self.assertNotIn("initNav", js)
+
+    @unittest.skipUnless(shutil.which("node"), "node is not installed")
+    def test_behaviour_against_a_mock_engine(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False,
+                                         encoding="utf-8") as f:
+            f.write(self.script())
+        try:
+            for extra in ([], ["--no-tabs"]):
+                r = subprocess.run(["node", self.HARNESS, f.name] + extra,
+                                   capture_output=True, text=True)
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        finally:
+            os.unlink(f.name)
 
 
 class TestColourExport(unittest.TestCase):

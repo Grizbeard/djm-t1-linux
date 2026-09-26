@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
 
 import re
 import time
-from . import banks, colour, jogs, padmodes
+from . import banks, colour, jogs, padmodes, pagenav
 from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -405,6 +405,10 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
         "",
         f"{prefix}.init = function (id, debugging) {{",
     ]
+    startup = profile.data.get("startup") or []
+    if startup:
+        # First, so that everything after it sees the state it depends on.
+        out.append(f"    {prefix}.applyStartup();")
     has_pad_modes = bool((profile.data.get("pad_modes") or {}).get("modes"))
     has_banks = bool((profile.data.get("banks") or {}).get("decks"))
     has_gang_leds = any(g.get("led") is not None
@@ -425,6 +429,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     if has_gang_leds:
         out += [f"    {prefix}.connectGangs();",
                 f"    {prefix}.paintGangs();"]
+    out += pagenav.init_calls(profile, prefix)
     out += [
         "};",
         "",
@@ -443,6 +448,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
         "",
     ]
     out.extend(_startup_helper(outputs, prefix))
+    out.extend(_startup_values_helper(startup, prefix))
     out.extend(jogs.generate(profile, prefix))
     out.extend(_hires_helper(hires, prefix))
     out.extend(_colour_helper(profile, prefix, layer))
@@ -451,6 +457,7 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
     out.extend(banks.generate_actions(profile, prefix))
     out.extend(banks.generate_loops(profile, prefix))
     out.extend(banks.generate_focus(profile, prefix))
+    out.extend(pagenav.generate(profile, prefix))
 
     pads = padmodes.generate(profile, prefix)
     if pads:
@@ -716,6 +723,52 @@ def _note_off_twin(entry, binding, profile):
     twin = dict(entry, status=(status & 0x0F) | 0x80,
                 description=f"{entry['description']} (release)")
     return [twin]
+
+
+def _startup_values_helper(startup, prefix):
+    """Set the Mixxx state a mapping depends on, every time it starts.
+
+    For state that is part of what the mapping *means* rather than a
+    preference -- which effect unit a fader feeds, which bus a unit is routed
+    to -- so that it cannot drift out from under the panel between sessions.
+
+    An entry with "require": true is read back after it is written. If it did
+    not take -- the control does not exist in this Mixxx, say, because it comes
+    from a patch this build does not have -- nothing after it is applied, and
+    the console says why. Put the entries that are only safe when an earlier
+    one took *after* it.
+    """
+    if not startup:
+        return []
+    out = [
+        "// ---------------------------------------------------------------",
+        "// Startup values (profile \"startup\").",
+        "//",
+        "// State this mapping depends on, asserted at every start. A required",
+        "// entry that does not take stops the rest from being applied.",
+        "",
+        f"{prefix}.STARTUP = [",
+    ]
+    for e in startup:
+        req = "true" if e.get("require") else "false"
+        out.append(f'    ["{e["group"]}", "{e["key"]}", {e["value"]!r}, {req}],')
+    out += [
+        "];",
+        "",
+        f"{prefix}.applyStartup = function () {{",
+        f"    for (var i = 0; i < {prefix}.STARTUP.length; i++) {{",
+        f"        var s = {prefix}.STARTUP[i];",
+        "        engine.setValue(s[0], s[1], s[2]);",
+        "        if (s[3] && engine.getValue(s[0], s[1]) !== s[2]) {",
+        "            console.warn(\"" + prefix + ": \" + s[0] + \",\" + s[1] +",
+        "                \" did not take; skipping the startup values after it\");",
+        "            return;",
+        "        }",
+        "    }",
+        "};",
+        "",
+    ]
+    return out
 
 
 def _startup_helper(outputs, prefix):
