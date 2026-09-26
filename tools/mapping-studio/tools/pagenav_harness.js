@@ -23,6 +23,7 @@ const writes = [];
 const connections = [];
 let timers = [];
 let nextTimer = 1;
+let refuseFocus = 0;
 
 const key = (g, k) => g + "," + k;
 const engine = {
@@ -41,6 +42,10 @@ const engine = {
             if (v > 0) {
                 PAGES.forEach((p) => { values[key(g, p)] = p === k ? 1 : 0; });
             }
+            return;
+        }
+        if (g === "[Library]" && k === "focused_widget" && refuseFocus > 0) {
+            refuseFocus--; // the library page not up yet: the focus request is lost
             return;
         }
         values[key(g, k)] = v;
@@ -182,5 +187,15 @@ setPage("decks");
 press(DJMT1.loadA);
 loaded("[Channel1]");
 check("decks: LOAD loads and stays on decks", page() === "decks");
+
+// Cold boot: the first focus requests are lost while the page comes up.
+setPage("decks");
+setFocus(0);
+refuseFocus = 3;
+press(DJMT1.browseShiftPush);
+for (let i = 0; i < 6; i++) {
+    flush();
+}
+check("cold boot: focus is retried until it takes", page() === "library" && focus() === 2);
 
 console.log(`${n} checks passed`);

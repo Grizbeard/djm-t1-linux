@@ -603,7 +603,7 @@ DJMT1.loopB = function (ch, ctrl, value) {
 // the deck actually takes returns you to the home page. Pages are the
 // skin's [Tab] triggers; a skin without them gets the old behaviour.
 
-DJMT1.NAV = {"tabs": "[Tab]", "home": "decks", "library": "library", "pages": ["decks", "library", "fx", "options"], "focusDelay": 60, "loadWindow": 5000};
+DJMT1.NAV = {"tabs": "[Tab]", "home": "decks", "library": "library", "pages": ["decks", "library", "fx", "options"], "focusDelay": 60, "focusRetry": 100, "focusTries": 15, "loadWindow": 5000};
 DJMT1.navFocus = 3;   // library focus to restore on the way in
 DJMT1.navPending = {};   // deck group -> timer, while its load is awaited
 
@@ -638,18 +638,40 @@ DJMT1.navShowHome = function () {
 
 // The page has to be showing before its widgets can take focus, and the
 // switch reaches the GUI thread asynchronously, so focus follows a beat
-// later.
+// later - and is checked, and asked for again, until it has taken. The
+// first time the library page is shown after a cold boot it takes longer
+// to appear than any fixed delay worth waiting.
 DJMT1.navShowLibrary = function (focus) {
+    DJMT1.navCancelFocus();
     engine.setValue(DJMT1.NAV.tabs, DJMT1.NAV.library, 1);
-    engine.beginTimer(DJMT1.NAV.focusDelay, function () {
-        engine.setValue("[Library]", "focused_widget", focus);
-    }, true);
+    var tries = 0;
+    var attempt = function () {
+        if (engine.getValue("[Library]", "focused_widget") === focus) {
+            return;
+        }
+        if (tries++ < DJMT1.NAV.focusTries) {
+            engine.setValue("[Library]", "focused_widget", focus);
+            DJMT1.navFocusTimer = engine.beginTimer(DJMT1.NAV.focusRetry, attempt, true);
+        } else {
+            DJMT1.navFocusTimer = undefined;
+        }
+    };
+    DJMT1.navFocusTimer = engine.beginTimer(DJMT1.NAV.focusDelay, attempt, true);
+};
+
+// Any press of the knob overrides a focus request still being retried.
+DJMT1.navCancelFocus = function () {
+    if (DJMT1.navFocusTimer !== undefined) {
+        engine.stopTimer(DJMT1.navFocusTimer);
+        DJMT1.navFocusTimer = undefined;
+    }
 };
 
 DJMT1.browsePush = function (ch, ctrl, value, status) {
     if (!DJMT1.navPressed(value, status)) {
         return;
     }
+    DJMT1.navCancelFocus();
     if (!DJMT1.navHasTabs()) {
         engine.setValue("[Library]", "GoToItem", 1);
         return;
@@ -673,6 +695,7 @@ DJMT1.browseShiftPush = function (ch, ctrl, value, status) {
     if (!DJMT1.navPressed(value, status)) {
         return;
     }
+    DJMT1.navCancelFocus();
     if (DJMT1.navHasTabs() && !DJMT1.navOnLibrary()) {
         DJMT1.navShowLibrary(2);
         return;
