@@ -29,6 +29,22 @@ def _decks(profile):
     return ((profile.data.get("banks") or {}).get("decks")) or []
 
 
+def _bank_control(deck):
+    """The deck's optional `bank_control`, "[Group],key", as a JS pair or null.
+
+    Where the mapping publishes the deck's current bank (0 = the first) for a
+    skin to follow. The control belongs to the skin; see followBankControl."""
+    spec = deck.get("bank_control")
+    if not spec:
+        return "null"
+    group, sep, key = spec.partition(",")
+    if not (sep and group.startswith("[") and group.endswith("]") and key):
+        raise ValueError(
+            f'banks: deck {deck.get("deck")}: bank_control {spec!r} is not'
+            ' "[Group],key"')
+    return f'["{group}", "{key}"]'
+
+
 def _hex(n):
     return f"0x{n:02X}"
 
@@ -60,15 +76,19 @@ def generate(profile, prefix):
                    + ", ".join(f'"{s}"' for s in samplers) + "],")
         out.append(f'        samplerPads: {list(d.get("sampler_buttons") or [])},')
         out.append(f'        samplerModeLed: {d.get("sampler_mode_led", "null")},')
+        out.append(f"        bankControl: {_bank_control(d)},")
         out.append("    },")
     out += ["];", ""]
 
     out += [
         "// Which four hot cues each deck's buttons currently address, and",
         "// whether its sampler pads play while held. Both are mapping state:",
-        "// Mixxx has no control to read them back from.",
+        "// Mixxx has no control to read them back from. The bank is also",
+        "// published to bankControl, when the profile names one and the skin",
+        "// has it, so a screen showing four cues can show the same four.",
         f"{prefix}.bank = [];",
         f"{prefix}.samplerHold = [];",
+        f"{prefix}.bankPublished = [];",
         "",
         f"{prefix}.initBanks = function () {{",
         f"    for (var i = 0; i < {prefix}.BANKS.length; i++) {{",
@@ -76,6 +96,54 @@ def generate(profile, prefix):
         f"        {prefix}.samplerHold[i] = false;",
         f"        {prefix}.connectBank(i);",
         f"        {prefix}.paintBank(i);",
+        "    }",
+        "};",
+        "",
+        "// The control is the skin's, so it exists only under a skin that",
+        "// declares it, and only once that skin has loaded - which in a",
+        "// QOpenGL build of Mixxx is after the controllers have started.",
+        "// Connecting doubles as the test for it, so a failed connect is",
+        "// retried once a second for a while, and a success publishes the",
+        "// bank the deck is on by then. No control at all, and the bank stays",
+        "// private to the mapping. Following the control as well as writing",
+        "// it keeps the pads right if anything else ever sets it.",
+        f"{prefix}.bankRetryMs = 1000;",
+        f"{prefix}.bankRetries = 30;",
+        "",
+        f"{prefix}.connectBankControl = function (i) {{",
+        f"    var d = {prefix}.BANKS[i];",
+        "    var conn = engine.makeConnection(d.bankControl[0], d.bankControl[1],",
+        "        function (value) {",
+        "            var b = Math.round(value);",
+        f"            if (b >= 0 && b < d.banks && b !== {prefix}.bank[i]) {{",
+        f"                {prefix}.bank[i] = b;",
+        f"                {prefix}.paintBank(i);",
+        "            }",
+        "        });",
+        f"    {prefix}.bankPublished[i] = conn !== undefined;",
+        f"    {prefix}.publishBank(i);",
+        f"    return {prefix}.bankPublished[i];",
+        "};",
+        "",
+        f"{prefix}.followBankControl = function (i) {{",
+        f"    {prefix}.bankPublished[i] = false;",
+        f"    if ({prefix}.BANKS[i].bankControl === null",
+        f"            || {prefix}.connectBankControl(i)) {{",
+        "        return;",
+        "    }",
+        "    var tries = 0;",
+        f"    var timer = engine.beginTimer({prefix}.bankRetryMs, function () {{",
+        "        tries++;",
+        f"        if ({prefix}.connectBankControl(i) || tries >= {prefix}.bankRetries) {{",
+        "            engine.stopTimer(timer);",
+        "        }",
+        "    });",
+        "};",
+        "",
+        f"{prefix}.publishBank = function (i) {{",
+        f"    var d = {prefix}.BANKS[i];",
+        f"    if ({prefix}.bankPublished[i]) {{",
+        f"        engine.setValue(d.bankControl[0], d.bankControl[1], {prefix}.bank[i]);",
         "    }",
         "};",
         "",
@@ -113,6 +181,7 @@ def generate(profile, prefix):
         '        engine.makeConnection(d.samplers[s], "play",',
         f"            function () {{ {prefix}.paintBank(i); }});",
         "    }",
+        f"    {prefix}.followBankControl(i);",
         "};",
         "",
         f"{prefix}.paintBank = function (i) {{",
@@ -170,6 +239,7 @@ def generate(profile, prefix):
         "    }",
         f"    var d = {prefix}.BANKS[i];",
         f"    {prefix}.bank[i] = ({prefix}.bank[i] + 1) % d.banks;",
+        f"    {prefix}.publishBank(i);",
         f"    {prefix}.paintBank(i);",
         "};",
         "",

@@ -483,6 +483,56 @@ class TestPageNav(unittest.TestCase):
             os.unlink(f.name)
 
 
+class TestBankControl(unittest.TestCase):
+    """Hot cue bank published to a skin control (banks.py, bank_control)."""
+
+    PROFILE = TestPageNav.PROFILE
+    HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "tools", "bank_harness.js")
+
+    def profile(self):
+        return Profile.load(self.PROFILE)
+
+    def script(self, p=None):
+        _xml, js, _fn = export_mixxx.export(p or self.profile())
+        return js
+
+    def test_table_names_the_control(self):
+        js = self.script()
+        self.assertIn('bankControl: ["[TerminalWide]", "hotcue_bank_1"],', js)
+        self.assertIn('bankControl: ["[TerminalWide]", "hotcue_bank_2"],', js)
+        toggle = js[js.index(".toggleBank = function"):]
+        toggle = toggle[:toggle.index("};")]
+        self.assertIn(".publishBank(i);", toggle)
+
+    def test_no_bank_control_is_null(self):
+        p = self.profile()
+        for d in p.data["banks"]["decks"]:
+            d.pop("bank_control", None)
+        js = self.script(p)
+        self.assertEqual(js.count("bankControl: null,"), 2)
+
+    def test_malformed_bank_control_is_refused(self):
+        p = self.profile()
+        p.data["banks"]["decks"][0]["bank_control"] = "TerminalWide.hotcue_bank_1"
+        with self.assertRaises(ValueError):
+            self.script(p)
+
+    @unittest.skipUnless(shutil.which("node"), "node is not installed")
+    def test_behaviour_against_a_mock_engine(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False,
+                                         encoding="utf-8") as f:
+            f.write(self.script())
+        try:
+            for extra in ([], ["--no-skin"], ["--late-skin"]):
+                r = subprocess.run(["node", self.HARNESS, f.name] + extra,
+                                   capture_output=True, text=True)
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        finally:
+            os.unlink(f.name)
+
+
 class TestColourExport(unittest.TestCase):
     def make(self):
         p = Profile.new("t", "Pad Device", {"w": 100, "h": 100})

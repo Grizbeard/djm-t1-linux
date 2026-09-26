@@ -138,6 +138,7 @@ DJMT1.BANKS = [
         samplers: ["[Sampler1]", "[Sampler2]", "[Sampler3]", "[Sampler4]"],
         samplerPads: [28, 32, 36, 40],
         samplerModeLed: 44,
+        bankControl: ["[TerminalWide]", "hotcue_bank_1"],
     },
     {
         deck: "B", group: "[Channel2]",
@@ -148,14 +149,18 @@ DJMT1.BANKS = [
         samplers: ["[Sampler5]", "[Sampler6]", "[Sampler7]", "[Sampler8]"],
         samplerPads: [30, 34, 38, 42],
         samplerModeLed: 46,
+        bankControl: ["[TerminalWide]", "hotcue_bank_2"],
     },
 ];
 
 // Which four hot cues each deck's buttons currently address, and
 // whether its sampler pads play while held. Both are mapping state:
-// Mixxx has no control to read them back from.
+// Mixxx has no control to read them back from. The bank is also
+// published to bankControl, when the profile names one and the skin
+// has it, so a screen showing four cues can show the same four.
 DJMT1.bank = [];
 DJMT1.samplerHold = [];
+DJMT1.bankPublished = [];
 
 DJMT1.initBanks = function () {
     for (var i = 0; i < DJMT1.BANKS.length; i++) {
@@ -163,6 +168,54 @@ DJMT1.initBanks = function () {
         DJMT1.samplerHold[i] = false;
         DJMT1.connectBank(i);
         DJMT1.paintBank(i);
+    }
+};
+
+// The control is the skin's, so it exists only under a skin that
+// declares it, and only once that skin has loaded - which in a
+// QOpenGL build of Mixxx is after the controllers have started.
+// Connecting doubles as the test for it, so a failed connect is
+// retried once a second for a while, and a success publishes the
+// bank the deck is on by then. No control at all, and the bank stays
+// private to the mapping. Following the control as well as writing
+// it keeps the pads right if anything else ever sets it.
+DJMT1.bankRetryMs = 1000;
+DJMT1.bankRetries = 30;
+
+DJMT1.connectBankControl = function (i) {
+    var d = DJMT1.BANKS[i];
+    var conn = engine.makeConnection(d.bankControl[0], d.bankControl[1],
+        function (value) {
+            var b = Math.round(value);
+            if (b >= 0 && b < d.banks && b !== DJMT1.bank[i]) {
+                DJMT1.bank[i] = b;
+                DJMT1.paintBank(i);
+            }
+        });
+    DJMT1.bankPublished[i] = conn !== undefined;
+    DJMT1.publishBank(i);
+    return DJMT1.bankPublished[i];
+};
+
+DJMT1.followBankControl = function (i) {
+    DJMT1.bankPublished[i] = false;
+    if (DJMT1.BANKS[i].bankControl === null
+            || DJMT1.connectBankControl(i)) {
+        return;
+    }
+    var tries = 0;
+    var timer = engine.beginTimer(DJMT1.bankRetryMs, function () {
+        tries++;
+        if (DJMT1.connectBankControl(i) || tries >= DJMT1.bankRetries) {
+            engine.stopTimer(timer);
+        }
+    });
+};
+
+DJMT1.publishBank = function (i) {
+    var d = DJMT1.BANKS[i];
+    if (DJMT1.bankPublished[i]) {
+        engine.setValue(d.bankControl[0], d.bankControl[1], DJMT1.bank[i]);
     }
 };
 
@@ -200,6 +253,7 @@ DJMT1.connectBank = function (i) {
         engine.makeConnection(d.samplers[s], "play",
             function () { DJMT1.paintBank(i); });
     }
+    DJMT1.followBankControl(i);
 };
 
 DJMT1.paintBank = function (i) {
@@ -256,6 +310,7 @@ DJMT1.toggleBank = function (i, value) {
     }
     var d = DJMT1.BANKS[i];
     DJMT1.bank[i] = (DJMT1.bank[i] + 1) % d.banks;
+    DJMT1.publishBank(i);
     DJMT1.paintBank(i);
 };
 

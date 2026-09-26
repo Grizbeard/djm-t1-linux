@@ -4404,7 +4404,8 @@
      36,
      40
     ],
-    "sampler_mode_led": 44
+    "sampler_mode_led": 44,
+    "bank_control": "[TerminalWide],hotcue_bank_1"
    },
    {
     "deck": "B",
@@ -4431,7 +4432,8 @@
      38,
      42
     ],
-    "sampler_mode_led": 46
+    "sampler_mode_led": 46,
+    "bank_control": "[TerminalWide],hotcue_bank_2"
    }
   ]
  },
@@ -4464,6 +4466,7 @@
   "FX ON switches the whole effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps the unit's chain preset, which nothing else on this panel reaches.",
   "SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.",
   "SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.",
+  "ACTIVE A/B, which switches that deck's four cue buttons between hot cues 1-4 and 5-8, also publishes the deck's bank as [TerminalWide],hotcue_bank_1 and _2 (0 = cues 1-4, 1 = 5-8). The Terminal-wide skin's four-cue row follows it, so the screen shows the four cues the buttons address. With a skin that has no such control the bank stays private to the mapping, as before.",
   "SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing.",
   "BROWSE PUSH moves between the Terminal-wide skin's pages: off the library page it opens the library, and in the library's track list it goes back to the decks. In the tree it still expands a folder or opens a crate. SHIFT + BROWSE PUSH opens the library on the tree, or swaps focus between the tree and the track list. LOAD A/B go back to the decks once the deck has actually taken the track; a rejected load stays put. With a skin that has no [Tab] pages, all of these behave as before."
  ],
