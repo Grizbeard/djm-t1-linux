@@ -80,17 +80,31 @@ carries Mixxx's faders and crossfader and the other the analog ones. For the
 same reason, do not assign an Auxiliary input to 5/6 while main is going out on
 it -- that is a feedback loop.
 
+The one exception is the post-fader FX setup at the end of this page, where a
+patched Mixxx makes its main output a wet-only effects return, and 5/6 carries
+that instead of a copy of the mix.
+
 ### Turn the mixer-section MIDI off
 
 The `CH1` / `CH2` buttons in the MIDI section decide whether the mixer strip
 sends MIDI. For hardware mixing they should be **off**.
 
-Mixxx taps a deck's output after EQ and pregain but before the fader:
-`EngineMixer::getChannelBuffer` returns the channel's own processed buffer, and
-the volume and crossfader gains are applied only when summing to main. So with
-mixer-section MIDI on, the TRIM and EQ knobs drive Mixxx's EQ *and* the analog
-EQ -- every tone shift applied twice -- while the channel faders and crossfader
-drive Mixxx controls that are not in the signal path at all.
+Mixxx's deck outputs are not tapped before its own fader. `getChannelBuffer`
+returns the channel's buffer after `ChannelMixer::applyEffectsInPlaceAndMixChannels`
+has worked on it in place -- EQ and pregain, then Mixxx's volume fader and
+crossfader gain, then the effect units routed to that deck -- so everything
+Mixxx does to a deck is in its USB output. With mixer-section MIDI on, the stock
+mapping would drive Mixxx's EQ *and* the analog EQ -- every tone shift applied
+twice -- and Mixxx's channel faders and crossfader *and* the analog ones, so a
+fader pulled halfway would attenuate twice.
+
+(An earlier version of this page said the volume and crossfader gains were
+applied only when summing to main. The engine source says otherwise.)
+
+The DJM-T1_Custom mapping is the exception: it needs mixer-section MIDI **on**,
+because its channel faders drive the post-fader effect sends (see below), and it
+leaves TRIM, the EQ and the crossfader unmapped so that nothing is applied
+twice.
 
 The performance controls are not in that section and keep working either way.
 Those buttons are really the switch between two whole configurations:
@@ -123,36 +137,62 @@ Mixxx, Preferences, Vinyl Control:
 On Linux, run the audio service first so the mixer is a PipeWire device
 (`djmt1-pipewire`).
 
-## Known limitation: no post-fader FX
+## Post-fader FX
 
-Hardware mixing cannot do post-fader effects. An echo tail lives inside the deck
-signal, so pulling the channel fader cuts the tail with it.
+Hardware mixing cannot do post-fader effects on stock Mixxx. An effect unit
+routed to a deck is an insert in that deck's USB output, so the channel fader
+comes after it and cuts an echo's tail along with the dry signal.
 
-There is a way out that keeps the analog mixer doing the mixing, using USB 5/6
-as an effects return rather than a second copy of the mix. Mixxx's main bus is
-an assignable effect bus, its Dry/Wet is a true crossfade, and its Echo emits
-only the delay buffer -- so a unit assigned to Main at Dry/Wet **1.0** makes the
-main output a pure wet return, which lands at the master past the channel
-faders.
+**The stock workaround does not work.** The idea was a unit on Mixxx's main bus
+at Dry/Wet 1.0, with main going out on USB 5/6, which skips the channel faders.
+But at Dry/Wet 1.0 Echo and Reverb still pass the dry signal: both output only
+their tail and set `addDryToWet`, and `EngineEffectChain::process` adds their
+input back before the crossfade. Dry+Wet always adds it, and a unit that is off
+or empty passes its input straight through. Any of these puts the whole mix on
+the master a second time.
 
-Not set up here yet, deliberately: it wants designing together with the MIDI
-mapping and the panel labelling rather than bolted on. Two things to know before
-picking it up.
+What works is patch 0012 in the Terminal-wide repository
+(`patches/0012-Let-an-effect-unit-be-a-wet-only-send-return.patch`) plus the
+DJM-T1_Custom mapping:
 
-- The Dry/Wet must stay pinned at 1.0 and no control may be mapped to it. At any
-  other value -- **0.0 worst of all, which is fully dry** -- or with the chain
-  bypassed or every slot empty, the main bus emits the whole dry mix and the
-  doubling described above comes back. Control the amount with the effect's own
-  send parameter instead, and use an effect that generates a tail; a filter or
-  flanger at full wet is a processed copy of everything.
-- Use EffectUnit 3. The panel's FX1 and FX2 are units 1 and 2, so a unit the
-  panel cannot reach cannot be knocked out of that state by accident.
+- `[EffectRack1_EffectUnitN],wet_only` turns a unit into a send/return: its mix
+  knob is the send level into the effects, and it outputs only what they
+  produce -- silence when it is off or empty.
+- Units 1 and 2 are wet-only returns on the left and right crossfader buses,
+  with deck 1 oriented left and deck 2 right, so each bus is one deck. Mixxx's
+  crossfader stays centred, where the default additive curve is unity; the
+  constant-power curve is not, and would drop both decks.
+- Main goes out on **USB 5/6**, which is now the effects return rather than a
+  second copy of the mix.
+- With mixer-section MIDI on, the CH1 and CH2 faders set units 1 and 2's send
+  levels. Closing a fader cuts the dry signal in the analog strip and stops
+  feeding the echo, and the tail it already has rings out on the master.
+- Units 3 and 4 stay ordinary pre-fader inserts on the decks, on the panel's
+  FX1/FX2 ON and DRY/WET.
+
+The mapping sets the wet-only flags, the bus routing and the orientations every
+time it starts. On a Mixxx without the patch, `wet_only` does not exist, so the
+mapping applies none of it and logs a warning. Its fader sends then do nothing
+useful, and main must stay unassigned as before.
+
+| | Hardware mixing, stock | Hardware mixing, post-fader FX |
+|---|---|---|
+| Deck outs | 1/2, 3/4 | 1/2, 3/4 |
+| Main out | unassigned | **5/6** (the FX return) |
+| Mixer MIDI | off | **on** |
+| Mapping | Pioneer DJM-T1 | DJM-T1_Custom |
+| Mixxx | stock | with patch 0012 |
 
 Verified on the bench (2026-09-25): USB out 5/6 bypasses the channel strips.
 With both channel faders fully down, test tones on out 5 and 6 played on master
 left and right, and the master meter moved while the channel meters stayed
 still. So anything Mixxx sends to 5/6, an echo tail included, is untouched by
 the channel faders.
+
+Verified in Mixxx on Windows (2026-09-25), recording the main mix with a tone
+on deck 1 and Reverb in unit 1: the return carried the reverb and no dry
+signal; with the slot off it was silent while the deck played; and closing the
+send faded the input out, let the tail ring down, and left silence.
 
 ## Still to check on the bench
 
