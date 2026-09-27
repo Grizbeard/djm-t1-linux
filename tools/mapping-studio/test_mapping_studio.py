@@ -594,6 +594,59 @@ class TestFxSections(unittest.TestCase):
         finally:
             os.unlink(f.name)
 
+
+class TestFavorites(unittest.TestCase):
+    """Library favorites on buttons (favorites.py, Mixxx patch 0014)."""
+
+    PROFILE = TestPageNav.PROFILE
+    HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "tools", "favorites_harness.js")
+
+    def profile(self):
+        return Profile.load(self.PROFILE)
+
+    def test_shift_effect_buttons_are_the_favorites(self):
+        xml, js, _fn = export_mixxx.export(self.profile())
+        root = ET.fromstring(xml)
+        shifted = {c.findtext("description"): c.findtext("key")
+                   for c in root.findall(".//controls/control")}
+        for n, label in enumerate(["FX1_1 On", "FX1_2 On", "FX1_3 On",
+                                   "FX2_1 On", "FX2_2 On", "FX2_3 On"], 1):
+            self.assertEqual(shifted.get(f"{label} (shift)"), f"DJMT1.favorite{n}")
+            self.assertIn(f"DJMT1.favorite{n} = function", js)
+
+    def test_init_connects_the_recall_counter(self):
+        _xml, js, _fn = export_mixxx.export(self.profile())
+        init = js[js.index(".init = function"):]
+        self.assertIn(".initFavorites();", init[:init.index("};")])
+        self.assertIn('"[Library]", "favorite_recalls"', js)
+
+    def test_a_slot_on_two_buttons_is_refused(self):
+        p = self.profile()
+        p.data["favorites"]["slots"][1]["slot"] = 1
+        with self.assertRaises(ValueError):
+            export_mixxx.export(p)
+
+    def test_no_favorites_means_no_code(self):
+        p = self.profile()
+        p.data.pop("favorites")
+        _xml, js, _fn = export_mixxx.export(p)
+        self.assertNotIn("FAVORITES", js)
+
+    @unittest.skipUnless(shutil.which("node"), "node is not installed")
+    def test_behaviour_against_a_mock_engine(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False,
+                                         encoding="utf-8") as f:
+            f.write(export_mixxx.export(self.profile())[1])
+        try:
+            r = subprocess.run(["node", self.HARNESS, f.name],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        finally:
+            os.unlink(f.name)
+
+
 class TestColourExport(unittest.TestCase):
     def make(self):
         p = Profile.new("t", "Pad Device", {"w": 100, "h": 100})

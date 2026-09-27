@@ -15,6 +15,7 @@ DJMT1.init = function (id, debugging) {
     DJMT1.connectGangs();
     DJMT1.paintGangs();
     DJMT1.initFxSections();
+    DJMT1.initFavorites();
     DJMT1.initNav();
 };
 
@@ -918,6 +919,143 @@ DJMT1.fx2Slot3 = function (ch, ctrl, value) { DJMT1.fxPressSlot(1, 2, value); };
 DJMT1.fx2NextEffect1 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(1, 0, value); };
 DJMT1.fx2NextEffect2 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(1, 1, value); };
 DJMT1.fx2NextEffect3 = function (ch, ctrl, value) { DJMT1.fxPressNextEffect(1, 2, value); };
+
+// ---------------------------------------------------------------
+// Library favorites: tap to jump there, hold to remember.
+// ---------------------------------------------------------------
+
+DJMT1.FAVORITES = {
+    "holdMs": 1000,
+    "slots": [
+        {
+            "slot": 1,
+            "led": {
+                "status": 144,
+                "midino": 15,
+                "on": 127,
+                "off": 0
+            }
+        },
+        {
+            "slot": 2,
+            "led": {
+                "status": 144,
+                "midino": 17,
+                "on": 127,
+                "off": 0
+            }
+        },
+        {
+            "slot": 3,
+            "led": {
+                "status": 144,
+                "midino": 19,
+                "on": 127,
+                "off": 0
+            }
+        },
+        {
+            "slot": 4,
+            "led": {
+                "status": 144,
+                "midino": 16,
+                "on": 127,
+                "off": 0
+            }
+        },
+        {
+            "slot": 5,
+            "led": {
+                "status": 144,
+                "midino": 18,
+                "on": 127,
+                "off": 0
+            }
+        },
+        {
+            "slot": 6,
+            "led": {
+                "status": 144,
+                "midino": 20,
+                "on": 127,
+                "off": 0
+            }
+        }
+    ]
+};
+
+DJMT1.favDown = [];    // when each button went down, while it is down
+DJMT1.favTimer = [];   // the hold timer, while it is running
+
+DJMT1.initFavorites = function () {
+    // Bumped by Mixxx on every recall that found its item: only then
+    // is there something worth switching pages for.
+    engine.makeConnection("[Library]", "favorite_recalls", function () {
+        DJMT1.navShowLibrary(3);   // the track list
+    });
+};
+
+DJMT1.favPulse = function (key, n) {
+    engine.setValue("[Library]", "favorite_" + n + "_" + key, 1);
+    engine.setValue("[Library]", "favorite_" + n + "_" + key, 0);
+};
+
+// Blink the button's lamp, then give it back to whatever owns it.
+DJMT1.favFlash = function (i) {
+    var led = DJMT1.FAVORITES.slots[i].led;
+    if (!led) {
+        return;
+    }
+    // On at once, so the moment the hold counts is the moment it shows.
+    midi.sendShortMsg(led.status, led.midino, led.on);
+    var left = 5;
+    var timer = engine.beginTimer(80, function () {
+        left--;
+        midi.sendShortMsg(led.status, led.midino, left % 2 ? led.on : led.off);
+        if (left <= 0) {
+            engine.stopTimer(timer);
+            DJMT1.favRestoreLed(i);
+        }
+    });
+};
+
+DJMT1.favRestoreLed = function (i) {
+    // The lamp belongs to an FX section button: repaint the sections.
+    for (var s = 0; s < DJMT1.FX_SECTIONS.length; s++) {
+        DJMT1.paintFx(s);
+    }
+};
+
+DJMT1.favPress = function (i, value, status) {
+    var pressed = value > 0 && (status & 0xF0) !== 0x80;
+    var holdMs = DJMT1.FAVORITES.holdMs;
+    if (pressed) {
+        DJMT1.favDown[i] = Date.now();
+        DJMT1.favTimer[i] = engine.beginTimer(holdMs, function () {
+            DJMT1.favTimer[i] = undefined;
+            DJMT1.favFlash(i);   // letting go now will store
+        }, true);
+        return;
+    }
+    if (DJMT1.favDown[i] === undefined) {
+        return;   // a release whose press this handler never saw
+    }
+    var held = Date.now() - DJMT1.favDown[i];
+    DJMT1.favDown[i] = undefined;
+    if (DJMT1.favTimer[i] !== undefined) {
+        engine.stopTimer(DJMT1.favTimer[i]);
+        DJMT1.favTimer[i] = undefined;
+    }
+    var n = DJMT1.FAVORITES.slots[i].slot;
+    DJMT1.favPulse(held >= holdMs ? "store" : "activate", n);
+};
+
+DJMT1.favorite1 = function (ch, ctrl, value, status) { DJMT1.favPress(0, value, status); };
+DJMT1.favorite2 = function (ch, ctrl, value, status) { DJMT1.favPress(1, value, status); };
+DJMT1.favorite3 = function (ch, ctrl, value, status) { DJMT1.favPress(2, value, status); };
+DJMT1.favorite4 = function (ch, ctrl, value, status) { DJMT1.favPress(3, value, status); };
+DJMT1.favorite5 = function (ch, ctrl, value, status) { DJMT1.favPress(4, value, status); };
+DJMT1.favorite6 = function (ch, ctrl, value, status) { DJMT1.favPress(5, value, status); };
 
 // ---------------------------------------------------------------
 // Page navigation (profile "page_nav").

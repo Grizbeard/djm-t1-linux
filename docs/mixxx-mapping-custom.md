@@ -115,13 +115,13 @@
 |---|---|---|
 | FX1_1 Level | `CC 3` | `fx1Level1` (script) |
 | FX1_1 On | `NOTE 15` | `fx1Slot1` (script) |
-| SHIFT + FX1_1 On | `NOTE 79` | `fx1NextEffect1` (script) |
+| SHIFT + FX1_1 On | `NOTE 79` | `favorite1` (script) |
 | FX1_2 Level | `CC 5` | `fx1Level2` (script) |
 | FX1_2 On | `NOTE 17` | `fx1Slot2` (script) |
-| SHIFT + FX1_2 On | `NOTE 81` | `fx1NextEffect2` (script) |
+| SHIFT + FX1_2 On | `NOTE 81` | `favorite2` (script) |
 | FX1_3 Level | `CC 7` | `fx1Level3` (script) |
 | FX1_3 On | `NOTE 19` | `fx1Slot3` (script) |
-| SHIFT + FX1_3 On | `NOTE 83` | `fx1NextEffect3` (script) |
+| SHIFT + FX1_3 On | `NOTE 83` | `favorite3` (script) |
 | FX1 DRY/ WET | `CC 1` | `fx1Mix` (script) |
 | FX1 ON | `NOTE 13` | `fx1On` (script) |
 | SHIFT + FX1 ON | `NOTE 77` | `fx1NextChain` (script) |
@@ -132,13 +132,13 @@
 |---|---|---|
 | FX2_1 Level | `CC 4` | `fx2Level1` (script) |
 | FX2_1 On | `NOTE 16` | `fx2Slot1` (script) |
-| SHIFT + FX2_1 On | `NOTE 80` | `fx2NextEffect1` (script) |
+| SHIFT + FX2_1 On | `NOTE 80` | `favorite4` (script) |
 | FX2_2 Level | `CC 6` | `fx2Level2` (script) |
 | FX2_2 On | `NOTE 18` | `fx2Slot2` (script) |
-| SHIFT + FX2_2 On | `NOTE 82` | `fx2NextEffect2` (script) |
+| SHIFT + FX2_2 On | `NOTE 82` | `favorite5` (script) |
 | FX2_3 Level | `CC 8` | `fx2Level3` (script) |
 | FX2_3 On | `NOTE 20` | `fx2Slot3` (script) |
-| SHIFT + FX2_3 On | `NOTE 84` | `fx2NextEffect3` (script) |
+| SHIFT + FX2_3 On | `NOTE 84` | `favorite6` (script) |
 | FX2 DRY/ WET | `CC 2` | `fx2Mix` (script) |
 | FX2 On | `NOTE 14` | `fx2On` (script) |
 | SHIFT + FX2 On | `NOTE 78` | `fx2NextChain` (script) |
@@ -161,7 +161,7 @@ deliberate substitution, not an oversight.
 - The CH1/CH2 faders, TRIM, HI/MID/LOW and the crossfader are captured but not mapped, since the analog mixer already does them and mapping them would apply them twice. Mixer-section MIDI (the CH1/CH2 buttons) can stay off.
 - FX ON switches the selected effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps that unit's chain preset, which nothing else on this panel reaches.
 - SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.
-- SHIFT + an effect knob switches effect type in TRAKTOR. These are absolute knobs, so that would make effect choice depend on knob position; SHIFT + the effect button steps the type instead, which is what the manual specifies for Generic Controller Mode anyway.
+- SHIFT + the six effect buttons are library favorites (they need Mixxx patch 0014): FX1-1 to FX1-3 are favorites 1-3 and FX2-1 to FX2-3 favorites 4-6. Select anything in the library's sidebar - a Rekordbox or Serato playlist on a DJ's drive, a crate, a playlist, a folder - and hold SHIFT + a button for a second: its light flashes, and letting go stores it. A tap of SHIFT + that button then jumps to it from any page, on the library page with the track list focused. A favorite on a drive that is not plugged in does nothing. When the same drive comes back it works again once the drive has been opened in the sidebar, since favorites are kept by the drive's mount path; a different drive never matches. Let go of the button before SHIFT. Effects are chosen on the fx page's selectors instead of by SHIFT + effect button, and SHIFT + an effect knob still does nothing: these are absolute knobs, so choosing by knob would make the effect depend on where the knob sits.
 - ACTIVE A/B, which switches that deck's four cue buttons between hot cues 1-4 and 5-8, also publishes the deck's bank as [TerminalWide],hotcue_bank_1 and _2 (0 = cues 1-4, 1 = 5-8). The Terminal-wide skin's four-cue row follows it, so the screen shows the four cues the buttons address. With a skin that has no such control the bank stays private to the mapping, as before.
 - SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing.
 - BROWSE PUSH moves between the Terminal-wide skin's pages: off the library page it opens the library, and in the library's track list it goes back to the decks. In the tree it still expands a folder or opens a crate. SHIFT + BROWSE PUSH opens the library on the tree, or swaps focus between the tree and the track list. LOAD A/B go back to the decks once the deck has actually taken the track; a rejected load stays put. With a skin that has no [Tab] pages, all of these behave as before.
