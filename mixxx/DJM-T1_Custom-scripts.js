@@ -658,6 +658,7 @@ DJMT1.FX_SECTIONS = [
             ]
         ],
         "slots": 3,
+        "knobKey": "super1",
         "selectLeds": [
             {
                 "status": 144,
@@ -718,6 +719,7 @@ DJMT1.FX_SECTIONS = [
             ]
         ],
         "slots": 3,
+        "knobKey": "super1",
         "selectLeds": [
             {
                 "status": 144,
@@ -785,7 +787,7 @@ DJMT1.initFxSections = function () {
         DJMT1.fxSel[s] = 0;
         for (var k = 0; k < d.units.length; k++) {
             var u = d.units[k];
-            engine.softTakeover(u, "mix", true);
+            engine.softTakeover(u, d.knobKey, true);
             for (var n = 0; n < d.slots; n++) {
                 engine.softTakeover(d.slotGroups[k][n], "meta", true);
             }
@@ -868,7 +870,7 @@ DJMT1.fxPressNextChain = function (s, value) {
 };
 
 DJMT1.fxTurnMix = function (s, value) {
-    engine.setParameter(DJMT1.fxUnit(s), "mix", DJMT1.fxKnob(value));
+    engine.setParameter(DJMT1.fxUnit(s), DJMT1.FX_SECTIONS[s].knobKey, DJMT1.fxKnob(value));
 };
 
 DJMT1.fxTurnLevel = function (s, n, value) {

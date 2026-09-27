@@ -21,10 +21,14 @@ The profile declares the sections under `fx_sections`:
     "fx_sections": [
       {"name": "FX1", "units": [1, 2],
        "select": ["fx1_assign_a", "fx2_assign_a"],
-       "on": "fx1_on", "mix": "fx1_dry_wet",
+       "on": "fx1_on", "mix": "fx1_dry_wet", "knob_key": "mix",
        "levels": ["fx1_1_level", "fx1_2_level", "fx1_3_level"],
        "slots": ["fx1_1_on", "fx1_2_on", "fx1_3_on"]}
     ]
+
+`knob_key` is the unit control the `mix` knob turns: "mix" (dry/wet, the
+default) or "super1" (the unit's super knob, which drives every slot's meta
+knob at once).
 
 Each entry names panel controls by id; their lights are read from the
 controls' base-layer outputs. The handlers are generated with names derived
@@ -89,6 +93,7 @@ def _table(profile):
             "slotGroups": [[f"[EffectRack1_EffectUnit{u}_Effect{n + 1}]"
                             for n in range(n_slots)] for u in units],
             "slots": n_slots,
+            "knobKey": s.get("knob_key", "mix"),
             "selectLeds": [_led(controls, cid, name) for cid in s["select"]],
             "onLed": _led(controls, s["on"], name) if s.get("on") else None,
             "slotLeds": [_led(controls, cid, name) for cid in s["slots"]],
@@ -141,7 +146,7 @@ def generate(profile, prefix):
         f"        {p}.fxSel[s] = 0;",
         "        for (var k = 0; k < d.units.length; k++) {",
         "            var u = d.units[k];",
-        '            engine.softTakeover(u, "mix", true);',
+        '            engine.softTakeover(u, d.knobKey, true);',
         "            for (var n = 0; n < d.slots; n++) {",
         '                engine.softTakeover(d.slotGroups[k][n], "meta", true);',
         "            }",
@@ -224,7 +229,7 @@ def generate(profile, prefix):
         "};",
         "",
         f"{p}.fxTurnMix = function (s, value) {{",
-        f'    engine.setParameter({p}.fxUnit(s), "mix", {p}.fxKnob(value));',
+        f'    engine.setParameter({p}.fxUnit(s), {p}.FX_SECTIONS[s].knobKey, {p}.fxKnob(value));',
         "};",
         "",
         f"{p}.fxTurnLevel = function (s, n, value) {{",

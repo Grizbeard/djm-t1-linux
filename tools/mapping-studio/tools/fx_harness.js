@@ -96,8 +96,9 @@ check("start: each deck's first ASSIGN lit, its second dark",
     lit(F1.selectLeds[0]) && !lit(F1.selectLeds[1])
     && lit(F2.selectLeds[0]) && !lit(F2.selectLeds[1]));
 check("start: FX ON lights show the selected units on", lit(F1.onLed) && lit(F2.onLed));
-check("soft takeover on every unit's mix and every slot's meta",
-    [1, 2, 3, 4].every((n) => takeover.has(key(U(n), "mix"))
+const K = F1.knobKey;   // the unit control the DRY/WET knob turns
+check("soft takeover on every unit's " + K + " and every slot's meta",
+    [1, 2, 3, 4].every((n) => takeover.has(key(U(n), K))
         && [1, 2, 3].every((j) => takeover.has(key(S(n, j), "meta")))));
 
 press("fx1On");
@@ -107,7 +108,7 @@ check("... and leaves unit 2 alone", on(U(2)));
 DJMT1.fx1Mix(0, 0, 64);
 DJMT1.fx1Level1(0, 0, 127);
 check("knobs on unit 1: DRY/WET 64 is the middle, a level knob at 127 the top",
-    params[key(U(1), "mix")] === 0.5 && params[key(S(1, 1), "meta")] === 1);
+    params[key(U(1), K)] === 0.5 && params[key(S(1, 1), "meta")] === 1);
 
 press("fx1Select2");
 check("deck A's second ASSIGN: the section is on unit 2, both on states kept",
@@ -118,8 +119,8 @@ check("... deck B untouched", DJMT1.fxSel[1] === 0 && lit(F2.selectLeds[0]));
 
 DJMT1.fx1Mix(0, 0, 0);
 DJMT1.fx1Level2(0, 0, 32);
-check("knobs now drive unit 2", params[key(U(2), "mix")] === 0
-    && params[key(S(2, 2), "meta")] === 0.25 && params[key(U(1), "mix")] === 0.5);
+check("knobs now drive unit 2", params[key(U(2), K)] === 0
+    && params[key(S(2, 2), "meta")] === 0.25 && params[key(U(1), K)] === 0.5);
 
 press("fx1Slot2");
 check("an effect button toggles the slot on unit 2, with its light",
