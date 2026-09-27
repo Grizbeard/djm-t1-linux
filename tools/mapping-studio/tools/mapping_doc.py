@@ -30,6 +30,12 @@ def describe(target):
     key = target.get("key", "")
     if key.startswith("DJMT1.") or "." in key:
         return f"`{key.split('.', 1)[-1]}` (script)"
+    if target.get("relative_action") == "beatjump":
+        size = target.get("size_key", "beatjump_size")
+        return f"`{target['group']}` `{key}` by `{size}`"
+    if target.get("cycle"):
+        steps = ", ".join(f"{v:g}" for v in target["cycle"])
+        return f"`{target['group']}` `{key}` through {steps}"
     return f"`{target['group']}` `{key}`"
 
 

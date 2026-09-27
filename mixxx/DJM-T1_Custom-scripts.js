@@ -1216,6 +1216,34 @@ DJMT1.auto_loop_a = function (channel, control, value, status, group) {
     engine.setValue("[Channel1]", "beatloop_size", v);
 };
 
+// AUTO LOOP A
+DJMT1.auto_loop_a_shift = function (channel, control, value, status, group) {
+    // Each detent jumps by the deck's beatjump length, in the
+    // direction turned; a fast turn reports several detents.
+    var delta = (value < 64) ? value : value - 128;
+    var size = engine.getValue("[Channel1]", "beatjump_size") || 4;
+    engine.setValue("[Channel1]", "beatjump", delta * size);
+};
+
+// AUTO LOOP A Push
+DJMT1.auto_loop_a_push_shift = function (channel, control, value, status, group) {
+    if (value !== 127) {
+        return;   // release edge; act on the press only
+    }
+    // Step to the next listed value, wrapping round. A value
+    // that is not in the list moves to the first one above it.
+    var steps = [1, 2, 4, 8, 16, 32];
+    var v = engine.getValue("[Channel1]", "beatjump_size");
+    var next = steps[0];
+    for (var i = 0; i < steps.length; i++) {
+        if (steps[i] > v + 1e-9) {
+            next = steps[i];
+            break;
+        }
+    }
+    engine.setValue("[Channel1]", "beatjump_size", next);
+};
+
 // AUTO LOOP B
 DJMT1.auto_loop_b = function (channel, control, value, status, group) {
     // A signed-relative encoder: 1 is one detent
@@ -1225,4 +1253,32 @@ DJMT1.auto_loop_b = function (channel, control, value, status, group) {
     v = up ? v * 2 : v / 2;
     v = Math.max(0.03125, Math.min(64, v));
     engine.setValue("[Channel2]", "beatloop_size", v);
+};
+
+// AUTO LOOP B
+DJMT1.auto_loop_b_shift = function (channel, control, value, status, group) {
+    // Each detent jumps by the deck's beatjump length, in the
+    // direction turned; a fast turn reports several detents.
+    var delta = (value < 64) ? value : value - 128;
+    var size = engine.getValue("[Channel2]", "beatjump_size") || 4;
+    engine.setValue("[Channel2]", "beatjump", delta * size);
+};
+
+// AUTO LOOP B Push
+DJMT1.auto_loop_b_push_shift = function (channel, control, value, status, group) {
+    if (value !== 127) {
+        return;   // release edge; act on the press only
+    }
+    // Step to the next listed value, wrapping round. A value
+    // that is not in the list moves to the first one above it.
+    var steps = [1, 2, 4, 8, 16, 32];
+    var v = engine.getValue("[Channel2]", "beatjump_size");
+    var next = steps[0];
+    for (var i = 0; i < steps.length; i++) {
+        if (steps[i] > v + 1e-9) {
+            next = steps[i];
+            break;
+        }
+    }
+    engine.setValue("[Channel2]", "beatjump_size", next);
 };

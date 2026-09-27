@@ -647,6 +647,56 @@ class TestFavorites(unittest.TestCase):
             os.unlink(f.name)
 
 
+class TestBeatjumpActions(unittest.TestCase):
+    """SHIFT + AUTO LOOP: relative_action "beatjump" and a "cycle" press."""
+
+    PROFILE = TestPageNav.PROFILE
+    MOCK = r"""
+const vals = {"[Channel1],beatjump_size": 4};
+const jumps = [];
+const engine = {
+  getValue: (g, k) => vals[g + "," + k] || 0,
+  setValue: (g, k, v) => { vals[g + "," + k] = v; if (k === "beatjump") jumps.push(v); },
+  getParameter: () => 0, setParameter() {}, softTakeover() {},
+  makeConnection: () => ({disconnect() {}}), beginTimer: () => 1, stopTimer() {},
+  trigger() {}, connectControl() {},
+};
+const midi = {sendShortMsg() {}, sendSysexMsg() {}};
+const P = new Function("engine", "midi", "console", SRC + "\nreturn DJMT1;")(
+    engine, midi, {log() {}, warn() {}});
+P.auto_loop_a_shift(0, 73, 1, 0xB0);
+P.auto_loop_a_shift(0, 73, 127, 0xB0);
+P.auto_loop_a_shift(0, 73, 2, 0xB0);
+const sizes = [];
+for (const start of [4, 32, 0.5]) {
+  vals["[Channel1],beatjump_size"] = start;
+  P.auto_loop_a_push_shift(0, 85, 127, 0x90);
+  P.auto_loop_a_push_shift(0, 85, 0, 0x90);
+  sizes.push(vals["[Channel1],beatjump_size"]);
+}
+console.log(JSON.stringify({jumps, sizes}));
+"""
+
+    @unittest.skipUnless(shutil.which("node"), "node is not installed")
+    def test_jump_by_length_and_step_the_length(self):
+        import json
+        import tempfile
+        _xml, js, _fn = export_mixxx.export(Profile.load(self.PROFILE))
+        # Through a file: the script is too long for a Windows command line.
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False,
+                                         encoding="utf-8") as f:
+            f.write("const SRC = " + json.dumps(js) + ";\n" + self.MOCK)
+        try:
+            r = subprocess.run(["node", f.name], capture_output=True, text=True)
+        finally:
+            os.unlink(f.name)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        out = json.loads(r.stdout)
+        # One detent each way by the length (4), then a fast turn of two.
+        self.assertEqual(out["jumps"], [4, -4, 8])
+        # 4 -> 8, 32 wraps to 1, and a length off the list goes to the next.
+        self.assertEqual(out["sizes"], [8, 1, 1])
+
 class TestColourExport(unittest.TestCase):
     def make(self):
         p = Profile.new("t", "Pad Device", {"w": 100, "h": 100})

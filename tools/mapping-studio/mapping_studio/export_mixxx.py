@@ -101,7 +101,7 @@ def _needs_script(control, binding, target=None):
         # A scaling encoder (loop length doubles and halves) cannot be expressed
         # by selectknob, which only nudges a value up and down.
         return bool(target.get("relative_action"))
-    if target.get("toggle"):
+    if target.get("toggle") or target.get("cycle"):
         return True
     if (control.get("detent") and binding.get("resting") not in (None, 64)
             and _detent_usable(binding)):
@@ -496,6 +496,20 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
                 # are numeric and the explicit form is what Mixxx mappings use.
                 out.append(f'    engine.setValue("{group}", "{key}",')
                 out.append(f'        engine.getValue("{group}", "{key}") ? 0 : 1);')
+            elif target.get("cycle"):
+                steps = ", ".join(repr(v) for v in target["cycle"])
+                out.append("    // Step to the next listed value, wrapping round. A value")
+                out.append("    // that is not in the list moves to the first one above it.")
+                out.append(f"    var steps = [{steps}];")
+                out.append(f'    var v = engine.getValue("{group}", "{key}");')
+                out.append("    var next = steps[0];")
+                out.append("    for (var i = 0; i < steps.length; i++) {")
+                out.append("        if (steps[i] > v + 1e-9) {")
+                out.append("            next = steps[i];")
+                out.append("            break;")
+                out.append("        }")
+                out.append("    }")
+                out.append(f'    engine.setValue("{group}", "{key}", next);')
             else:
                 out.append(f'    engine.setValue("{group}", "{key}", 1);')
         elif binding.get("mode") == "relative" and target.get("relative_action") == "scale":
@@ -508,6 +522,13 @@ def build_script(profile, scripted, prefix, layer="base", hires=(),
             out.append("    v = up ? v * 2 : v / 2;")
             out.append(f"    v = Math.max({lo}, Math.min({hi}, v));")
             out.append(f'    engine.setValue("{group}", "{key}", v);')
+        elif binding.get("mode") == "relative" and target.get("relative_action") == "beatjump":
+            size_key = target.get("size_key", "beatjump_size")
+            out.append("    // Each detent jumps by the deck's beatjump length, in the")
+            out.append("    // direction turned; a fast turn reports several detents.")
+            out.append("    var delta = (value < 64) ? value : value - 128;")
+            out.append(f'    var size = engine.getValue("{group}", "{size_key}") || 4;')
+            out.append(f'    engine.setValue("{group}", "{key}", delta * size);')
         elif binding.get("mode") == "relative":
             out.append("    var delta = (value < 64) ? value : value - 128;")
             out.append(f'    engine.setValue("{group}", "{key}", delta);')

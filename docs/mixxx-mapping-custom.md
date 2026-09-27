@@ -35,9 +35,10 @@
 | SAMPLER mode ACTIVE A | `NOTE 44` | `samplerHoldA` (script) |
 | SAMPLER mode, SHIFT + ACTIVE A | `NOTE 108` | `samplerRepeatA` (script) |
 | AUTO LOOP A | `CC 9` | `[Channel1]` `beatloop_size` |
-| SHIFT + AUTO LOOP A | `CC 73` | `[Channel1]` `loop_move` |
+| SHIFT + AUTO LOOP A | `CC 73` | `[Channel1]` `beatjump` by `beatjump_size` |
 | SAMPLER mode, SHIFT + AUTO LOOP A | `CC 74` | `samplerGainA` (script) |
 | AUTO LOOP A Push | `NOTE 21` | `loopA` (script) |
+| SHIFT + AUTO LOOP A Push | `NOTE 85` | `[Channel1]` `beatjump_size` through 1, 2, 4, 8, 16, 32 |
 | SAMPLER mode, SHIFT + AUTO LOOP A Push | `NOTE 86` | `samplerGainResetA` (script) |
 | Cue A | `NOTE 11` | `[Channel1]` `cue_default` |
 | SHIFT + Cue A | `NOTE 75` | `absoluteA` (script) |
@@ -76,9 +77,10 @@
 | SAMPLER mode ACTIVE B | `NOTE 46` | `samplerHoldB` (script) |
 | SAMPLER mode, SHIFT + ACTIVE B | `NOTE 110` | `samplerRepeatB` (script) |
 | AUTO LOOP B | `CC 11` | `[Channel2]` `beatloop_size` |
-| SHIFT + AUTO LOOP B | `CC 75` | `[Channel2]` `loop_move` |
+| SHIFT + AUTO LOOP B | `CC 75` | `[Channel2]` `beatjump` by `beatjump_size` |
 | SAMPLER mode, SHIFT + AUTO LOOP B | `CC 76` | `samplerGainB` (script) |
 | AUTO LOOP B Push | `NOTE 23` | `loopB` (script) |
+| SHIFT + AUTO LOOP B Push | `NOTE 87` | `[Channel2]` `beatjump_size` through 1, 2, 4, 8, 16, 32 |
 | SAMPLER mode, SHIFT + AUTO LOOP B Push | `NOTE 88` | `samplerGainResetB` (script) |
 | CUE B | `NOTE 12` | `[Channel2]` `cue_default` |
 | SHIFT + CUE B | `NOTE 76` | `absoluteB` (script) |
@@ -165,6 +167,7 @@ deliberate substitution, not an oversight.
 - ACTIVE A/B, which switches that deck's four cue buttons between hot cues 1-4 and 5-8, also publishes the deck's bank as [TerminalWide],hotcue_bank_1 and _2 (0 = cues 1-4, 1 = 5-8). The Terminal-wide skin's four-cue row follows it, so the screen shows the four cues the buttons address. With a skin that has no such control the bank stays private to the mapping, as before.
 - SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing.
 - BROWSE PUSH moves between the Terminal-wide skin's pages: off the library page it opens the library, and in the library's track list it goes back to the decks. In the tree it still expands a folder or opens a crate. SHIFT + BROWSE PUSH opens the library on the tree, or swaps focus between the tree and the track list. LOAD A/B go back to the decks once the deck has actually taken the track; a rejected load stays put. With a skin that has no [Tab] pages, all of these behave as before.
+- SHIFT + AUTO LOOP is beatjump: SHIFT + turn jumps back or forward by the deck's beatjump length, one jump per detent, and SHIFT + push steps that length through 1, 2, 4, 8, 16 and 32 beats and round again. The length shows on the deck's beatjump row when the options page shows it. The stock mapping's SHIFT + turn moved the loop instead.
 
 ## Set at every start
 
@@ -207,8 +210,6 @@ no function at all. They are left free on purpose.
 - SAMPLER mode AUTO LOOP B Push (`NOTE 24`)
 - SHIFT + ACTIVE A (`NOTE 107`)
 - SHIFT + ACTIVE B (`NOTE 109`)
-- SHIFT + AUTO LOOP A Push (`NOTE 85`)
-- SHIFT + AUTO LOOP B Push (`NOTE 87`)
 - SHIFT + CH1 HI (`CC 79`)
 - SHIFT + CH1 LOW (`CC 83`)
 - SHIFT + CH1 MID (`CC 81`)
