@@ -30,6 +30,19 @@ The profile declares the sections under `fx_sections`:
 default) or "super1" (the unit's super knob, which drives every slot's meta
 knob at once).
 
+`knob_choice` lets a control elsewhere - a skin button, one per unit - pick
+that per unit instead:
+
+    "knob_choice": {"control": "[TerminalWide],fx{unit}_knob_drywet",
+                    "keys": ["super1", "mix"]}
+
+`{unit}` is the unit's number, and the control's value indexes `keys`. Until
+the control exists (on the Pi the controller starts before the skin has
+loaded; a mapping run with another skin never sees it) the knob turns
+`knob_key`. The mapping retries the connection once a second for 30 s. Soft
+takeover covers every key, so switching a unit over makes the knob pick up
+the other control where it stands rather than jump it.
+
 Each entry names panel controls by id; their lights are read from the
 controls' base-layer outputs. The handlers are generated with names derived
 from `name` (see handler_names), and the profile binds the controls to them as
@@ -74,6 +87,23 @@ def _led(controls, cid, name):
             "on": out.get("on", 0x7F), "off": out.get("off", 0x00)}
 
 
+def _knob_choice(section, units):
+    c = section.get("knob_choice")
+    if not c:
+        return None
+    keys = list(c.get("keys") or [])
+    if len(keys) < 2:
+        raise ValueError(f"fx_sections {section['name']}: knob_choice needs two or more keys")
+    controls = []
+    for u in units:
+        group, _, key = c["control"].replace("{unit}", str(u)).partition(",")
+        if not (group.startswith("[") and group.endswith("]") and key):
+            raise ValueError(f"fx_sections {section['name']}: knob_choice control "
+                             f"{c['control']!r} is not \"[Group],key\"")
+        controls.append([group, key])
+    return {"controls": controls, "keys": keys}
+
+
 def _table(profile):
     controls = {c["id"]: c for c in profile.controls}
     table = []
@@ -94,6 +124,7 @@ def _table(profile):
                             for n in range(n_slots)] for u in units],
             "slots": n_slots,
             "knobKey": s.get("knob_key", "mix"),
+            "knobChoice": _knob_choice(s, units),
             "selectLeds": [_led(controls, cid, name) for cid in s["select"]],
             "onLed": _led(controls, s["on"], name) if s.get("on") else None,
             "slotLeds": [_led(controls, cid, name) for cid in s["slots"]],
@@ -140,13 +171,76 @@ def generate(profile, prefix):
         "    return value <= 64 ? value / 128 : 0.5 + (value - 64) / 126;",
         "};",
         "",
+        "// Which key each unit's knob_choice control picks, once connected:",
+        "// fxChoice[s][k] is an index into knobChoice.keys, or undefined.",
+        f"{p}.fxChoice = [];",
+        f"{p}.fxChoiceRetryMs = 1000;",
+        f"{p}.fxChoiceRetries = 30;",
+        "",
+        "// The unit control the section's knob turns right now.",
+        f"{p}.fxKnobKey = function (s) {{",
+        f"    var d = {p}.FX_SECTIONS[s];",
+        f"    var i = d.knobChoice ? {p}.fxChoice[s][{p}.fxSel[s]] : undefined;",
+        "    if (i === undefined) {",
+        "        return d.knobKey;",
+        "    }",
+        "    return d.knobChoice.keys[Math.max(0, Math.min(d.knobChoice.keys.length - 1, i))];",
+        "};",
+        "",
+        "// Follow unit k's choice control; false while it does not exist yet.",
+        f"{p}.connectFxChoice = function (s, k) {{",
+        f"    var c = {p}.FX_SECTIONS[s].knobChoice.controls[k];",
+        "    var conn = engine.makeConnection(c[0], c[1], function (value) {",
+        f"        {p}.fxChoice[s][k] = Math.round(value);",
+        "    });",
+        "    if (!conn) {",
+        "        return false;",
+        "    }",
+        f"    {p}.fxChoice[s][k] = Math.round(engine.getValue(c[0], c[1]));",
+        "    return true;",
+        "};",
+        "",
+        "// The skin makes the choice controls, and on the Pi it loads after",
+        "// the controller has started: keep trying for a while.",
+        f"{p}.followFxChoices = function () {{",
+        "    var pending = [];",
+        f"    for (var s = 0; s < {p}.FX_SECTIONS.length; s++) {{",
+        f"        var d = {p}.FX_SECTIONS[s];",
+        "        if (!d.knobChoice) {",
+        "            continue;",
+        "        }",
+        "        for (var k = 0; k < d.units.length; k++) {",
+        f"            if (!{p}.connectFxChoice(s, k)) {{",
+        "                pending.push([s, k]);",
+        "            }",
+        "        }",
+        "    }",
+        "    if (!pending.length) {",
+        "        return;",
+        "    }",
+        "    var tries = 0;",
+        f"    var timer = engine.beginTimer({p}.fxChoiceRetryMs, function () {{",
+        "        tries++;",
+        "        pending = pending.filter(function (sk) {",
+        f"            return !{p}.connectFxChoice(sk[0], sk[1]);",
+        "        });",
+        f"        if (!pending.length || tries >= {p}.fxChoiceRetries) {{",
+        "            engine.stopTimer(timer);",
+        "        }",
+        "    });",
+        "};",
+        "",
         f"{p}.initFxSections = function () {{",
         f"    for (var s = 0; s < {p}.FX_SECTIONS.length; s++) {{",
         f"        var d = {p}.FX_SECTIONS[s];",
         f"        {p}.fxSel[s] = 0;",
+        f"        {p}.fxChoice[s] = [];",
+        "        var keys = [d.knobKey].concat(d.knobChoice ? d.knobChoice.keys : []);",
         "        for (var k = 0; k < d.units.length; k++) {",
         "            var u = d.units[k];",
-        '            engine.softTakeover(u, d.knobKey, true);',
+        "            for (var j = 0; j < keys.length; j++) {",
+        "                engine.softTakeover(u, keys[j], true);",
+        "            }",
         "            for (var n = 0; n < d.slots; n++) {",
         '                engine.softTakeover(d.slotGroups[k][n], "meta", true);',
         "            }",
@@ -154,6 +248,7 @@ def generate(profile, prefix):
         "        }",
         f"        {p}.paintFx(s);",
         "    }",
+        f"    {p}.followFxChoices();",
         "};",
         "",
         f"{p}.connectFxUnit = function (s, k) {{",
@@ -229,7 +324,7 @@ def generate(profile, prefix):
         "};",
         "",
         f"{p}.fxTurnMix = function (s, value) {{",
-        f'    engine.setParameter({p}.fxUnit(s), {p}.FX_SECTIONS[s].knobKey, {p}.fxKnob(value));',
+        f'    engine.setParameter({p}.fxUnit(s), {p}.fxKnobKey(s), {p}.fxKnob(value));',
         "};",
         "",
         f"{p}.fxTurnLevel = function (s, n, value) {{",

@@ -155,6 +155,37 @@ check("deck B's second ASSIGN puts FX2 on unit 4, unit 3 untouched",
 DJMT1.fx2Level1(0, 0, 127);
 check("... and its knobs drive unit 4", params[key(S(4, 1), "meta")] === 1);
 
+// Each unit's knob_choice control picks what DRY/WET turns: 0 the super knob
+// (the default), 1 dry/wet.
+const C = (n) => ["[TerminalWide]", "fx" + n + "_knob_drywet"];
+check("every unit has a knob choice, super then dry/wet",
+    [F1, F2].every((d) => d.knobChoice && d.knobChoice.keys.join() === "super1,mix"
+        && d.knobChoice.controls.length === 2)
+    && F2.knobChoice.controls[1].join() === C(4).join());
+check("soft takeover covers both of a unit's knob targets",
+    [1, 2, 3, 4].every((n) => takeover.has(key(U(n), "super1")) && takeover.has(key(U(n), "mix"))));
+DJMT1.fx2Mix(0, 0, 0);
+check("by default DRY/WET turns unit 4's super knob",
+    params[key(U(4), "super1")] === 0 && params[key(U(4), "mix")] === undefined);
+engine.setValue(...C(4), 1);
+DJMT1.fx2Mix(0, 0, 127);
+check("unit 4's button on d/w: the knob turns unit 4's dry/wet instead",
+    params[key(U(4), "mix")] === 1 && params[key(U(4), "super1")] === 0);
+press("fx2Select1");
+DJMT1.fx2Mix(0, 0, 127);
+check("... while unit 3, still on super, gets its super knob turned",
+    params[key(U(3), "super1")] === 1 && params[key(U(3), "mix")] === undefined);
+engine.setValue(...C(4), 0);
+press("fx2Select2");
+DJMT1.fx2Mix(0, 0, 64);
+check("unit 4 back on super: the knob turns its super knob again",
+    params[key(U(4), "super1")] === 0.5 && params[key(U(4), "mix")] === 1);
+engine.setValue(...C(4), 1);
+DJMT1.fxChoice[1][1] = undefined;   // as if the skin had never made the control
+DJMT1.fx2Mix(0, 0, 0);
+check("with no choice control the knob turns knob_key",
+    params[key(U(4), F2.knobKey)] === 0);
+
 DJMT1.fxLedsOff();
 check("shutdown: every FX light off",
     [F1, F2].every((d) => d.selectLeds.concat([d.onLed], d.slotLeds)

@@ -659,6 +659,22 @@ DJMT1.FX_SECTIONS = [
         ],
         "slots": 3,
         "knobKey": "super1",
+        "knobChoice": {
+            "controls": [
+                [
+                    "[TerminalWide]",
+                    "fx1_knob_drywet"
+                ],
+                [
+                    "[TerminalWide]",
+                    "fx2_knob_drywet"
+                ]
+            ],
+            "keys": [
+                "super1",
+                "mix"
+            ]
+        },
         "selectLeds": [
             {
                 "status": 144,
@@ -720,6 +736,22 @@ DJMT1.FX_SECTIONS = [
         ],
         "slots": 3,
         "knobKey": "super1",
+        "knobChoice": {
+            "controls": [
+                [
+                    "[TerminalWide]",
+                    "fx3_knob_drywet"
+                ],
+                [
+                    "[TerminalWide]",
+                    "fx4_knob_drywet"
+                ]
+            ],
+            "keys": [
+                "super1",
+                "mix"
+            ]
+        },
         "selectLeds": [
             {
                 "status": 144,
@@ -781,13 +813,76 @@ DJMT1.fxKnob = function (value) {
     return value <= 64 ? value / 128 : 0.5 + (value - 64) / 126;
 };
 
+// Which key each unit's knob_choice control picks, once connected:
+// fxChoice[s][k] is an index into knobChoice.keys, or undefined.
+DJMT1.fxChoice = [];
+DJMT1.fxChoiceRetryMs = 1000;
+DJMT1.fxChoiceRetries = 30;
+
+// The unit control the section's knob turns right now.
+DJMT1.fxKnobKey = function (s) {
+    var d = DJMT1.FX_SECTIONS[s];
+    var i = d.knobChoice ? DJMT1.fxChoice[s][DJMT1.fxSel[s]] : undefined;
+    if (i === undefined) {
+        return d.knobKey;
+    }
+    return d.knobChoice.keys[Math.max(0, Math.min(d.knobChoice.keys.length - 1, i))];
+};
+
+// Follow unit k's choice control; false while it does not exist yet.
+DJMT1.connectFxChoice = function (s, k) {
+    var c = DJMT1.FX_SECTIONS[s].knobChoice.controls[k];
+    var conn = engine.makeConnection(c[0], c[1], function (value) {
+        DJMT1.fxChoice[s][k] = Math.round(value);
+    });
+    if (!conn) {
+        return false;
+    }
+    DJMT1.fxChoice[s][k] = Math.round(engine.getValue(c[0], c[1]));
+    return true;
+};
+
+// The skin makes the choice controls, and on the Pi it loads after
+// the controller has started: keep trying for a while.
+DJMT1.followFxChoices = function () {
+    var pending = [];
+    for (var s = 0; s < DJMT1.FX_SECTIONS.length; s++) {
+        var d = DJMT1.FX_SECTIONS[s];
+        if (!d.knobChoice) {
+            continue;
+        }
+        for (var k = 0; k < d.units.length; k++) {
+            if (!DJMT1.connectFxChoice(s, k)) {
+                pending.push([s, k]);
+            }
+        }
+    }
+    if (!pending.length) {
+        return;
+    }
+    var tries = 0;
+    var timer = engine.beginTimer(DJMT1.fxChoiceRetryMs, function () {
+        tries++;
+        pending = pending.filter(function (sk) {
+            return !DJMT1.connectFxChoice(sk[0], sk[1]);
+        });
+        if (!pending.length || tries >= DJMT1.fxChoiceRetries) {
+            engine.stopTimer(timer);
+        }
+    });
+};
+
 DJMT1.initFxSections = function () {
     for (var s = 0; s < DJMT1.FX_SECTIONS.length; s++) {
         var d = DJMT1.FX_SECTIONS[s];
         DJMT1.fxSel[s] = 0;
+        DJMT1.fxChoice[s] = [];
+        var keys = [d.knobKey].concat(d.knobChoice ? d.knobChoice.keys : []);
         for (var k = 0; k < d.units.length; k++) {
             var u = d.units[k];
-            engine.softTakeover(u, d.knobKey, true);
+            for (var j = 0; j < keys.length; j++) {
+                engine.softTakeover(u, keys[j], true);
+            }
             for (var n = 0; n < d.slots; n++) {
                 engine.softTakeover(d.slotGroups[k][n], "meta", true);
             }
@@ -795,6 +890,7 @@ DJMT1.initFxSections = function () {
         }
         DJMT1.paintFx(s);
     }
+    DJMT1.followFxChoices();
 };
 
 DJMT1.connectFxUnit = function (s, k) {
@@ -870,7 +966,7 @@ DJMT1.fxPressNextChain = function (s, value) {
 };
 
 DJMT1.fxTurnMix = function (s, value) {
-    engine.setParameter(DJMT1.fxUnit(s), DJMT1.FX_SECTIONS[s].knobKey, DJMT1.fxKnob(value));
+    engine.setParameter(DJMT1.fxUnit(s), DJMT1.fxKnobKey(s), DJMT1.fxKnob(value));
 };
 
 DJMT1.fxTurnLevel = function (s, n, value) {

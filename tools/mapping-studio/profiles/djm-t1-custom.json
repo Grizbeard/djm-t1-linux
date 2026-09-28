@@ -4506,7 +4506,7 @@
   }
  ],
  "deviations": [
-  "Each FX section plays two effect units on one deck: FX1 units 1 and 2 on deck 1, FX2 units 3 and 4 on deck 2. The mapping sets that routing every time it starts. The ASSIGN buttons are grouped by deck, and each deck's pair picks which of its two units the FX section controls: under deck A, FX1 ASSIGN picks unit 1 and FX2 ASSIGN unit 2; under deck B, FX1 ASSIGN picks unit 3 and FX2 ASSIGN unit 4. The lit button says which. The section's ON, DRY/WET, level knobs and effect buttons all follow it. DRY/WET turns the selected unit's super knob, which moves every effect's meta knob at once, not its dry/wet mix; the mix stays where the fx page sets it. SHIFT + ASSIGN keeps the stock pitch bend.",
+  "Each FX section plays two effect units on one deck: FX1 units 1 and 2 on deck 1, FX2 units 3 and 4 on deck 2. The mapping sets that routing every time it starts. The ASSIGN buttons are grouped by deck, and each deck's pair picks which of its two units the FX section controls: under deck A, FX1 ASSIGN picks unit 1 and FX2 ASSIGN unit 2; under deck B, FX1 ASSIGN picks unit 3 and FX2 ASSIGN unit 4. The lit button says which. The section's ON, DRY/WET, level knobs and effect buttons all follow it. DRY/WET turns the selected unit's super knob, which moves every effect's meta knob at once, or its dry/wet mix instead: each unit's 'knob: super / knob: d/w' button on the fx page picks which, and remembers it. The knob picks up the other control where it stands, with no jump. SHIFT + ASSIGN keeps the stock pitch bend.",
   "Picking a unit changes only what the section controls. Each unit keeps its own on/off state, so both of a deck's units can run at once and one left on keeps playing while the other is adjusted. After a switch the knobs pick up the new unit's settings by soft takeover: a knob does nothing until it passes the value the unit already has.",
   "The CH1/CH2 faders, TRIM, HI/MID/LOW and the crossfader are captured but not mapped, since the analog mixer already does them and mapping them would apply them twice. Mixer-section MIDI (the CH1/CH2 buttons) can stay off.",
   "FX ON switches the selected effect unit on and off through its master enable, and its light shows that enable. SHIFT+FX ON steps that unit's chain preset, which nothing else on this panel reaches.",
@@ -4650,6 +4650,13 @@
     "fx1_2_on",
     "fx1_3_on"
    ],
+   "knob_choice": {
+    "control": "[TerminalWide],fx{unit}_knob_drywet",
+    "keys": [
+     "super1",
+     "mix"
+    ]
+   },
    "knob_key": "super1"
   },
   {
@@ -4674,6 +4681,13 @@
     "fx2_2_on",
     "fx2_3_on"
    ],
+   "knob_choice": {
+    "control": "[TerminalWide],fx{unit}_knob_drywet",
+    "keys": [
+     "super1",
+     "mix"
+    ]
+   },
    "knob_key": "super1"
   }
  ],

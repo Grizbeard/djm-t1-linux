@@ -575,6 +575,19 @@ class TestFxSections(unittest.TestCase):
         with self.assertRaises(ValueError):
             export_mixxx.export(p)
 
+    def test_knob_choice_names_a_control_per_unit(self):
+        _xml, js, _fn = export_mixxx.export(self.profile())
+        self.assertIn('"[TerminalWide]",\n                    "fx4_knob_drywet"', js)
+        self.assertIn(".followFxChoices();", js)
+
+    def test_a_bad_knob_choice_is_refused(self):
+        for bad in ({"control": "fx{unit}_knob", "keys": ["super1", "mix"]},
+                    {"control": "[TerminalWide],fx{unit}_knob", "keys": ["mix"]}):
+            p = self.profile()
+            p.data["fx_sections"][0]["knob_choice"] = bad
+            with self.assertRaises(ValueError):
+                export_mixxx.export(p)
+
     def test_no_sections_means_no_code(self):
         p = self.profile()
         p.data.pop("fx_sections")
