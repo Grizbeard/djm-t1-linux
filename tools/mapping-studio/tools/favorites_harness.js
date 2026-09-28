@@ -139,13 +139,61 @@ release("favorite2");
 check("letting go after the hold stores favorite 2", pulses("favorite_2_store") === 1
     && pulses("favorite_2_activate") === 0);
 
+// The SNAP lamp shows quantize (base layer) and slip (SHIFT layer).
+const confirm = F.confirm.map((l) => l.midino).sort((a, b) => a - b);
+check("the store confirmation is SNAP on both layers", confirm.join() === "49,113");
+advance(2000);   // let favorite 2's confirmation finish
+// Times the lamp was turned on, from ledLog; `lit` is how it stood before.
+function blinks(note, lit) {
+    let rises = 0;
+    ledLog.filter((l) => l[0] === note).forEach((l) => {
+        if (l[1] === 0x7F && !lit) {
+            rises++;
+        }
+        lit = l[1] === 0x7F;
+    });
+    return rises;
+}
+ledLog.length = 0;
+press("favorite5");
+advance(999);
+check("no SNAP blink before the hold counts", !ledLog.some((l) => confirm.includes(l[0])));
+advance(1);
+check("SNAP goes dark at the one-second mark, still held",
+    confirm.every((c) => leds[c] === 0) && pulses("favorite_5_store") === 0);
+advance(840);
+check("... blinks three times on both layers, with a dark pause after",
+    confirm.every((c) => leds[c] === 0 && blinks(c, false) === 3));
+advance(2000);
+check("... is given back, and leaves no timer running",
+    confirm.every((c) => leds[c] === 0) && timers.length === 0);
+release("favorite5");
+check("letting go after the blinks stores favorite 5", pulses("favorite_5_store") === 1);
+
+engine.setValue("[Channel1]", "quantize", 1);
+engine.setValue("[Channel2]", "quantize", 1);
+ledLog.length = 0;
+press("favorite5");
+advance(3000);
+release("favorite5");
+// Three blinks, then lit again for quantize: four times on in all.
+check("a lit SNAP still shows three blinks", blinks(49, true) === 4);
+check("... and goes back to showing quantize after", leds[49] === 0x7F && leds[113] === 0);
+
+ledLog.length = 0;
+press("favorite1");
+advance(200);
+release("favorite1");
+advance(2000);
+check("a tap does not blink SNAP", !ledLog.some((l) => confirm.includes(l[0])));
+
 press("favorite3");
 advance(1500);
 release("favorite3", NOTE_OFF);
 check("a real note-off counts as the release too", pulses("favorite_3_store") === 1);
 
 const n = writes.length;
-release("favorite5");
+release("favorite4");
 check("a release with no press seen does nothing", writes.length === n);
 
 press("favorite6");

@@ -11,7 +11,10 @@ This module puts those on buttons. A tap recalls the favorite and, when it
 was found, switches the skin to the library page with the track list focused
 (page_nav). Holding the button for `hold_ms` or longer stores the sidebar's
 current selection instead; the button's lamp flashes when the hold reaches
-that point, to say that letting go now will store.
+that point, to say that letting go now will store, and so does a lamp
+elsewhere on the panel (`confirm_control`, the DJM-T1's SNAP), three times,
+which is easier to see under a finger. The store itself still waits for the
+release.
 
 The decision is made on the release, not by a timer firing while held. On a
 panel whose SHIFT is firmware-only - the DJM-T1's sends no MIDI - a shifted
@@ -24,11 +27,15 @@ The profile declares:
 
     "favorites": {
       "hold_ms": 1000,
+      "confirm_control": "snap",
       "slots": [{"slot": 1, "control": "fx1_1_on", "layer": "shift"}, ...]
     }
 
 and binds each control's layer to the handler handler_name(slot) as an
-external script target. The lamp is the control's base-layer output.
+external script target. The lamp is the control's base-layer output. The
+confirmation blinks every layer's output of confirm_control, since the panel
+shows whichever layer SHIFT picks; if that lamp is a gang lamp (SNAP shows
+quantize and slip), the gangs are repainted afterwards.
 
 SPDX-License-Identifier: MIT
 """
@@ -57,6 +64,23 @@ def _led(controls, cid):
             "on": out.get("on", 0x7F), "off": out.get("off", 0x00)}
 
 
+def _confirm_leds(controls, cid):
+    c = controls.get(cid)
+    if c is None:
+        raise ValueError(f"favorites: no control {cid!r}")
+    leds = []
+    for layer in (c.get("bindings") or {}).values():
+        out = (layer or {}).get("output")
+        if not out or out.get("status", "note") != "note":
+            continue
+        leds.append({"status": 0x90 | (out.get("channel", 1) - 1),
+                     "midino": out["number"],
+                     "on": out.get("on", 0x7F), "off": out.get("off", 0x00)})
+    if not leds:
+        raise ValueError(f"favorites: {cid!r} has no lamp to confirm with")
+    return leds
+
+
 def _table(profile):
     s = spec(profile)
     if not s:
@@ -72,7 +96,9 @@ def _table(profile):
             raise ValueError(f"favorites: slot {n} is on two buttons")
         seen.add(n)
         slots.append({"slot": n, "led": _led(controls, entry["control"])})
-    return {"holdMs": int(s.get("hold_ms", 1000)), "slots": slots}
+    confirm = _confirm_leds(controls, s["confirm_control"])         if s.get("confirm_control") else []
+    return {"holdMs": int(s.get("hold_ms", 1000)), "slots": slots,
+            "confirm": confirm}
 
 
 def init_calls(profile, prefix):
@@ -87,6 +113,8 @@ def generate(profile, prefix):
     p = prefix
     has_nav = bool(profile.data.get("page_nav"))
     has_fx = bool(profile.data.get("fx_sections"))
+    has_gang_leds = any(g.get("led") is not None
+                        for g in profile.data.get("gangs") or [])
     out = [
         "// ---------------------------------------------------------------",
         "// Library favorites: tap to jump there, hold to remember.",
@@ -96,6 +124,7 @@ def generate(profile, prefix):
         "",
         f"{p}.favDown = [];    // when each button went down, while it is down",
         f"{p}.favTimer = [];   // the hold timer, while it is running",
+        f"{p}.favConfirmTimer = undefined;",
         "",
         f"{p}.initFavorites = function () {{",
         "    // Bumped by Mixxx on every recall that found its item: only then",
@@ -151,6 +180,54 @@ def generate(profile, prefix):
     out += [
         "};",
         "",
+        "// Three blinks of the confirmation lamp: held long enough to store.",
+        "// Off first, so that a lamp already lit still shows three, and a",
+        "// longer dark pause at the end so they read as three before the lamp",
+        "// goes back to what it shows.",
+        f"{p}.favConfirm = function () {{",
+        f"    var leds = {p}.FAVORITES.confirm;",
+        "    if (!leds.length) {",
+        "        return;",
+        "    }",
+        f"    if ({p}.favConfirmTimer !== undefined) {{",
+        f"        engine.stopTimer({p}.favConfirmTimer);",
+        "    }",
+        "    var step = 0;",
+        "    var paint = function () {",
+        "        for (var j = 0; j < leds.length; j++) {",
+        "            midi.sendShortMsg(leds[j].status, leds[j].midino,",
+        "                step % 2 ? leds[j].on : leds[j].off);",
+        "        }",
+        "    };",
+        "    paint();",
+        f"    {p}.favConfirmTimer = engine.beginTimer(120, function () {{",
+        "        step++;",
+        "        if (step < 7) {",
+        "            paint();",
+        "        }",
+        "        if (step < 10) {",
+        "            return;",
+        "        }",
+        f"        engine.stopTimer({p}.favConfirmTimer);",
+        f"        {p}.favConfirmTimer = undefined;",
+        f"        {p}.favRestoreConfirm();",
+        "    });",
+        "};",
+        "",
+        f"{p}.favRestoreConfirm = function () {{",
+    ]
+    if has_gang_leds:
+        out.append(f"    {p}.paintGangs();   // the lamp also shows a gang's state")
+    else:
+        out += [
+            f"    var leds = {p}.FAVORITES.confirm;",
+            "    for (var j = 0; j < leds.length; j++) {",
+            "        midi.sendShortMsg(leds[j].status, leds[j].midino, leds[j].off);",
+            "    }",
+        ]
+    out += [
+        "};",
+        "",
         f"{p}.favPress = function (i, value, status) {{",
         "    var pressed = value > 0 && (status & 0xF0) !== 0x80;",
         f"    var holdMs = {p}.FAVORITES.holdMs;",
@@ -159,6 +236,7 @@ def generate(profile, prefix):
         f"        {p}.favTimer[i] = engine.beginTimer(holdMs, function () {{",
         f"            {p}.favTimer[i] = undefined;",
         f"            {p}.favFlash(i);   // letting go now will store",
+        f"            {p}.favConfirm();",
         "        }, true);",
         "        return;",
         "    }",

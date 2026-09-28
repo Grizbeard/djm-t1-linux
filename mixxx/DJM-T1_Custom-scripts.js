@@ -3,7 +3,7 @@
 //
 // Controller: DJM-T1_Custom
 // Layer:      base
-// Generated:  2026-09-26
+// Generated:  2026-09-27
 
 var DJMT1 = {};
 
@@ -983,11 +983,26 @@ DJMT1.FAVORITES = {
                 "off": 0
             }
         }
+    ],
+    "confirm": [
+        {
+            "status": 144,
+            "midino": 113,
+            "on": 127,
+            "off": 0
+        },
+        {
+            "status": 144,
+            "midino": 49,
+            "on": 127,
+            "off": 0
+        }
     ]
 };
 
 DJMT1.favDown = [];    // when each button went down, while it is down
 DJMT1.favTimer = [];   // the hold timer, while it is running
+DJMT1.favConfirmTimer = undefined;
 
 DJMT1.initFavorites = function () {
     // Bumped by Mixxx on every recall that found its item: only then
@@ -1028,6 +1043,44 @@ DJMT1.favRestoreLed = function (i) {
     }
 };
 
+// Three blinks of the confirmation lamp: held long enough to store.
+// Off first, so that a lamp already lit still shows three, and a
+// longer dark pause at the end so they read as three before the lamp
+// goes back to what it shows.
+DJMT1.favConfirm = function () {
+    var leds = DJMT1.FAVORITES.confirm;
+    if (!leds.length) {
+        return;
+    }
+    if (DJMT1.favConfirmTimer !== undefined) {
+        engine.stopTimer(DJMT1.favConfirmTimer);
+    }
+    var step = 0;
+    var paint = function () {
+        for (var j = 0; j < leds.length; j++) {
+            midi.sendShortMsg(leds[j].status, leds[j].midino,
+                step % 2 ? leds[j].on : leds[j].off);
+        }
+    };
+    paint();
+    DJMT1.favConfirmTimer = engine.beginTimer(120, function () {
+        step++;
+        if (step < 7) {
+            paint();
+        }
+        if (step < 10) {
+            return;
+        }
+        engine.stopTimer(DJMT1.favConfirmTimer);
+        DJMT1.favConfirmTimer = undefined;
+        DJMT1.favRestoreConfirm();
+    });
+};
+
+DJMT1.favRestoreConfirm = function () {
+    DJMT1.paintGangs();   // the lamp also shows a gang's state
+};
+
 DJMT1.favPress = function (i, value, status) {
     var pressed = value > 0 && (status & 0xF0) !== 0x80;
     var holdMs = DJMT1.FAVORITES.holdMs;
@@ -1036,6 +1089,7 @@ DJMT1.favPress = function (i, value, status) {
         DJMT1.favTimer[i] = engine.beginTimer(holdMs, function () {
             DJMT1.favTimer[i] = undefined;
             DJMT1.favFlash(i);   // letting go now will store
+            DJMT1.favConfirm();
         }, true);
         return;
     }
