@@ -177,4 +177,23 @@ check("... and B's bank light follows", leds[B.bankLed] === 0x7F);
 engine.setValue(SKIN, "hotcue_bank_2", 7);
 check("an out-of-range value is ignored", DJMT1.bank[1] === 1);
 
+// The pad's release reaches Mixxx (a paused deck plays the cue only while it
+// is held), and goes to the cue the press started.
+const G = A.group;
+const activations = (n) => wrote(G, "hotcue_" + n + "_activate").map((w) => w[2]);
+check("deck A is on cues 1-4", DJMT1.bank[0] === 0);
+DJMT1.hotcueA2(0, 0x1F, 0x7F, 0x90);
+check("pad 2 holds hot cue 2 down", activations(2).join() === "1");
+DJMT1.toggleBank(0, 127);
+DJMT1.hotcueA2(0, 0x1F, 0x00, 0x90);
+check("the release lets go of hot cue 2, though the bank moved to 5-8",
+    activations(2).join() === "1,0" && activations(6).length === 0);
+DJMT1.hotcueA2(0, 0x1F, 0x7F, 0x90);
+check("in bank 5-8 pad 2 holds hot cue 6", activations(6).join() === "1");
+DJMT1.hotcueA2(0, 0x1F, 0x40, 0x80);
+check("a note-off releases it, whatever its velocity",
+    activations(6).join() === "1,0");
+DJMT1.hotcueA2(0, 0x1F, 0x00, 0x90);
+check("a second release sends nothing", activations(6).join() === "1,0");
+
 console.log(checks + " checks passed");

@@ -3,7 +3,7 @@
 //
 // Controller: DJM-T1_Custom
 // Layer:      base
-// Generated:  2026-09-27
+// Generated:  2026-10-02
 
 var DJMT1 = {};
 
@@ -144,11 +144,14 @@ DJMT1.BANKS = [
 DJMT1.bank = [];
 DJMT1.samplerHold = [];
 DJMT1.bankPublished = [];
+// The hot cue each pad's press started, for its release.
+DJMT1.hotcueHeld = [];
 
 DJMT1.initBanks = function () {
     for (var i = 0; i < DJMT1.BANKS.length; i++) {
         DJMT1.bank[i] = 0;
         DJMT1.samplerHold[i] = false;
+        DJMT1.hotcueHeld[i] = [];
         DJMT1.connectBank(i);
         DJMT1.paintBank(i);
     }
@@ -268,14 +271,24 @@ DJMT1.paintBank = function (i) {
 
 // --- hot cue pads ----------------------------------------------
 
+// Press and release go to Mixxx as they happen, which is what makes
+// a hot cue on a paused deck play only while held and stop back on
+// the cue when let go; on a playing deck the press jumps and the deck
+// plays on. The release goes to the cue the press started, even if
+// the bank changed while the pad was held.
 DJMT1.hotcuePress = function (i, pad, value) {
-    if (value === 0) {
-        return;   // release; a hot cue acts on the press
-    }
     var d = DJMT1.BANKS[i];
+    if (value === 0) {
+        var held = DJMT1.hotcueHeld[i][pad];
+        if (held) {
+            DJMT1.hotcueHeld[i][pad] = 0;
+            engine.setValue(d.group, "hotcue_" + held + "_activate", 0);
+        }
+        return;
+    }
     var n = DJMT1.bank[i] * d.perBank + pad + 1;
+    DJMT1.hotcueHeld[i][pad] = n;
     engine.setValue(d.group, "hotcue_" + n + "_activate", 1);
-    engine.setValue(d.group, "hotcue_" + n + "_activate", 0);
 };
 
 DJMT1.hotcueClear = function (i, pad, value) {
@@ -386,26 +399,30 @@ DJMT1.samplerGainReset = function (i, value) {
 };
 
 // Per-button entry points; a mapping <key> cannot pass arguments.
-DJMT1.hotcueA1 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(0, 0, value);
+DJMT1.hotcueA1 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(0, 0, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueA1Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(0, 0, value);
 };
-DJMT1.hotcueA2 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(0, 1, value);
+DJMT1.hotcueA2 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(0, 1, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueA2Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(0, 1, value);
 };
-DJMT1.hotcueA3 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(0, 2, value);
+DJMT1.hotcueA3 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(0, 2, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueA3Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(0, 2, value);
 };
-DJMT1.hotcueA4 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(0, 3, value);
+DJMT1.hotcueA4 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(0, 3, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueA4Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(0, 3, value);
@@ -450,26 +467,30 @@ DJMT1.samplerGainResetA = function (ch, ctrl, value) {
     DJMT1.samplerGainReset(0, value);
 };
 
-DJMT1.hotcueB1 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(1, 0, value);
+DJMT1.hotcueB1 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(1, 0, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueB1Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(1, 0, value);
 };
-DJMT1.hotcueB2 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(1, 1, value);
+DJMT1.hotcueB2 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(1, 1, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueB2Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(1, 1, value);
 };
-DJMT1.hotcueB3 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(1, 2, value);
+DJMT1.hotcueB3 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(1, 2, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueB3Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(1, 2, value);
 };
-DJMT1.hotcueB4 = function (ch, ctrl, value) {
-    DJMT1.hotcuePress(1, 3, value);
+DJMT1.hotcueB4 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.hotcuePress(1, 3, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.hotcueB4Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(1, 3, value);
