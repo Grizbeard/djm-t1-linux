@@ -827,11 +827,23 @@ DJMT1.fxSlot = function (s, n) {
     return DJMT1.FX_SECTIONS[s].slotGroups[DJMT1.fxSel[s]][n];
 };
 
-// Mixxx's own curve for a plain absolute knob (<normal/>), so these
-// knobs feel as they did bound straight to the controls: 64 is the
-// middle, 0 and 127 the ends.
+// 0 and 127 are the ends, and the centre detent is exactly the
+// middle: it can rest a step or two either side of 64, and a meta or
+// super knob a step off centre still leaves a send open (Filter Echo,
+// Filter Reverb) or a filter barely on. So 62-66 are all 0.5, and the
+// travel either side spreads evenly over the rest.
+DJMT1.FX_KNOB_CENTRE_LOW = 62;
+DJMT1.FX_KNOB_CENTRE_HIGH = 66;
 DJMT1.fxKnob = function (value) {
-    return value <= 64 ? value / 128 : 0.5 + (value - 64) / 126;
+    var lo = DJMT1.FX_KNOB_CENTRE_LOW;
+    var hi = DJMT1.FX_KNOB_CENTRE_HIGH;
+    if (value <= lo) {
+        return value / lo / 2;
+    }
+    if (value >= hi) {
+        return 0.5 + (value - hi) / (127 - hi) / 2;
+    }
+    return 0.5;
 };
 
 // Which key each unit's knob_choice control picks, once connected:

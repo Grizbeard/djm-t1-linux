@@ -109,6 +109,13 @@ DJMT1.fx1Mix(0, 0, 64);
 DJMT1.fx1Level1(0, 0, 127);
 check("knobs on unit 1: DRY/WET 64 is the middle, a level knob at 127 the top",
     params[key(U(1), K)] === 0.5 && params[key(S(1, 1), "meta")] === 1);
+check("the centre detent is exactly the middle a step or two either side of 64",
+    [62, 63, 64, 65, 66].every((v) => DJMT1.fxKnob(v) === 0.5));
+check("... and the travel either side carries on from it without a jump",
+    DJMT1.fxKnob(0) === 0 && DJMT1.fxKnob(31) === 0.25
+    && DJMT1.fxKnob(61) < 0.5 && DJMT1.fxKnob(61) > 0.49
+    && DJMT1.fxKnob(67) > 0.5 && DJMT1.fxKnob(67) < 0.51
+    && DJMT1.fxKnob(127) === 1);
 
 press("fx1Select2");
 check("deck A's second ASSIGN: the section is on unit 2, both on states kept",
@@ -118,7 +125,7 @@ check("... lights: second lit, first dark, FX ON shows unit 2 (on)",
 check("... deck B untouched", DJMT1.fxSel[1] === 0 && lit(F2.selectLeds[0]));
 
 DJMT1.fx1Mix(0, 0, 0);
-DJMT1.fx1Level2(0, 0, 32);
+DJMT1.fx1Level2(0, 0, 31);
 check("knobs now drive unit 2", params[key(U(2), K)] === 0
     && params[key(S(2, 2), "meta")] === 0.25 && params[key(U(1), K)] === 0.5);
 
