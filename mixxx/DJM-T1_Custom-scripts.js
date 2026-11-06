@@ -3,7 +3,7 @@
 //
 // Controller: DJM-T1_Custom
 // Layer:      base
-// Generated:  2026-10-02
+// Generated:  2026-11-06
 
 var DJMT1 = {};
 
@@ -93,6 +93,8 @@ DJMT1.STARTUP = [
     ["[EffectRack1_EffectUnit3]", "group_[Channel2]_enable", 1, false],
     ["[EffectRack1_EffectUnit4]", "group_[Channel1]_enable", 0, false],
     ["[EffectRack1_EffectUnit4]", "group_[Channel2]_enable", 1, false],
+    ["[Channel1]", "main_mix", 0, false],
+    ["[Channel2]", "main_mix", 0, false],
 ];
 
 DJMT1.applyStartup = function () {
@@ -136,6 +138,13 @@ DJMT1.BANKS = [
     },
 ];
 
+// What the controller's SAMPLER mode does with the cue buttons:
+// the mode `control` selects, by index into `modes`.
+DJMT1.SECOND_MODE = {
+    control: ["[TerminalWide]", "pad_mode"],
+    modes: ["sampler", "cueloop", "looproll"],
+};
+
 // Which four hot cues each deck's buttons currently address, and
 // whether its sampler pads play while held. Both are mapping state:
 // Mixxx has no control to read them back from. The bank is also
@@ -152,9 +161,12 @@ DJMT1.initBanks = function () {
         DJMT1.bank[i] = 0;
         DJMT1.samplerHold[i] = false;
         DJMT1.hotcueHeld[i] = [];
+        DJMT1.rollSet[i] = 0;
+        DJMT1.rollHeld[i] = [];
         DJMT1.connectBank(i);
         DJMT1.paintBank(i);
     }
+    DJMT1.followSecondMode();
 };
 
 // The control is the skin's, so it exists only under a skin that
@@ -239,6 +251,8 @@ DJMT1.connectBank = function (i) {
         engine.makeConnection(d.samplers[s], "play",
             function () { DJMT1.paintBank(i); });
     }
+    engine.makeConnection(d.group, "loop_enabled",
+        function () { DJMT1.paintBank(i); });
     DJMT1.followBankControl(i);
 };
 
@@ -251,22 +265,13 @@ DJMT1.paintBank = function (i) {
             + "_status") > 0;
         midi.sendShortMsg(status, d.hotcues[p], set ? 0x7F : 0x00);
     }
-    // A sampler pad is lit when it holds something and brighter is
-    // not available here, so playing and loaded look the same.
-    for (var s = 0; s < d.samplerPads.length && s < d.samplers.length; s++) {
-        var live = engine.getValue(d.samplers[s], "track_loaded") > 0;
-        midi.sendShortMsg(status, d.samplerPads[s], live ? 0x7F : 0x00);
-    }
     if (d.bankLed !== null) {
         // The light says 'not the first bank', which on a two-bank
         // controller reads as 'cues 5-8'.
         midi.sendShortMsg(status, d.bankLed,
             DJMT1.bank[i] > 0 ? 0x7F : 0x00);
     }
-    if (d.samplerModeLed !== null) {
-        midi.sendShortMsg(status, d.samplerModeLed,
-            DJMT1.samplerHold[i] ? 0x7F : 0x00);
-    }
+    DJMT1.paintSecondLayer(i);
 };
 
 // --- hot cue pads ----------------------------------------------
@@ -312,7 +317,7 @@ DJMT1.toggleBank = function (i, value) {
 
 // --- sampler pads ----------------------------------------------
 
-DJMT1.samplerPress = function (i, pad, value) {
+DJMT1.samplerPlay = function (i, pad, value) {
     var d = DJMT1.BANKS[i];
     var s = d.samplers[pad];
     if (s === undefined) {
@@ -347,7 +352,7 @@ DJMT1.samplerPress = function (i, pad, value) {
     }
 };
 
-DJMT1.samplerEject = function (i, pad, value) {
+DJMT1.samplerEjectSlot = function (i, pad, value) {
     if (value === 0) {
         return;
     }
@@ -358,7 +363,7 @@ DJMT1.samplerEject = function (i, pad, value) {
     }
 };
 
-DJMT1.toggleSamplerHold = function (i, value) {
+DJMT1.samplerToggleHold = function (i, value) {
     if (value === 0) {
         return;
     }
@@ -366,7 +371,7 @@ DJMT1.toggleSamplerHold = function (i, value) {
     DJMT1.paintBank(i);
 };
 
-DJMT1.toggleSamplerRepeat = function (i, value) {
+DJMT1.samplerToggleRepeat = function (i, value) {
     if (value === 0) {
         return;
     }
@@ -398,6 +403,203 @@ DJMT1.samplerGainReset = function (i, value) {
     }
 };
 
+// --- what SAMPLER mode does --------------------------------------
+//
+// The firmware's SAMPLER mode (the SELECT button) re-addresses the four cue
+// buttons, ACTIVE and the AUTO LOOP encoder, so their presses arrive here.
+// What they do is picked on the skin's options page:
+//
+//   sampler    the deck's four samplers, as always
+//   cueloop    each button loops from its hot cue, for beatloop_size beats:
+//              the length AUTO LOOP sets. Pressing it again leaves the loop,
+//              ACTIVE switches cues 1-4 and 5-8, SHIFT + button clears the cue.
+//   looproll   each button rolls a loop while it is held, with slip on, so
+//              the track carries on underneath and comes back where it would
+//              have been. The buttons roll 1/8, 1/4, 1/2 and 1 beat, and ACTIVE
+//              (lit) switches them to 1/32, 1/16, 1/8 and 1/4.
+//
+// AUTO LOOP is not part of this: the profile binds its SAMPLER-mode addresses
+// to the same loop and beatjump controls as in hot cue mode.
+// Until the skin's control exists, or under a skin without it, it is sampler.
+DJMT1.secondMode = "sampler";
+DJMT1.secondModeRetryMs = 1000;
+DJMT1.secondModeRetries = 30;
+
+// Loop roll lengths in beats, one per button: ACTIVE picks the set.
+DJMT1.ROLL_SETS = [
+    [0.125, 0.25, 0.5, 1],
+    [0.03125, 0.0625, 0.125, 0.25],
+];
+DJMT1.rollSet = [];
+// The length each button's press started rolling, for its release.
+DJMT1.rollHeld = [];
+
+DJMT1.setSecondMode = function (value) {
+    var mode = DJMT1.SECOND_MODE.modes[Math.round(value)];
+    if (mode === undefined || mode === DJMT1.secondMode) {
+        return;
+    }
+    // A roll still held would never get its release.
+    DJMT1.endRolls();
+    DJMT1.secondMode = mode;
+    for (var i = 0; i < DJMT1.BANKS.length; i++) {
+        DJMT1.paintBank(i);
+    }
+};
+
+// The control is the skin's, so like the bank controls it may only appear
+// after the controllers have started: connecting is retried for a while.
+DJMT1.connectSecondMode = function () {
+    var c = DJMT1.SECOND_MODE.control;
+    var conn = engine.makeConnection(c[0], c[1], DJMT1.setSecondMode);
+    if (conn === undefined) {
+        return false;
+    }
+    DJMT1.setSecondMode(engine.getValue(c[0], c[1]));
+    return true;
+};
+
+DJMT1.followSecondMode = function () {
+    if (DJMT1.SECOND_MODE.control === null || DJMT1.connectSecondMode()) {
+        return;
+    }
+    var tries = 0;
+    var timer = engine.beginTimer(DJMT1.secondModeRetryMs, function () {
+        tries++;
+        if (DJMT1.connectSecondMode() || tries >= DJMT1.secondModeRetries) {
+            engine.stopTimer(timer);
+        }
+    });
+};
+
+DJMT1.endRolls = function () {
+    for (var i = 0; i < DJMT1.BANKS.length; i++) {
+        for (var pad = 0; pad < DJMT1.BANKS[i].samplerPads.length; pad++) {
+            DJMT1.rollPress(i, pad, 0);
+        }
+    }
+};
+
+// SAMPLER-mode lights: what is loaded, which cues exist, what is rolling.
+DJMT1.paintSecondLayer = function (i) {
+    var d = DJMT1.BANKS[i];
+    var status = 0x90 | d.channel;
+    var mode = DJMT1.secondMode;
+    var base = DJMT1.bank[i] * d.perBank;
+    for (var p = 0; p < d.samplerPads.length; p++) {
+        var lit;
+        if (mode === "cueloop") {
+            lit = engine.getValue(d.group, "hotcue_" + (base + p + 1) + "_status") > 0;
+        } else if (mode === "looproll") {
+            lit = !!DJMT1.rollHeld[i][p];
+        } else {
+            // Lit when it holds something; there is no brighter level, so
+            // playing and loaded look the same.
+            lit = p < d.samplers.length
+                && engine.getValue(d.samplers[p], "track_loaded") > 0;
+        }
+        midi.sendShortMsg(status, d.samplerPads[p], lit ? 0x7F : 0x00);
+    }
+    if (d.samplerModeLed !== null) {
+        var on = (mode === "cueloop") ? DJMT1.bank[i] > 0
+            : (mode === "looproll") ? DJMT1.rollSet[i] > 0
+            : DJMT1.samplerHold[i];
+        midi.sendShortMsg(status, d.samplerModeLed, on ? 0x7F : 0x00);
+    }
+};
+
+// -- the buttons --
+
+DJMT1.cueLoopPress = function (i, pad, value) {
+    if (value === 0) {
+        return;
+    }
+    var d = DJMT1.BANKS[i];
+    var n = DJMT1.bank[i] * d.perBank + pad + 1;
+    var cue = "hotcue_" + n;
+    // Mixxx's own cue loop: a loop of beatloop_size beats from the cue, left
+    // again by a second press. An empty button sets a cue here first. It
+    // only sets the loop, though: from before the cue the deck plays on to
+    // it, so the button jumps there first, the jump a hot cue press makes -
+    // unless this press is the one that leaves the loop.
+    var leaving = engine.getValue(d.group, "loop_enabled") > 0
+        && Math.abs(engine.getValue(d.group, "loop_start_position")
+            - engine.getValue(d.group, cue + "_position")) < 1;
+    if (!leaving && engine.getValue(d.group, cue + "_status") > 0) {
+        engine.setValue(d.group, cue + "_goto", 1);
+        engine.setValue(d.group, cue + "_goto", 0);
+    }
+    engine.setValue(d.group, cue + "_cueloop", 1);
+    engine.setValue(d.group, cue + "_cueloop", 0);
+};
+
+DJMT1.rollPress = function (i, pad, value) {
+    var d = DJMT1.BANKS[i];
+    if (value === 0) {
+        var held = DJMT1.rollHeld[i][pad];
+        if (held) {
+            DJMT1.rollHeld[i][pad] = 0;
+            engine.setValue(d.group, "beatlooproll_" + held + "_activate", 0);
+            DJMT1.paintBank(i);
+        }
+        return;
+    }
+    var size = DJMT1.ROLL_SETS[DJMT1.rollSet[i]][pad];
+    if (size === undefined) {
+        return;
+    }
+    DJMT1.rollHeld[i][pad] = size;
+    engine.setValue(d.group, "beatlooproll_" + size + "_activate", 1);
+    DJMT1.paintBank(i);
+};
+
+DJMT1.samplerPress = function (i, pad, value) {
+    if (DJMT1.secondMode === "cueloop") {
+        DJMT1.cueLoopPress(i, pad, value);
+    } else if (DJMT1.secondMode === "looproll") {
+        DJMT1.rollPress(i, pad, value);
+    } else {
+        DJMT1.samplerPlay(i, pad, value);
+    }
+};
+
+// SHIFT + button.
+DJMT1.samplerEject = function (i, pad, value) {
+    if (DJMT1.secondMode === "cueloop") {
+        DJMT1.hotcueClear(i, pad, value);
+    } else if (DJMT1.secondMode === "sampler") {
+        DJMT1.samplerEjectSlot(i, pad, value);
+    }
+};
+
+// ACTIVE.
+DJMT1.toggleSamplerHold = function (i, value) {
+    if (DJMT1.secondMode === "cueloop") {
+        DJMT1.toggleBank(i, value);
+    } else if (DJMT1.secondMode === "looproll") {
+        DJMT1.toggleRollSet(i, value);
+    } else {
+        DJMT1.samplerToggleHold(i, value);
+    }
+};
+
+DJMT1.toggleRollSet = function (i, value) {
+    if (value === 0) {
+        return;
+    }
+    // A roll held across the switch still ends on its own length.
+    DJMT1.rollSet[i] = (DJMT1.rollSet[i] + 1) % DJMT1.ROLL_SETS.length;
+    DJMT1.paintBank(i);
+};
+
+// SHIFT + ACTIVE.
+DJMT1.toggleSamplerRepeat = function (i, value) {
+    if (DJMT1.secondMode === "sampler") {
+        DJMT1.samplerToggleRepeat(i, value);
+    }
+};
+
+
 // Per-button entry points; a mapping <key> cannot pass arguments.
 DJMT1.hotcueA1 = function (ch, ctrl, value, status) {
     // A note-off is a release, whatever its velocity.
@@ -427,26 +629,30 @@ DJMT1.hotcueA4 = function (ch, ctrl, value, status) {
 DJMT1.hotcueA4Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(0, 3, value);
 };
-DJMT1.samplerA1 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(0, 0, value);
+DJMT1.samplerA1 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(0, 0, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerA1Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(0, 0, value);
 };
-DJMT1.samplerA2 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(0, 1, value);
+DJMT1.samplerA2 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(0, 1, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerA2Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(0, 1, value);
 };
-DJMT1.samplerA3 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(0, 2, value);
+DJMT1.samplerA3 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(0, 2, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerA3Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(0, 2, value);
 };
-DJMT1.samplerA4 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(0, 3, value);
+DJMT1.samplerA4 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(0, 3, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerA4Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(0, 3, value);
@@ -495,26 +701,30 @@ DJMT1.hotcueB4 = function (ch, ctrl, value, status) {
 DJMT1.hotcueB4Clear = function (ch, ctrl, value) {
     DJMT1.hotcueClear(1, 3, value);
 };
-DJMT1.samplerB1 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(1, 0, value);
+DJMT1.samplerB1 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(1, 0, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerB1Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(1, 0, value);
 };
-DJMT1.samplerB2 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(1, 1, value);
+DJMT1.samplerB2 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(1, 1, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerB2Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(1, 1, value);
 };
-DJMT1.samplerB3 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(1, 2, value);
+DJMT1.samplerB3 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(1, 2, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerB3Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(1, 2, value);
 };
-DJMT1.samplerB4 = function (ch, ctrl, value) {
-    DJMT1.samplerPress(1, 3, value);
+DJMT1.samplerB4 = function (ch, ctrl, value, status) {
+    // A note-off is a release, whatever its velocity.
+    DJMT1.samplerPress(1, 3, (status & 0xF0) === 0x80 ? 0 : value);
 };
 DJMT1.samplerB4Eject = function (ch, ctrl, value) {
     DJMT1.samplerEject(1, 3, value);
@@ -1410,8 +1620,47 @@ DJMT1.auto_loop_a_shift = function (channel, control, value, status, group) {
     engine.setValue("[Channel1]", "beatjump", delta * size);
 };
 
+// AUTO LOOP A
+DJMT1.auto_loop_a_sampler = function (channel, control, value, status, group) {
+    // A signed-relative encoder: 1 is one detent
+    // clockwise, 127 one anticlockwise.
+    var up = (value < 64);
+    var v = engine.getValue("[Channel1]", "beatloop_size") || 8.0;
+    v = up ? v * 2 : v / 2;
+    v = Math.max(0.03125, Math.min(64, v));
+    engine.setValue("[Channel1]", "beatloop_size", v);
+};
+
+// AUTO LOOP A
+DJMT1.auto_loop_a_sampler_shift = function (channel, control, value, status, group) {
+    // Each detent jumps by the deck's beatjump length, in the
+    // direction turned; a fast turn reports several detents.
+    var delta = (value < 64) ? value : value - 128;
+    var size = engine.getValue("[Channel1]", "beatjump_size") || 4;
+    engine.setValue("[Channel1]", "beatjump", delta * size);
+};
+
 // AUTO LOOP A Push
 DJMT1.auto_loop_a_push_shift = function (channel, control, value, status, group) {
+    if (value !== 127) {
+        return;   // release edge; act on the press only
+    }
+    // Step to the next listed value, wrapping round. A value
+    // that is not in the list moves to the first one above it.
+    var steps = [1, 2, 4, 8, 16, 32];
+    var v = engine.getValue("[Channel1]", "beatjump_size");
+    var next = steps[0];
+    for (var i = 0; i < steps.length; i++) {
+        if (steps[i] > v + 1e-9) {
+            next = steps[i];
+            break;
+        }
+    }
+    engine.setValue("[Channel1]", "beatjump_size", next);
+};
+
+// AUTO LOOP A Push
+DJMT1.auto_loop_a_push_sampler_shift = function (channel, control, value, status, group) {
     if (value !== 127) {
         return;   // release edge; act on the press only
     }
@@ -1449,8 +1698,47 @@ DJMT1.auto_loop_b_shift = function (channel, control, value, status, group) {
     engine.setValue("[Channel2]", "beatjump", delta * size);
 };
 
+// AUTO LOOP B
+DJMT1.auto_loop_b_sampler = function (channel, control, value, status, group) {
+    // A signed-relative encoder: 1 is one detent
+    // clockwise, 127 one anticlockwise.
+    var up = (value < 64);
+    var v = engine.getValue("[Channel2]", "beatloop_size") || 8.0;
+    v = up ? v * 2 : v / 2;
+    v = Math.max(0.03125, Math.min(64, v));
+    engine.setValue("[Channel2]", "beatloop_size", v);
+};
+
+// AUTO LOOP B
+DJMT1.auto_loop_b_sampler_shift = function (channel, control, value, status, group) {
+    // Each detent jumps by the deck's beatjump length, in the
+    // direction turned; a fast turn reports several detents.
+    var delta = (value < 64) ? value : value - 128;
+    var size = engine.getValue("[Channel2]", "beatjump_size") || 4;
+    engine.setValue("[Channel2]", "beatjump", delta * size);
+};
+
 // AUTO LOOP B Push
 DJMT1.auto_loop_b_push_shift = function (channel, control, value, status, group) {
+    if (value !== 127) {
+        return;   // release edge; act on the press only
+    }
+    // Step to the next listed value, wrapping round. A value
+    // that is not in the list moves to the first one above it.
+    var steps = [1, 2, 4, 8, 16, 32];
+    var v = engine.getValue("[Channel2]", "beatjump_size");
+    var next = steps[0];
+    for (var i = 0; i < steps.length; i++) {
+        if (steps[i] > v + 1e-9) {
+            next = steps[i];
+            break;
+        }
+    }
+    engine.setValue("[Channel2]", "beatjump_size", next);
+};
+
+// AUTO LOOP B Push
+DJMT1.auto_loop_b_push_sampler_shift = function (channel, control, value, status, group) {
     if (value !== 127) {
         return;   // release edge; act on the press only
     }

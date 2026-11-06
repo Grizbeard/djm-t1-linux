@@ -119,19 +119,21 @@ if (noSkin) {
         tick();
     }
     check("no skin control: the retries give up", timers.length === 0);
+    check("no skin control: SAMPLER mode stays the sampler",
+        DJMT1.secondMode === "sampler");
     console.log(checks + " checks passed (no skin)");
     process.exit(0);
 }
 
 if (lateSkin) {
     check("skin not loaded yet: nothing published at init",
-        writes.every((w) => w[0] !== SKIN) && timers.length === 2);
+        writes.every((w) => w[0] !== SKIN) && timers.length === 3);
     DJMT1.toggleBank(0, 127);
     check("skin not loaded yet: ACTIVE A still moves the pads to 5-8",
         (DJMT1.hotcuePress(0, 0, 127), lastActivated(A.group) === "hotcue_5_activate"));
     tick();
     check("a retry before the skin loads changes nothing",
-        writes.every((w) => w[0] !== SKIN) && timers.length === 2);
+        writes.every((w) => w[0] !== SKIN) && timers.length === 3);
     skinLoaded = true;
     tick();
     check("once the skin loads, the next retry publishes the bank each deck is on",
@@ -142,6 +144,9 @@ if (lateSkin) {
     check("... and ACTIVE A publishes from then on", values[key(SKIN, "hotcue_bank_1")] === 0);
     engine.setValue(SKIN, "hotcue_bank_2", 1);
     check("... and the mapping follows the control", DJMT1.bank[1] === 1);
+    engine.setValue(SKIN, "pad_mode", 2);
+    check("... and the pad mode control, once the skin has it",
+        DJMT1.secondMode === "looproll");
     console.log(checks + " checks passed (late skin)");
     process.exit(0);
 }
@@ -195,5 +200,73 @@ check("a note-off releases it, whatever its velocity",
     activations(6).join() === "1,0");
 DJMT1.hotcueA2(0, 0x1F, 0x00, 0x90);
 check("a second release sends nothing", activations(6).join() === "1,0");
+
+// SAMPLER mode: what the SELECT button's second layer does is the skin's
+// pad_mode, 0 sampler, 1 cue loop, 2 loop roll.
+const S1 = A.samplers[0];
+const pad1 = (v) => DJMT1.samplerA1(0, A.samplerPads[0], v, 0x90);
+const pad2 = (v) => DJMT1.samplerA2(0, A.samplerPads[1], v, 0x90);
+check("pad mode 0 at start: SAMPLER mode is the sampler", DJMT1.secondMode === "sampler");
+pad1(127);
+check("... an empty sampler button loads the selected track",
+    wrote(S1, "LoadSelectedTrack").length === 1);
+
+engine.setValue(SKIN, "pad_mode", 1);
+check("pad mode 1: cue loop", DJMT1.secondMode === "cueloop");
+check("deck A is on cues 5-8 from before", DJMT1.bank[0] === 1);
+engine.setValue(G, "hotcue_5_status", 1);
+check("... button 1 is lit for its hot cue, 5", leds[A.samplerPads[0]] === 0x7F
+    && leds[A.samplerPads[1]] === 0x00);
+check("... and ACTIVE's SAMPLER-mode light says cues 5-8", leds[A.samplerModeLed] === 0x7F);
+engine.setValue(G, "hotcue_5_position", 96000);
+pad1(127);
+check("... button 1 jumps to hot cue 5 and loops from it",
+    wrote(G, "hotcue_5_goto").map((w) => w[2]).join() === "1,0"
+    && wrote(G, "hotcue_5_cueloop").map((w) => w[2]).join() === "1,0"
+    && wrote(S1, "LoadSelectedTrack").length === 1);
+check("... jumping before the loop is set", writes.findIndex((w) => w[1] === "hotcue_5_goto")
+    < writes.findIndex((w) => w[1] === "hotcue_5_cueloop"));
+pad1(0);
+check("... its release does nothing more", wrote(G, "hotcue_5_cueloop").length === 2);
+engine.setValue(G, "loop_enabled", 1);
+engine.setValue(G, "loop_start_position", 96000);
+pad1(127);
+check("... pressed again in its own loop, it leaves the loop without jumping",
+    wrote(G, "hotcue_5_cueloop").length === 4 && wrote(G, "hotcue_5_goto").length === 2);
+engine.setValue(G, "loop_enabled", 0);
+engine.setValue(G, "hotcue_6_status", 0);
+DJMT1.samplerA2(0, A.samplerPads[1], 127, 0x90);
+check("... an empty button sets its cue and loop with no jump",
+    wrote(G, "hotcue_6_goto").length === 0 && wrote(G, "hotcue_6_cueloop").length === 2);
+DJMT1.samplerHoldA(0, A.samplerModeLed, 127);
+check("... ACTIVE switches to cues 1-4, and the skin's row follows",
+    DJMT1.bank[0] === 0 && values[key(SKIN, "hotcue_bank_1")] === 0);
+DJMT1.samplerA2Eject(0, 0, 127);
+check("... SHIFT + button 2 clears hot cue 2", wrote(G, "hotcue_2_clear").length === 1);
+
+engine.setValue(SKIN, "pad_mode", 2);
+check("pad mode 2: loop roll", DJMT1.secondMode === "looproll");
+pad2(127);
+check("... button 2 rolls 1/4 beat while held",
+    wrote(G, "beatlooproll_0.25_activate").map((w) => w[2]).join() === "1"
+    && leds[A.samplerPads[1]] === 0x7F);
+DJMT1.samplerHoldA(0, A.samplerModeLed, 127);
+check("... ACTIVE switches to the short lengths, and lights", DJMT1.rollSet[0] === 1
+    && leds[A.samplerModeLed] === 0x7F);
+DJMT1.samplerA2(0, A.samplerPads[1], 0x40, 0x80);
+check("... the release ends the 1/4 roll it started, whatever the set now",
+    wrote(G, "beatlooproll_0.25_activate").map((w) => w[2]).join() === "1,0"
+    && leds[A.samplerPads[1]] === 0x00);
+pad1(127);
+check("... in the short set button 1 rolls 1/32",
+    wrote(G, "beatlooproll_0.03125_activate").map((w) => w[2]).join() === "1");
+engine.setValue(SKIN, "pad_mode", 0);
+check("switching mode mid-roll ends the roll",
+    wrote(G, "beatlooproll_0.03125_activate").map((w) => w[2]).join() === "1,0");
+pad1(0);
+check("... and the late release does not reach the sampler",
+    wrote(G, "beatlooproll_0.03125_activate").length === 2 && wrote(S1, "play").length === 0);
+engine.setValue(SKIN, "pad_mode", 7);
+check("an unknown pad mode is ignored", DJMT1.secondMode === "sampler");
 
 console.log(checks + " checks passed");

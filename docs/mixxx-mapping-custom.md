@@ -36,10 +36,12 @@
 | SAMPLER mode, SHIFT + ACTIVE A | `NOTE 108` | `samplerRepeatA` (script) |
 | AUTO LOOP A | `CC 9` | `[Channel1]` `beatloop_size` |
 | SHIFT + AUTO LOOP A | `CC 73` | `[Channel1]` `beatjump` by `beatjump_size` |
-| SAMPLER mode, SHIFT + AUTO LOOP A | `CC 74` | `samplerGainA` (script) |
+| SAMPLER mode AUTO LOOP A | `CC 10` | `[Channel1]` `beatloop_size` |
+| SAMPLER mode, SHIFT + AUTO LOOP A | `CC 74` | `[Channel1]` `beatjump` by `beatjump_size` |
 | AUTO LOOP A Push | `NOTE 21` | `loopA` (script) |
 | SHIFT + AUTO LOOP A Push | `NOTE 85` | `[Channel1]` `beatjump_size` through 1, 2, 4, 8, 16, 32 |
-| SAMPLER mode, SHIFT + AUTO LOOP A Push | `NOTE 86` | `samplerGainResetA` (script) |
+| SAMPLER mode AUTO LOOP A Push | `NOTE 22` | `loopA` (script) |
+| SAMPLER mode, SHIFT + AUTO LOOP A Push | `NOTE 86` | `[Channel1]` `beatjump_size` through 1, 2, 4, 8, 16, 32 |
 | Cue A | `NOTE 11` | `[Channel1]` `cue_default` |
 | SHIFT + Cue A | `NOTE 75` | `absoluteA` (script) |
 | FX1 Assign A | `NOTE 7` | `fx1Select1` (script) |
@@ -78,10 +80,12 @@
 | SAMPLER mode, SHIFT + ACTIVE B | `NOTE 110` | `samplerRepeatB` (script) |
 | AUTO LOOP B | `CC 11` | `[Channel2]` `beatloop_size` |
 | SHIFT + AUTO LOOP B | `CC 75` | `[Channel2]` `beatjump` by `beatjump_size` |
-| SAMPLER mode, SHIFT + AUTO LOOP B | `CC 76` | `samplerGainB` (script) |
+| SAMPLER mode AUTO LOOP B | `CC 12` | `[Channel2]` `beatloop_size` |
+| SAMPLER mode, SHIFT + AUTO LOOP B | `CC 76` | `[Channel2]` `beatjump` by `beatjump_size` |
 | AUTO LOOP B Push | `NOTE 23` | `loopB` (script) |
 | SHIFT + AUTO LOOP B Push | `NOTE 87` | `[Channel2]` `beatjump_size` through 1, 2, 4, 8, 16, 32 |
-| SAMPLER mode, SHIFT + AUTO LOOP B Push | `NOTE 88` | `samplerGainResetB` (script) |
+| SAMPLER mode AUTO LOOP B Push | `NOTE 24` | `loopB` (script) |
+| SAMPLER mode, SHIFT + AUTO LOOP B Push | `NOTE 88` | `[Channel2]` `beatjump_size` through 1, 2, 4, 8, 16, 32 |
 | CUE B | `NOTE 12` | `[Channel2]` `cue_default` |
 | SHIFT + CUE B | `NOTE 76` | `absoluteB` (script) |
 | FX1 Assign B | `NOTE 8` | `fx2Select1` (script) |
@@ -165,9 +169,11 @@ deliberate substitution, not an oversight.
 - SNAP is TRAKTOR's snap-to-grid and SHIFT+SNAP its quantize. Mixxx has only quantize, so SNAP drives quantize on both decks and SHIFT+SNAP drives slip.
 - SHIFT + the six effect buttons are library favorites (they need Mixxx patch 0014): FX1-1 to FX1-3 are favorites 1-3 and FX2-1 to FX2-3 favorites 4-6. Select anything in the library's sidebar - a Rekordbox or Serato playlist on a DJ's drive, a crate, a playlist, a folder - and hold SHIFT + a button for a second: its light flashes and SNAP blinks three times, and letting go then stores it. A tap of SHIFT + that button then jumps to it from any page, on the library page with the track list focused. A favorite on a drive that is not plugged in does nothing. When the same drive comes back it works again once the drive has been opened in the sidebar, since favorites are kept by the drive's mount path; a different drive never matches. Let go of the button before SHIFT. Effects are chosen on the fx page's selectors instead of by SHIFT + effect button, and SHIFT + an effect knob still does nothing: these are absolute knobs, so choosing by knob would make the effect depend on where the knob sits.
 - ACTIVE A/B, which switches that deck's four cue buttons between hot cues 1-4 and 5-8, also publishes the deck's bank as [TerminalWide],hotcue_bank_1 and _2 (0 = cues 1-4, 1 = 5-8). The Terminal-wide skin's four-cue row follows it, so the screen shows the four cues the buttons address. With a skin that has no such control the bank stays private to the mapping, as before.
-- SELECT (hot cue / sampler) and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both modes are bound at once and Mixxx never needs to know which is showing.
+- SELECT and its CROSS FADER CONTROL shift function are not mapped. The firmware re-addresses the section, so both of SELECT's layers are bound at once and Mixxx never needs to know which is showing. What the second layer does is the Terminal-wide skin's choice: options > controller > 'select: hot cues and' sets [TerminalWide],pad_mode to sampler (0), cue loop (1) or loop roll (2), and the mapping follows it from the moment the skin loads. Under a skin without that control it stays the sampler.
+- In SELECT's second layer: as the sampler, a button plays or stops its sampler (an empty one loads the selected track), SHIFT + button ejects, ACTIVE switches between play-while-held and toggle, SHIFT + ACTIVE switches repeat. As cue loop, a button starts a loop at its hot cue, as long as the deck's loop length, and pressing it again leaves the loop; an empty button sets a hot cue there first. ACTIVE switches cues 1-4 and 5-8 as in hot cue mode, and SHIFT + button clears the cue. As loop roll, a button rolls 1/8, 1/4, 1/2 or 1 beat while held, with slip, so on release the track carries on from where it would have been; ACTIVE (lit) switches the buttons to 1/32, 1/16, 1/8 and 1/4. Each button's light shows a sampler that holds something, a hot cue that exists, or a roll that is running. AUTO LOOP does the same in both layers: loop length, loop on/off, and with SHIFT the beatjump and its length. Sampler gain, which SHIFT + AUTO LOOP used to set in the sampler layer, is no longer on the panel.
 - BROWSE PUSH moves between the Terminal-wide skin's pages: off the library page it opens the library, and in the library's track list it goes back to the decks. In the tree it still expands a folder or opens a crate. SHIFT + BROWSE PUSH opens the library on the tree, or swaps focus between the tree and the track list. LOAD A/B go back to the decks once the deck has actually taken the track; a rejected load stays put. With a skin that has no [Tab] pages, all of these behave as before.
 - SHIFT + AUTO LOOP is beatjump: SHIFT + turn jumps back or forward by the deck's beatjump length, one jump per detent, and SHIFT + push steps that length through 1, 2, 4, 8, 16 and 32 beats and round again. The length shows on the deck's beatjump row when the options page shows it. The stock mapping's SHIFT + turn moved the loop instead.
+- The decks are taken out of Mixxx's Main mix at every start ([ChannelN],main_mix 0): they reach the mixer on their own USB outputs (1/2 and 3/4), and Main is left for the samplers, sent to USB 5/6, the DJM-T1's master return. With a deck still in Main it would reach the master twice, the second time past its channel fader. Their own outputs do not depend on main_mix.
 
 ## Set at every start
 
@@ -184,6 +190,8 @@ required value does not take, nothing below it is applied.
 | `[EffectRack1_EffectUnit3]` `group_[Channel2]_enable` | 1 |  |
 | `[EffectRack1_EffectUnit4]` `group_[Channel1]_enable` | 0 |  |
 | `[EffectRack1_EffectUnit4]` `group_[Channel2]_enable` | 1 |  |
+| `[Channel1]` `main_mix` | 0 |  |
+| `[Channel2]` `main_mix` | 0 |  |
 
 ## Sends MIDI, deliberately unmapped
 
@@ -204,10 +212,6 @@ no function at all. They are left free on purpose.
 - CROSSFADER (`CC 23`)
 - Mode Select A (`NOTE 25`)
 - Mode Select B (`NOTE 26`)
-- SAMPLER mode AUTO LOOP A (`CC 10`)
-- SAMPLER mode AUTO LOOP A Push (`NOTE 22`)
-- SAMPLER mode AUTO LOOP B (`CC 12`)
-- SAMPLER mode AUTO LOOP B Push (`NOTE 24`)
 - SHIFT + ACTIVE A (`NOTE 107`)
 - SHIFT + ACTIVE B (`NOTE 109`)
 - SHIFT + CH1 HI (`CC 79`)

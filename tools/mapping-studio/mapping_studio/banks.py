@@ -49,6 +49,52 @@ def _hex(n):
     return f"0x{n:02X}"
 
 
+def _second_mode(profile):
+    """The profile's optional `banks.second_mode`, validated.
+
+    What the controller's own SAMPLER mode does with the four cue buttons,
+    ACTIVE and the AUTO LOOP encoder: `modes` lists what each value of
+    `control`, "[Group],key", selects. The control is the skin's; see
+    followSecondMode."""
+    spec = (profile.data.get("banks") or {}).get("second_mode")
+    if not spec:
+        return None
+    group, sep, key = (spec.get("control") or "").partition(",")
+    if not (sep and group.startswith("[") and group.endswith("]") and key):
+        raise ValueError(
+            f"banks: second_mode control {spec.get('control')!r} is not"
+            ' "[Group],key"')
+    modes = list(spec.get("modes") or [])
+    unknown = [m for m in modes if m not in SECOND_MODES]
+    if not modes or unknown or modes[0] != "sampler":
+        raise ValueError(
+            f"banks: second_mode modes {modes!r} must start with \"sampler\""
+            f" and be some of {', '.join(SECOND_MODES)}")
+    return group, key, modes
+
+
+# What SAMPLER mode can be made to do.
+SECOND_MODES = ("sampler", "cueloop", "looproll")
+
+
+def _second_mode_table(profile, prefix):
+    spec = _second_mode(profile)
+    if spec is None:
+        control, modes = "null", ["sampler"]
+    else:
+        group, key, modes = spec
+        control = f'["{group}", "{key}"]'
+    return [
+        "// What the controller's SAMPLER mode does with the cue buttons:",
+        "// the mode `control` selects, by index into `modes`.",
+        f"{prefix}.SECOND_MODE = {{",
+        f"    control: {control},",
+        "    modes: [" + ", ".join(f'"{m}"' for m in modes) + "],",
+        "};",
+        "",
+    ]
+
+
 def generate(profile, prefix):
     """JS for every deck's hot cue bank and sampler bank. [] if none declared."""
     decks = _decks(profile)
@@ -79,6 +125,7 @@ def generate(profile, prefix):
         out.append(f"        bankControl: {_bank_control(d)},")
         out.append("    },")
     out += ["];", ""]
+    out += _second_mode_table(profile, prefix)
 
     out += [
         "// Which four hot cues each deck's buttons currently address, and",
@@ -97,9 +144,12 @@ def generate(profile, prefix):
         f"        {prefix}.bank[i] = 0;",
         f"        {prefix}.samplerHold[i] = false;",
         f"        {prefix}.hotcueHeld[i] = [];",
+        f"        {prefix}.rollSet[i] = 0;",
+        f"        {prefix}.rollHeld[i] = [];",
         f"        {prefix}.connectBank(i);",
         f"        {prefix}.paintBank(i);",
         "    }",
+        f"    {prefix}.followSecondMode();",
         "};",
         "",
         "// The control is the skin's, so it exists only under a skin that",
@@ -184,6 +234,8 @@ def generate(profile, prefix):
         '        engine.makeConnection(d.samplers[s], "play",',
         f"            function () {{ {prefix}.paintBank(i); }});",
         "    }",
+        '    engine.makeConnection(d.group, "loop_enabled",',
+        f"        function () {{ {prefix}.paintBank(i); }});",
         f"    {prefix}.followBankControl(i);",
         "};",
         "",
@@ -196,23 +248,13 @@ def generate(profile, prefix):
         '            + "_status") > 0;',
         "        midi.sendShortMsg(status, d.hotcues[p], set ? 0x7F : 0x00);",
         "    }",
-        "    // A sampler pad is lit when it holds something and brighter is",
-        "    // not available here, so playing and loaded look the same.",
-        "    for (var s = 0; s < d.samplerPads.length && s < d.samplers.length;"
-        " s++) {",
-        '        var live = engine.getValue(d.samplers[s], "track_loaded") > 0;',
-        "        midi.sendShortMsg(status, d.samplerPads[s], live ? 0x7F : 0x00);",
-        "    }",
         "    if (d.bankLed !== null) {",
         "        // The light says 'not the first bank', which on a two-bank",
         "        // controller reads as 'cues 5-8'.",
         "        midi.sendShortMsg(status, d.bankLed,",
         f"            {prefix}.bank[i] > 0 ? 0x7F : 0x00);",
         "    }",
-        "    if (d.samplerModeLed !== null) {",
-        "        midi.sendShortMsg(status, d.samplerModeLed,",
-        f"            {prefix}.samplerHold[i] ? 0x7F : 0x00);",
-        "    }",
+        f"    {prefix}.paintSecondLayer(i);",
         "};",
         "",
         "// --- hot cue pads ----------------------------------------------",
@@ -258,7 +300,7 @@ def generate(profile, prefix):
         "",
         "// --- sampler pads ----------------------------------------------",
         "",
-        f"{prefix}.samplerPress = function (i, pad, value) {{",
+        f"{prefix}.samplerPlay = function (i, pad, value) {{",
         f"    var d = {prefix}.BANKS[i];",
         "    var s = d.samplers[pad];",
         "    if (s === undefined) {",
@@ -293,7 +335,7 @@ def generate(profile, prefix):
         "    }",
         "};",
         "",
-        f"{prefix}.samplerEject = function (i, pad, value) {{",
+        f"{prefix}.samplerEjectSlot = function (i, pad, value) {{",
         "    if (value === 0) {",
         "        return;",
         "    }",
@@ -304,7 +346,7 @@ def generate(profile, prefix):
         "    }",
         "};",
         "",
-        f"{prefix}.toggleSamplerHold = function (i, value) {{",
+        f"{prefix}.samplerToggleHold = function (i, value) {{",
         "    if (value === 0) {",
         "        return;",
         "    }",
@@ -312,7 +354,7 @@ def generate(profile, prefix):
         f"    {prefix}.paintBank(i);",
         "};",
         "",
-        f"{prefix}.toggleSamplerRepeat = function (i, value) {{",
+        f"{prefix}.samplerToggleRepeat = function (i, value) {{",
         "    if (value === 0) {",
         "        return;",
         "    }",
@@ -346,6 +388,8 @@ def generate(profile, prefix):
         "",
     ]
 
+    out += _second_mode_js(prefix)
+
     # One thin named function per button, because a Mixxx <key> can only name a
     # function, never call one with arguments.
     out.append("// Per-button entry points; a mapping <key> cannot pass arguments.")
@@ -363,8 +407,9 @@ def generate(profile, prefix):
             ]
         for pad in range(len(d.get("sampler_buttons") or [])):
             out += [
-                f"{prefix}.sampler{deck}{pad + 1} = function (ch, ctrl, value) {{",
-                f"    {prefix}.samplerPress({i}, {pad}, value);",
+                f"{prefix}.sampler{deck}{pad + 1} = function (ch, ctrl, value, status) {{",
+                "    // A note-off is a release, whatever its velocity.",
+                f"    {prefix}.samplerPress({i}, {pad}, (status & 0xF0) === 0x80 ? 0 : value);",
                 "};",
                 f"{prefix}.sampler{deck}{pad + 1}Eject = function (ch, ctrl, value) {{",
                 f"    {prefix}.samplerEject({i}, {pad}, value);",
@@ -389,6 +434,211 @@ def generate(profile, prefix):
             "",
         ]
     return out
+
+
+_SECOND_MODE_JS = """
+// --- what SAMPLER mode does --------------------------------------
+//
+// The firmware's SAMPLER mode (the SELECT button) re-addresses the four cue
+// buttons, ACTIVE and the AUTO LOOP encoder, so their presses arrive here.
+// What they do is picked on the skin's options page:
+//
+//   sampler    the deck's four samplers, as always
+//   cueloop    each button loops from its hot cue, for beatloop_size beats:
+//              the length AUTO LOOP sets. Pressing it again leaves the loop,
+//              ACTIVE switches cues 1-4 and 5-8, SHIFT + button clears the cue.
+//   looproll   each button rolls a loop while it is held, with slip on, so
+//              the track carries on underneath and comes back where it would
+//              have been. The buttons roll 1/8, 1/4, 1/2 and 1 beat, and ACTIVE
+//              (lit) switches them to 1/32, 1/16, 1/8 and 1/4.
+//
+// AUTO LOOP is not part of this: the profile binds its SAMPLER-mode addresses
+// to the same loop and beatjump controls as in hot cue mode.
+// Until the skin's control exists, or under a skin without it, it is sampler.
+@P@.secondMode = "sampler";
+@P@.secondModeRetryMs = 1000;
+@P@.secondModeRetries = 30;
+
+// Loop roll lengths in beats, one per button: ACTIVE picks the set.
+@P@.ROLL_SETS = [
+    [0.125, 0.25, 0.5, 1],
+    [0.03125, 0.0625, 0.125, 0.25],
+];
+@P@.rollSet = [];
+// The length each button's press started rolling, for its release.
+@P@.rollHeld = [];
+
+@P@.setSecondMode = function (value) {
+    var mode = @P@.SECOND_MODE.modes[Math.round(value)];
+    if (mode === undefined || mode === @P@.secondMode) {
+        return;
+    }
+    // A roll still held would never get its release.
+    @P@.endRolls();
+    @P@.secondMode = mode;
+    for (var i = 0; i < @P@.BANKS.length; i++) {
+        @P@.paintBank(i);
+    }
+};
+
+// The control is the skin's, so like the bank controls it may only appear
+// after the controllers have started: connecting is retried for a while.
+@P@.connectSecondMode = function () {
+    var c = @P@.SECOND_MODE.control;
+    var conn = engine.makeConnection(c[0], c[1], @P@.setSecondMode);
+    if (conn === undefined) {
+        return false;
+    }
+    @P@.setSecondMode(engine.getValue(c[0], c[1]));
+    return true;
+};
+
+@P@.followSecondMode = function () {
+    if (@P@.SECOND_MODE.control === null || @P@.connectSecondMode()) {
+        return;
+    }
+    var tries = 0;
+    var timer = engine.beginTimer(@P@.secondModeRetryMs, function () {
+        tries++;
+        if (@P@.connectSecondMode() || tries >= @P@.secondModeRetries) {
+            engine.stopTimer(timer);
+        }
+    });
+};
+
+@P@.endRolls = function () {
+    for (var i = 0; i < @P@.BANKS.length; i++) {
+        for (var pad = 0; pad < @P@.BANKS[i].samplerPads.length; pad++) {
+            @P@.rollPress(i, pad, 0);
+        }
+    }
+};
+
+// SAMPLER-mode lights: what is loaded, which cues exist, what is rolling.
+@P@.paintSecondLayer = function (i) {
+    var d = @P@.BANKS[i];
+    var status = 0x90 | d.channel;
+    var mode = @P@.secondMode;
+    var base = @P@.bank[i] * d.perBank;
+    for (var p = 0; p < d.samplerPads.length; p++) {
+        var lit;
+        if (mode === "cueloop") {
+            lit = engine.getValue(d.group, "hotcue_" + (base + p + 1) + "_status") > 0;
+        } else if (mode === "looproll") {
+            lit = !!@P@.rollHeld[i][p];
+        } else {
+            // Lit when it holds something; there is no brighter level, so
+            // playing and loaded look the same.
+            lit = p < d.samplers.length
+                && engine.getValue(d.samplers[p], "track_loaded") > 0;
+        }
+        midi.sendShortMsg(status, d.samplerPads[p], lit ? 0x7F : 0x00);
+    }
+    if (d.samplerModeLed !== null) {
+        var on = (mode === "cueloop") ? @P@.bank[i] > 0
+            : (mode === "looproll") ? @P@.rollSet[i] > 0
+            : @P@.samplerHold[i];
+        midi.sendShortMsg(status, d.samplerModeLed, on ? 0x7F : 0x00);
+    }
+};
+
+// -- the buttons --
+
+@P@.cueLoopPress = function (i, pad, value) {
+    if (value === 0) {
+        return;
+    }
+    var d = @P@.BANKS[i];
+    var n = @P@.bank[i] * d.perBank + pad + 1;
+    var cue = "hotcue_" + n;
+    // Mixxx's own cue loop: a loop of beatloop_size beats from the cue, left
+    // again by a second press. An empty button sets a cue here first. It
+    // only sets the loop, though: from before the cue the deck plays on to
+    // it, so the button jumps there first, the jump a hot cue press makes -
+    // unless this press is the one that leaves the loop.
+    var leaving = engine.getValue(d.group, "loop_enabled") > 0
+        && Math.abs(engine.getValue(d.group, "loop_start_position")
+            - engine.getValue(d.group, cue + "_position")) < 1;
+    if (!leaving && engine.getValue(d.group, cue + "_status") > 0) {
+        engine.setValue(d.group, cue + "_goto", 1);
+        engine.setValue(d.group, cue + "_goto", 0);
+    }
+    engine.setValue(d.group, cue + "_cueloop", 1);
+    engine.setValue(d.group, cue + "_cueloop", 0);
+};
+
+@P@.rollPress = function (i, pad, value) {
+    var d = @P@.BANKS[i];
+    if (value === 0) {
+        var held = @P@.rollHeld[i][pad];
+        if (held) {
+            @P@.rollHeld[i][pad] = 0;
+            engine.setValue(d.group, "beatlooproll_" + held + "_activate", 0);
+            @P@.paintBank(i);
+        }
+        return;
+    }
+    var size = @P@.ROLL_SETS[@P@.rollSet[i]][pad];
+    if (size === undefined) {
+        return;
+    }
+    @P@.rollHeld[i][pad] = size;
+    engine.setValue(d.group, "beatlooproll_" + size + "_activate", 1);
+    @P@.paintBank(i);
+};
+
+@P@.samplerPress = function (i, pad, value) {
+    if (@P@.secondMode === "cueloop") {
+        @P@.cueLoopPress(i, pad, value);
+    } else if (@P@.secondMode === "looproll") {
+        @P@.rollPress(i, pad, value);
+    } else {
+        @P@.samplerPlay(i, pad, value);
+    }
+};
+
+// SHIFT + button.
+@P@.samplerEject = function (i, pad, value) {
+    if (@P@.secondMode === "cueloop") {
+        @P@.hotcueClear(i, pad, value);
+    } else if (@P@.secondMode === "sampler") {
+        @P@.samplerEjectSlot(i, pad, value);
+    }
+};
+
+// ACTIVE.
+@P@.toggleSamplerHold = function (i, value) {
+    if (@P@.secondMode === "cueloop") {
+        @P@.toggleBank(i, value);
+    } else if (@P@.secondMode === "looproll") {
+        @P@.toggleRollSet(i, value);
+    } else {
+        @P@.samplerToggleHold(i, value);
+    }
+};
+
+@P@.toggleRollSet = function (i, value) {
+    if (value === 0) {
+        return;
+    }
+    // A roll held across the switch still ends on its own length.
+    @P@.rollSet[i] = (@P@.rollSet[i] + 1) % @P@.ROLL_SETS.length;
+    @P@.paintBank(i);
+};
+
+// SHIFT + ACTIVE.
+@P@.toggleSamplerRepeat = function (i, value) {
+    if (@P@.secondMode === "sampler") {
+        @P@.samplerToggleRepeat(i, value);
+    }
+};
+
+"""
+
+
+def _second_mode_js(prefix):
+    """The SAMPLER-mode dispatch, and the cue loop and loop roll modes."""
+    return _SECOND_MODE_JS.replace("@P@", prefix).split("\n")[1:]
 
 
 def generate_gangs(profile, prefix):

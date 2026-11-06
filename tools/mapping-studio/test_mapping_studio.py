@@ -518,6 +518,28 @@ class TestBankControl(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.script(p)
 
+    def test_second_mode_table(self):
+        js = self.script()
+        self.assertIn('control: ["[TerminalWide]", "pad_mode"],', js)
+        self.assertIn('modes: ["sampler", "cueloop", "looproll"],', js)
+
+    def test_no_second_mode_stays_the_sampler(self):
+        p = self.profile()
+        p.data["banks"].pop("second_mode")
+        js = self.script(p)
+        self.assertIn("control: null,", js)
+        self.assertIn('modes: ["sampler"],', js)
+
+    def test_malformed_second_mode_is_refused(self):
+        for spec in ({"control": "TerminalWide.pad_mode", "modes": ["sampler"]},
+                     {"control": "[TerminalWide],pad_mode", "modes": ["cueloop"]},
+                     {"control": "[TerminalWide],pad_mode",
+                      "modes": ["sampler", "pitchplay"]}):
+            p = self.profile()
+            p.data["banks"]["second_mode"] = spec
+            with self.assertRaises(ValueError, msg=repr(spec)):
+                self.script(p)
+
     @unittest.skipUnless(shutil.which("node"), "node is not installed")
     def test_behaviour_against_a_mock_engine(self):
         import tempfile
